@@ -17,6 +17,11 @@ import { Neighbors, type NeighborSpeech } from './world/Neighbors';
 import type { NeighborId } from './world/layout';
 import { WorldLighting } from './world/WorldLighting';
 import { SurfaceProvider } from './materials/SurfaceMaterial';
+import { Landscape } from './world/Landscape';
+import { Traffic } from './vehicles/Traffic';
+import { VehicleController } from './vehicles/VehicleController';
+import { initialVehicleState, type VehicleState } from './vehicles/driving';
+import { worldDaylight } from './logic/appearance';
 
 type Props = {
   settings: GameSettings;
@@ -32,6 +37,10 @@ type Props = {
   onReadingReady?: () => void;
   onTravelEnd?: () => void;
   onFirstMove?: () => void;
+  carUnlocked?: boolean;
+  onVehicle?: (state: VehicleState) => void;
+  onCarExit?: () => void;
+  onCarExitBlocked?: () => void;
 };
 
 const FROZEN_MODES = ['computer', 'arcade', 'reading', 'readingOnSofa', 'watching', 'gameNet'];
@@ -51,10 +60,15 @@ function SceneReady({ onReady }: { onReady: () => void }) {
   return null;
 }
 
-function SceneContent({ settings, life, room, timestamp, neighborSpeech, onNeighborTalk, onPosition, onReady, arcadeUnlocked = false, onComputerReady, onTVReady, onReadingReady, onTravelEnd, onFirstMove }: Props & { onReady: () => void }) {
+function SceneContent({ settings, life, room, timestamp, neighborSpeech, onNeighborTalk, onPosition, onReady, arcadeUnlocked = false, onComputerReady, onTVReady, onReadingReady, onTravelEnd, onFirstMove, carUnlocked = false, onVehicle, onCarExit, onCarExitBlocked }: Props & { onReady: () => void }) {
   useLanguage();
   const body = useRef<RapierRigidBody>(null);
-  const look = useCameraLook(settings.mode === 'explore' && !settings.paused, settings.cameraView);
+  const car = useRef<RapierRigidBody>(null);
+  const vehicle = useRef(initialVehicleState());
+  const driverAttached = useRef(false);
+  const frozen = settings.paused || FROZEN_MODES.includes(settings.mode);
+  const look = useCameraLook((settings.mode === 'explore' || settings.mode === 'driving') && !settings.paused, settings.cameraView);
+  const night = worldDaylight(timestamp, settings.themeMode) < 0.2;
   const onActivityReady = () => {
     if (settings.mode === 'enteringComputer') onComputerReady?.();
     if (settings.mode === 'enteringTV') onTVReady?.();
@@ -63,6 +77,7 @@ function SceneContent({ settings, life, room, timestamp, neighborSpeech, onNeigh
   return (
     <SurfaceProvider>
       <WorldLighting timestamp={timestamp} theme={settings.themeMode} />
+      <Landscape timestamp={timestamp} theme={settings.themeMode} paused={frozen} />
       <pointLight position={[0, 3.5, 0]} intensity={12} distance={12} color="#ffe2b5" />
       <pointLight position={[2.2, 3.2, -8.7]} intensity={9} distance={9} color="#ffdfb5" />
       <pointLight position={[-15, 3.5, 7]} intensity={12} distance={12} color="#b8eee0" />
@@ -72,10 +87,12 @@ function SceneContent({ settings, life, room, timestamp, neighborSpeech, onNeigh
       <Neighbors speech={neighborSpeech} onTalk={onNeighborTalk} />
       {arcadeUnlocked && <ArcadeMachine />}
       <Suspense fallback={null}>
-        <PhysicsWorld paused={settings.paused || FROZEN_MODES.includes(settings.mode)} debug={settings.showPhysics} arcadeUnlocked={arcadeUnlocked} greenhouseOpen={life.greenhouseOpen}>
+        <PhysicsWorld paused={frozen} debug={settings.showPhysics} arcadeUnlocked={arcadeUnlocked} greenhouseOpen={life.greenhouseOpen}>
           <SceneReady onReady={onReady} />
-          <PlayerController bodyRef={body} settings={settings} look={look} greenhouseOpen={life.greenhouseOpen} arcadeUnlocked={arcadeUnlocked} onTravelEnd={onTravelEnd} onFirstMove={onFirstMove} key={settings.resetToken} />
-          <WorldCamera bodyRef={body} onPosition={onPosition} settings={settings} look={look} onActivityReady={onActivityReady} key={`camera-${settings.resetToken}`} />
+          <PlayerController bodyRef={body} settings={settings} look={look} vehicle={vehicle} driverAttachedRef={driverAttached} greenhouseOpen={life.greenhouseOpen} arcadeUnlocked={arcadeUnlocked} onTravelEnd={onTravelEnd} onFirstMove={onFirstMove} key={settings.resetToken} />
+          <VehicleController bodyRef={car} playerRef={body} driverAttachedRef={driverAttached} state={vehicle} look={look} settings={settings} unlocked={carUnlocked} night={night} onTelemetry={onVehicle} onExit={onCarExit} onBlockedExit={onCarExitBlocked} onNavigate={() => life.onNavigate?.('car')} key={`car-${settings.resetToken}`} />
+          <Traffic paused={frozen} night={night} />
+          <WorldCamera bodyRef={body} carRef={car} vehicle={vehicle} onPosition={onPosition} settings={settings} look={look} onActivityReady={onActivityReady} key={`camera-${settings.resetToken}`} />
         </PhysicsWorld>
       </Suspense>
     </SurfaceProvider>
@@ -88,7 +105,7 @@ function GameSceneView(props: Props) {
   const onReady = useCallback(() => setReady(true), []);
   return (
     <SceneBoundary>
-      <Canvas frameloop={FROZEN_MODES.includes(props.settings.mode) ? 'demand' : 'always'} shadows dpr={[1, 1.5]} camera={{ fov: CAMERA_CONFIG.fov, position: [4.5, 7, 9.2], near: 0.08, far: 110 }} gl={{ antialias: true, alpha: true }} fallback={<div className="scene-error">{tx("این مرورگر از WebGL پشتیبانی نمی‌کند.")}</div>}>
+      <Canvas frameloop={FROZEN_MODES.includes(props.settings.mode) ? 'demand' : 'always'} shadows dpr={[1, 1.5]} camera={{ fov: CAMERA_CONFIG.fov, position: [4.5, 7, 9.2], near: 0.08, far: 330 }} gl={{ antialias: true, alpha: true }} fallback={<div className="scene-error">{tx("این مرورگر از WebGL پشتیبانی نمی‌کند.")}</div>}>
         <SceneContent {...props} onReady={onReady} />
       </Canvas>
       {!ready && <div className="scene-loading-wrap" role="status"><div className="scene-loading">{tx("در حال آماده‌سازی اتاق…")}</div></div>}

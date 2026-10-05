@@ -12,8 +12,12 @@ export function WorldLighting({ timestamp, theme }: { timestamp: number | null; 
   const sun: [number, number, number] = [Math.cos(angle) * 26, 8 + daylight * 24, -15];
   return <>
     <color attach="background" args={[sky]} />
-    <fog attach="fog" args={[sky, 45, 100]} />
+    <fog attach="fog" args={[sky, 100, 285]} />
     {daylight > 0.15 ? <Sky distance={2000} sunPosition={sun} turbidity={4} rayleigh={1.2} mieCoefficient={0.006} mieDirectionalG={0.8} /> : <Stars radius={90} depth={30} count={800} factor={2.5} saturation={0} fade speed={0} />}
+    {daylight > 0.15 && <group position={[sun[0] * 5, sun[1] * 5, sun[2] * 5]}>
+      <mesh><sphereGeometry args={[4.2, 24, 16]} /><meshBasicMaterial color="#fff5c4" toneMapped={false} fog={false} /></mesh>
+      <mesh><sphereGeometry args={[5.4, 24, 16]} /><meshBasicMaterial color="#ffe3a1" transparent opacity={0.12} depthWrite={false} toneMapped={false} fog={false} /></mesh>
+    </group>}
     <ambientLight intensity={0.16 + daylight * 0.23} />
     <hemisphereLight args={['#e6edff', '#59664d', 0.65 + daylight * 0.7]} />
     <directionalLight position={sun} intensity={daylight > 0.15 ? 0.6 + daylight * 2.8 : 0.75} color={daylight > 0.15 ? '#fff1d9' : '#b5c8ec'} castShadow

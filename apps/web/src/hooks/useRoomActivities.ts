@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { GAME_NET, NEIGHBORS, ROOM_SPOTS, canUseGameNet, getNearestInteraction, type NeighborId, type PlayerPosition, type RoomSpotId } from '@react-quest/game';
+import { GAME_NET, CAR, canDrive, findCarApproach, NEIGHBORS, ROOM_SPOTS, canUseGameNet, getNearestInteraction, type NeighborId, type PlayerPosition, type RoomSpotId, type VehicleState } from '@react-quest/game';
 import type { InteractionObject } from '@react-quest/shared';
 import { useAppDispatch, useAppSelector } from '../store';
-import { setDestination, setMode } from '../store/gameSlice';
+import { setDestination, setMode, startDriving } from '../store/gameSlice';
 import { collectRoomKey, openGreenhouse, waterPlant } from '../store/progressSlice';
 import { getRoomRewards } from '../store/roomLife';
 
 type NeighborSpeech = { id: NeighborId; text: string };
-type Options = { position: PlayerPosition; hubOpen: boolean; xp: number };
+type Options = { position: PlayerPosition; vehicle: VehicleState; hubOpen: boolean; xp: number };
 
-export function useRoomActivities({ position, hubOpen, xp }: Options) {
+export function useRoomActivities({ position, vehicle, hubOpen, xp }: Options) {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(state => state.game);
   const progress = useAppSelector(state => state.progress);
@@ -22,9 +22,11 @@ export function useRoomActivities({ position, hubOpen, xp }: Options) {
   const [speech, setSpeech] = useState<NeighborSpeech>();
   const neighborVisits = useRef(new Map<NeighborId, { at: number; count: number }>());
   const latestPosition = useRef(position);
+  const latestVehicle = useRef(vehicle);
   const canInteract = settings.mode === 'explore' && !settings.paused && !hubOpen;
   const arcadeUnlocked = canUseGameNet(xp);
   useEffect(() => { latestPosition.current = position; }, [position]);
+  useEffect(() => { latestVehicle.current = vehicle; }, [vehicle]);
 
   useEffect(() => {
     if (!watering) return;
@@ -45,8 +47,10 @@ export function useRoomActivities({ position, hubOpen, xp }: Options) {
   const onNavigate = useCallback((id: RoomSpotId) => {
     if (!canInteract) return;
     setActiveSpot(id);
-    dispatch(setDestination(ROOM_SPOTS[id].approach));
-  }, [canInteract, dispatch]);
+    const destination = id === 'car' ? findCarApproach(latestPosition.current, latestVehicle.current, life.greenhouseOpen, arcadeUnlocked) : ROOM_SPOTS[id].approach;
+    if (!destination) { setToast('مسیر ماشین بسته است؛ از سمت دیگری نزدیک شو.'); return; }
+    dispatch(setDestination(destination));
+  }, [canInteract, dispatch, life.greenhouseOpen, arcadeUnlocked]);
   const onTravelEnd = useCallback(() => dispatch(setDestination(undefined)), [dispatch]);
   const speak = useCallback((id: NeighborId) => {
     const person = NEIGHBORS.find(neighbor => neighbor.id === id)!;
@@ -82,6 +86,7 @@ export function useRoomActivities({ position, hubOpen, xp }: Options) {
   }, [dispatch, rewards.drops, watering]);
 
   const objects = useMemo<InteractionObject[]>(() => [
+    { id: 'car', position: [vehicle.x, 0, vehicle.z], interactionRadius: 2.3, label: canDrive(xp) ? 'سوار شدن و رانندگی' : 'ماشین · ۲۰۰۰ XP', onInteract: () => canDrive(xp) ? dispatch(startDriving(xp)) : setToast(`برای رانندگی ${CAR.requiredXp} XP لازم داری؛ ${Math.max(0, CAR.requiredXp - xp)} XP دیگر یاد بگیر.`) },
     { id: 'computer', position: ROOM_SPOTS.computer.position, interactionRadius: 1.6, label: 'استفاده از کامپیوتر', onInteract: () => dispatch(setMode('enteringComputer')) },
     { id: 'books', position: ROOM_SPOTS.books.position, interactionRadius: 1.65, label: 'ورق زدن کتاب‌های React', onInteract: () => dispatch(setMode('reading')) },
     { id: 'sofa', position: ROOM_SPOTS.sofa.position, interactionRadius: 1.65, label: 'نشستن روی مبل و خواندن React', onInteract: () => dispatch(setMode('enteringReading')) },
@@ -101,7 +106,7 @@ export function useRoomActivities({ position, hubOpen, xp }: Options) {
     ...(arcadeUnlocked ? [{ id: 'arcade', position: ROOM_SPOTS.arcade.position, interactionRadius: 1.75, label: 'بازی Bug Hunter', onInteract: () => dispatch(setMode('arcade')) }] : []),
     ...(life.greenhouseOpen ? [{ id: 'greenhouse', position: ROOM_SPOTS.greenhouse.position, interactionRadius: 1.65, label: 'آبیاری باغچهٔ گلخانه', onInteract: () => water('greenhouse') }] : []),
     ...NEIGHBORS.map(person => ({ id: person.id, position: [...person.position] as [number, number, number], interactionRadius: 2.2, label: `گفتگو با ${person.name}`, onInteract: () => speak(person.id) }))
-  ], [dispatch, watering, water, rewards.television, rewards.keyEarned, life.keyCollected, life.greenhouseOpen, onNavigate, arcadeUnlocked, xp, speak]);
+  ], [dispatch, watering, water, rewards.television, rewards.keyEarned, life.keyCollected, life.greenhouseOpen, onNavigate, arcadeUnlocked, xp, speak, vehicle.x, vehicle.z]);
 
   return {
     life, rewards, watering, wateringSpot, toast, setToast, activeSpot, speech,

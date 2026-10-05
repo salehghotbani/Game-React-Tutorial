@@ -64,3 +64,9 @@
   .game-net-timer { top: 100px; max-width: calc(100% - 28px); width: max-content; padding: 8px 12px; }.game-net-timer span { font-size: 8px; }.game-net-finished h2 { font-size: 19px; }
 }
 @media (prefers-reduced-motion: reduce) { .movement-guide { transition: none; }.neighbor-speech { animation: none; } }
+.driving-hud { position: absolute; z-index: 15; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 20px; padding: 12px 18px; max-width: calc(100vw - 32px); border-radius: 18px; }
+.driving-hud b { display: block; font-size: 22px; }
+.driving-hud small { font-size: 12px; font-weight: 400; }
+.driving-hud span { font-size: 11px; opacity: .8; }
+.driving-hud button { display: flex; align-items: center; gap: 8px; white-space: nowrap; padding: 9px 12px; border: 1px solid var(--line); border-radius: 12px; }
+@media (max-width: 700px) { .driving-hud { bottom: 210px; gap: 10px; padding: 10px 12px; width: max-content; } .driving-hud span { display: block; max-width: 190px; } }

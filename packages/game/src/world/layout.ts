@@ -4,19 +4,23 @@ export type WorldPoint = { x: number; z: number };
 export type WorldCollider = { id: string; position: Vector3Tuple; halfExtents: Vector3Tuple };
 export type FloorArea = { id: string; x: number; z: number; width: number; depth: number };
 
-export const WORLD_BOUNDS = { minX: -21, maxX: 21, minZ: -13, maxZ: 27 };
+export const WORLD_BOUNDS = { minX: -75, maxX: 75, minZ: -55, maxZ: 75 };
 export const GAME_NET = { requiredXp: 1000, sessionSeconds: 180 };
+export const MEADOW_TREES = [[-35, -8], [43, -19], [-51, 42], [38, 55], [0, -35], [-47, -30], [57, 3], [-60, 9], [61, 57], [-24, 59], [18, -36], [-61, 62]] as const;
 
 export const FLOOR_AREAS: FloorArea[] = [
   { id: 'studio', x: 0, z: 0, width: 10.4, depth: 10.4 },
   { id: 'upstairs', x: 0, z: -8.5, width: 10.4, depth: 7 },
   { id: 'quiet-room', x: -7.6, z: 0, width: 5.2, depth: 10.4 },
   { id: 'yard', x: 0, z: 8.5, width: 20.4, depth: 7 },
-  { id: 'street', x: 0, z: 15.5, width: 42, depth: 7 },
+  { id: 'street', x: 0, z: 15.5, width: 150, depth: 7 },
   { id: 'game-net', x: -15, z: 7.5, width: 9, depth: 7 },
   { id: 'game-net-apron', x: -15, z: 11.5, width: 9, depth: 1.2 },
   { id: 'east-walk', x: 15.5, z: 8.5, width: 11, depth: 7 },
-  { id: 'south-walk', x: 0, z: 22.5, width: 42, depth: 8 }
+  { id: 'south-walk', x: 0, z: 23, width: 42, depth: 8 },
+  { id: 'country-road', x: 0, z: 36, width: 176, depth: 8 },
+  { id: 'road-link', x: 31, z: 25.5, width: 7, depth: 13 },
+  { id: 'parking', x: 24, z: 25, width: 6, depth: 12 }
 ];
 
 export const WORLD_CEILINGS: WorldCollider[] = FLOOR_AREAS
@@ -41,13 +45,15 @@ export const NEIGHBOR_HOUSES = [
 const divider = (id: string, position: Vector3Tuple, halfExtents: Vector3Tuple): WorldCollider => ({ id, position, halfExtents });
 
 export const NEIGHBORHOOD_COLLIDERS: WorldCollider[] = [
-  divider('neighborhood-ground-floor', [0, -0.11, 7], [21, 0.1, 20]),
+  // Moderate physics tiles keep character contact precision stable across the enlarged meadow.
+  ...Array.from({ length: 30 }, (_, i) => divider(`meadow-ground-${i}-floor`, [-62.5 + i % 6 * 25, -0.11, -42 + Math.floor(i / 6) * 26], [12.5, 0.1, 13])),
   ...WORLD_CEILINGS,
   ...FLOOR_AREAS.filter(area => area.id !== 'studio').map(area => divider(`${area.id}-floor`, [area.x, -0.1, area.z], [area.width / 2, 0.1, area.depth / 2])),
-  divider('world-west', [-21, 1.5, 7], [0.15, 1.5, 20]),
-  divider('world-east', [21, 1.5, 7], [0.15, 1.5, 20]),
-  divider('world-north', [0, 1.5, -12.5], [21, 1.5, 0.15]),
-  divider('world-south', [0, 1.5, 26.5], [21, 1.5, 0.15]),
+  divider('world-west', [-75, 2, 10], [0.15, 2, 65]),
+  divider('world-east', [75, 2, 10], [0.15, 2, 65]),
+  divider('world-north', [0, 2, -55], [75, 2, 0.15]),
+  divider('world-south', [0, 2, 75], [75, 2, 0.15]),
+  ...MEADOW_TREES.map(([x, z], index) => divider(`meadow-tree-${index}`, [x, 1.5, z], [0.4, 1.5, 0.4])),
   divider('annex-west', [-10.2, 1.5, -3.75], [0.12, 1.5, 1.4]),
   divider('annex-west-long', [-10.2, 1.5, 1.8], [0.12, 1.5, 3.3]),
   divider('annex-north', [-7.6, 1.5, -5.1], [2.6, 1.5, 0.12]),
@@ -85,6 +91,9 @@ export function isOnWorldFloor(point: WorldPoint, greenhouseOpen: boolean): bool
 }
 
 export function getWorldArea(point: WorldPoint): string {
+  if (point.z >= 32 && point.z <= 40 || point.x >= 27.5 && point.x <= 34.5 && point.z >= 19 && point.z <= 32) return 'جادهٔ دشت';
+  if (point.x >= 21 && point.x <= 27 && point.z >= 19 && point.z <= 31) return 'پارکینگ محله';
+  if (Math.abs(point.x) > 21 || point.z < -13 || point.z > 27) return 'دشت آفتاب';
   if (point.x < -10.5 && point.z < 11.5 && point.z > 3.5) return 'گیم‌نت محله';
   if (point.z > 12) return 'کوچهٔ یادگیری';
   if (point.z > 5) return 'حیاط خانه';

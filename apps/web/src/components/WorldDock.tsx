@@ -1,6 +1,6 @@
 import { tx, useLanguage } from '@react-quest/localization';
 import { useState } from 'react';
-import { GAME_NET, type RoomSpotId } from '@react-quest/game';
+import { CAR, GAME_NET, type RoomSpotId } from '@react-quest/game';
 
 type Props = {
   onNavigate: (id: RoomSpotId) => void;
@@ -27,7 +27,9 @@ export function WorldDock({ onNavigate, active, drops, cards, greenhouseOpen, ke
     { id: 'kitchen', title: 'آشپزخانه', detail: 'یک اتاق تازه در خانه', icon: '◉' },
     { id: 'yard', title: 'حیاط خانه', detail: 'درخت‌ها و همسایه‌ها', icon: '♧' },
     { id: 'street', title: 'کوچهٔ یادگیری', detail: 'خانه‌های محله را ببین', icon: '↗' },
-    { id: 'gameNet', title: 'گیم‌نت محله', detail: xp >= GAME_NET.requiredXp ? 'نوبت ۳ دقیقه‌ای آماده' : `${GAME_NET.requiredXp} XP برای بازی`, icon: '⌘' }
+    { id: 'gameNet', title: 'گیم‌نت محله', detail: xp >= GAME_NET.requiredXp ? 'نوبت ۳ دقیقه‌ای آماده' : `${GAME_NET.requiredXp} XP برای بازی`, icon: '⌘' },
+    { id: 'car', title: 'ماشین', detail: xp >= CAR.requiredXp ? 'رانندگی آماده است؛ XP کم نمی‌شود' : '۲۰۰۰ XP برای رانندگی', icon: '◆' },
+    { id: 'meadow', title: 'دشت آفتاب', detail: 'کوه‌ها، گل‌های وحشی و جاده', icon: '♧' }
   ];
   return <aside className={`room-activity-dock world-dock ${open ? 'expanded' : ''}`} aria-label={tx("مقصدهای محله")}>
     <button className="room-dock-toggle" aria-expanded={open} aria-controls="world-destinations" onClick={() => setOpen(!open)}>

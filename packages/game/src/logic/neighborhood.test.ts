@@ -31,6 +31,9 @@ describe('neighborhood rules', () => {
     expect(getWorldArea({ x: -15, z: 7 })).toBe('گیم‌نت محله');
     expect(isOnWorldFloor({ x: 7, z: 0 }, false)).toBe(false);
     expect(isOnWorldFloor({ x: 7, z: 0 }, true)).toBe(true);
-    expect(isOnWorldFloor({ x: 22, z: -10 }, true)).toBe(false);
+    expect(isOnWorldFloor({ x: 22, z: -10 }, true)).toBe(true);
+    expect(isOnWorldFloor({ x: 76, z: -10 }, true)).toBe(false);
+    expect(getWorldArea({ x: 0, z: 36 })).toBe('جادهٔ دشت');
+    expect(getWorldArea({ x: -32, z: -18 })).toBe('دشت آفتاب');
   });
 });

@@ -1,13 +1,13 @@
 # Education extension validation
 
-Verified 2026-10-05 on Windows with Node 24.18.0, pnpm 11.19.0, installed Microsoft Edge and software WebGL.
+Verified 2026-10-06 on Windows with Node 24.18.0, pnpm 11.19.0, installed Microsoft Edge and software WebGL.
 
 | Check | Result |
 |---|---|
 | pnpm frozen workspace install | Passed; pnpm-lock.yaml is the sole lockfile |
 | Strict TypeScript | Passed |
 | ESLint with zero warnings | Passed |
-| Vitest | 95 passed across twenty-two files |
+| Vitest | 108 passed across twenty-four files |
 | Complete curriculum browser sweep | All 54 reference solutions passed actual behavior, question and source checks |
 | Existing movement/learning/arcade plus education flows | All fourteen local-engine scenarios validated across the regression run and focused beginner rerun |
 | Production checks | Beginner teaching/gating/resume, free interactive examples, personal copy and tolerant punctuation, guidance, mastery/room visits, state traces, daily persistence, project carry and mobile layouts passed |
@@ -25,10 +25,15 @@ Verified 2026-10-05 on Windows with Node 24.18.0, pnpm 11.19.0, installed Micros
 | Shelf/floor visual correction | Before/after overview and rotated views reviewed, plus first/third-person kitchen views; actual kitchen navigation completed with no page errors |
 | Static Pages build | Passed with `/Game-React-Tutorial/` base path and static-host mode |
 | Static Pages browser scenario | Passed on a plain static HTTP server with no API/isolation headers: English country selection, icons/scene/workers, HTTP clock despite a wrong browser clock, teaching example, auto-to-local real grading (200 XP), reload persistence and mobile settings; no page errors, missing site assets or API requests |
+| Landscape/vehicle physics | Eleven new pure/actual-Rapier checks passed: XP boundary, throttle/reverse/steering/braking, bounded time steps, reachable doors, terrain/road planting, traffic wrap, grounded meadow driving, buildings/boundaries, safe exit and traffic yielding/resuming |
+| Landscape browser checks | Both desktop/mobile scenario bodies passed: a fresh learner's 2000-XP gate and physical meadow route, driving/braking/pause, both cameras, detached safe exit/re-entry, touch acceleration/braking, ground-height checks, retained XP and reload |
+| Expanded navigation | Reachable computer routes from the meadow, parking and both distant field corners passed; wider retry handles detours around the home |
 | Production build | Passed |
 | Visual review | Knowledge map, editor/preview, execution inspector, mobile hub/projects, beginner teaching, resizable panes, furnished room, flowers, greenhouse, book/cinema poster, courtyard/street, café and first-person interiors on desktop/mobile reviewed |
 
 ## Evidence
+
+The landscape and vehicle checks verify the actual rendered browser world as well as Rapier behavior. Visual inspection exposed an explicit-undefined collision-group option that made the car ignore the ground; all static colliders now have an explicit membership group, and browser checks assert car height after desktop/mobile driving. A multi-tick exit race was fixed with immediate physical driver detachment, and the browser verifies that the player stands outside the parked car. The enlarged ground uses moderate tiles to preserve contact precision. Mountain/cloud, third-person driving, dashboard and 390 px controls screenshots were reviewed under ignored `artifacts/landscape-*.png`. The two-scenario Windows browser runner reported both passing bodies but lingered in cleanup and was stopped; a clean runner exit is not claimed.
 
 Pages preparation was verified against a plain file server rather than Vite preview, so development middleware and isolation headers could not mask static-host failures. Unit checks cover HTTP Date/Age conversion, unavailable clock headers, cache age validation, same-origin HEAD under the hosting subpath and skipping the visitor-country API on static hosting. The Pages browser scenario uses a deterministic country response; live third-party country lookup remains subject to network availability. The workflow's pinned action revisions were verified against their official GitHub repositories.
 

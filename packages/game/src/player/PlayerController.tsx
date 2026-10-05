@@ -10,18 +10,21 @@ import { findWalkingPath, type Point } from '../logic/navigation';
 import { getActivityPose } from './activityPose';
 import { PlayerModel } from './PlayerModel';
 import type { PlayerBodyRef, PlayerMotion } from './types';
+import { vehicleObstacle, type VehicleState } from '../vehicles/driving';
 
 type Props = {
   bodyRef: PlayerBodyRef;
   settings: GameSettings;
   look: RefObject<CameraLook>;
+  vehicle: RefObject<VehicleState>;
+  driverAttachedRef: RefObject<boolean>;
   greenhouseOpen?: boolean;
   arcadeUnlocked?: boolean;
   onTravelEnd?: () => void;
   onFirstMove?: () => void;
 };
 
-export function PlayerController({ bodyRef, settings, look, greenhouseOpen, arcadeUnlocked, onTravelEnd, onFirstMove }: Props) {
+export function PlayerController({ bodyRef, settings, look, vehicle, driverAttachedRef, greenhouseOpen, arcadeUnlocked, onTravelEnd, onFirstMove }: Props) {
   const { world } = useRapier();
   const { input, consumeJump } = useMovementInput(settings.paused || settings.mode !== 'explore');
   const previousMode = useRef(settings.mode);
@@ -37,9 +40,9 @@ export function PlayerController({ bodyRef, settings, look, greenhouseOpen, arca
   useEffect(() => {
     stuckTime.current = 0;
     const body = bodyRef.current;
-    path.current = body && settings.destination ? findWalkingPath(body.translation(), settings.destination, greenhouseOpen, arcadeUnlocked) : [];
+    path.current = body && settings.destination ? findWalkingPath(body.translation(), settings.destination, greenhouseOpen, arcadeUnlocked, [vehicleObstacle(vehicle.current)]) : [];
     if (settings.destination && !path.current.length) onTravelEnd?.();
-  }, [settings.destination, bodyRef, greenhouseOpen, arcadeUnlocked, onTravelEnd]);
+  }, [settings.destination, bodyRef, greenhouseOpen, arcadeUnlocked, onTravelEnd, vehicle]);
 
   useEffect(() => {
     const character = world.createCharacterController(PLAYER_CONFIG.collisionOffset);
@@ -54,6 +57,14 @@ export function PlayerController({ bodyRef, settings, look, greenhouseOpen, arca
     const body = bodyRef.current;
     const character = controller.current;
     if (!body || !character) return;
+    if (settings.mode === 'driving') {
+      const car = vehicle.current;
+      // A render may span several physics ticks; a completed exit must stay detached immediately.
+      if (driverAttachedRef.current) body.setNextKinematicTranslation({ x: car.x, y: car.y + 0.4, z: car.z });
+      verticalVelocity.current = 0; grounded.current = false;
+      previousMode.current = settings.mode;
+      return;
+    }
     const modeChanged = previousMode.current !== settings.mode;
     const pose = getActivityPose(settings.mode);
     if (modeChanged && pose && !getActivityPose(previousMode.current)) returnPosition.current = { ...body.translation() };
@@ -118,8 +129,8 @@ export function PlayerController({ bodyRef, settings, look, greenhouseOpen, arca
   const seated = Boolean(getActivityPose(settings.mode));
   return (
     <RigidBody ref={bodyRef} type="kinematicPosition" colliders={false} position={PLAYER_CONFIG.spawn} enabledRotations={[false, false, false]} name="player">
-      <CapsuleCollider args={[PLAYER_CONFIG.capsuleHalfHeight, PLAYER_CONFIG.capsuleRadius]} />
-      {(settings.cameraView === 'thirdPerson' || seated) && <PlayerModel motion={motion} paused={settings.paused} seated={seated} />}
+      <CapsuleCollider args={[PLAYER_CONFIG.capsuleHalfHeight, PLAYER_CONFIG.capsuleRadius]} sensor={settings.mode === 'driving'} />
+      {settings.mode !== 'driving' && (settings.cameraView === 'thirdPerson' || seated) && <PlayerModel motion={motion} paused={settings.paused} seated={seated} />}
     </RigidBody>
   );
 }

@@ -65,7 +65,9 @@ export const ROOM_SPOTS = {
   street: { position: [0, 0, 15], approach: { x: 0, z: 15 } },
   gameNet: { position: [-15, 0, 6.7], approach: { x: -15, z: 7.3 } },
   kitchen: { position: [-2, 0, -7], approach: { x: -2, z: -7 } },
-  quietRoom: { position: [-7, 0, 2.5], approach: { x: -7, z: 2.5 } }
+  quietRoom: { position: [-7, 0, 2.5], approach: { x: -7, z: 2.5 } },
+  car: { position: [24, 0, 25], approach: { x: 22.4, z: 25 } },
+  meadow: { position: [-32, 0, -18], approach: { x: -32, z: -18 } }
 } satisfies Record<string, { position: Vector3Tuple; approach: { x: number; z: number } }>;
 
 export type RoomSpotId = keyof typeof ROOM_SPOTS;

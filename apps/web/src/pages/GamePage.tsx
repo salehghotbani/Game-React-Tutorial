@@ -1,9 +1,9 @@
 import { tx, useLanguage } from '@react-quest/localization';
 import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
-import { GameScene, PLAYER_CONFIG, getWorldArea, isTypingTarget, type PlayerPosition } from '@react-quest/game';
+import { GameScene, PLAYER_CONFIG, canDrive, initialVehicleState, getWorldArea, isTypingTarget, type VehicleState, type PlayerPosition } from '@react-quest/game';
 import { challenges, rooms, isChallengeAvailable } from '@react-quest/challenges';
 import { useAppDispatch, useAppSelector } from '../store';
-import { resetPlayer, setCameraView, setMode, setPaused, setThemeMode, togglePause } from '../store/gameSlice';
+import { resetPlayer, requestCarExit, setCameraView, setMode, setPaused, setThemeMode, togglePause } from '../store/gameSlice';
 import { assignDaily, recordArcadeScore, selectChallenge, visitRoom } from '../store/progressSlice';
 import { dayKey, getProgressTotals, isRoomAvailable } from '../store/progression';
 import { useRoomActivities } from '../hooks/useRoomActivities';
@@ -16,6 +16,7 @@ import { SettingsPanel } from '../components/SettingsPanel';
 import { RoomReading, RoomCinema } from '../components/RoomActivities';
 import { WorldDock } from '../components/WorldDock';
 import { MovementGuide, TouchMovement, WorldHud } from '../components/WorldHud';
+import { DrivingHud } from '../components/DrivingHud';
 import '../room.css';
 import '../world.css';
 import '../theme.css';
@@ -39,10 +40,16 @@ export function GamePage() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [hasMoved, setHasMoved] = useState(false);
   const [position, setPosition] = useState<PlayerPosition>({ x: PLAYER_CONFIG.spawn[0], z: PLAYER_CONFIG.spawn[2], heading: Math.PI });
-  const activity = useRoomActivities({ position, hubOpen, xp });
+  const [vehicle, setVehicle] = useState(initialVehicleState);
+  const onVehicle = useCallback((next: VehicleState) => setVehicle(next), []);
+  const activity = useRoomActivities({ position, vehicle, hubOpen, xp });
   const area = getWorldArea(position);
   const dailyId = progress.dailyAssignments[dayKey()];
   const exploring = settings.mode === 'explore' && !settings.paused && !hubOpen && settings.themeChosen && !settingsOpen;
+  const driving = settings.mode === 'driving' && !settings.paused && !hubOpen && !settingsOpen;
+  const exitCar = useCallback(() => dispatch(requestCarExit()), [dispatch]);
+  const { setToast } = activity;
+  const blockedCarExit = useCallback(() => setToast('فضای پیاده شدن بسته است؛ ماشین را کمی جابه‌جا کن.'), [setToast]);
   const sceneSettings = useMemo(() => ({ ...settings, paused: settings.paused || hubOpen || !settings.themeChosen || settingsOpen }), [settings, hubOpen, settingsOpen]);
   const sceneLife = useMemo(() => ({
     ...activity.rewards, ...activity.life, watering: activity.watering, wateringSpot: activity.wateringSpot,
@@ -85,6 +92,7 @@ export function GamePage() {
       if (event.repeat || event.defaultPrevented) return;
       if (!settings.themeChosen) return;
       if (hubOpen) { if (event.code === 'Escape') setHubOpen(false); return; }
+      if (event.code === 'KeyE' && !isTypingTarget(event.target) && driving) { exitCar(); return; }
       if (event.code === 'KeyE' && !isTypingTarget(event.target) && exploring && activity.nearest) { activity.nearest.onInteract(); return; }
       if (event.code !== 'Escape') return;
       if (settingsOpen) setSettingsOpen(false);
@@ -95,7 +103,7 @@ export function GamePage() {
     window.addEventListener('keydown', onKey);
     document.addEventListener('visibilitychange', onVisibility);
     return () => { window.removeEventListener('keydown', onKey); document.removeEventListener('visibilitychange', onVisibility); };
-  }, [dispatch, settingsOpen, settings.mode, settings.themeChosen, exploring, activity.nearest, leaveActivity, hubOpen]);
+  }, [dispatch, settingsOpen, settings.mode, settings.themeChosen, exploring, driving, exitCar, activity.nearest, leaveActivity, hubOpen]);
 
   return <AppearanceContext.Provider value={theme}><main className="game-page neighborhood-page"
     data-world-blooms={activity.rewards.blooms} data-room-key={activity.life.keyCollected}
@@ -105,19 +113,21 @@ export function GamePage() {
       <GameScene settings={sceneSettings} room={room} life={sceneLife}
         timestamp={clock.timestamp} neighborSpeech={activity.speech} onNeighborTalk={activity.onTalk}
         onPosition={onPosition} arcadeUnlocked={activity.arcadeUnlocked} onFirstMove={onFirstMove}
+        carUnlocked={canDrive(xp)} onVehicle={onVehicle} onCarExit={leaveActivity} onCarExitBlocked={blockedCarExit}
         onComputerReady={onComputerReady} onTVReady={onTVReady} onReadingReady={onReadingReady} onTravelEnd={activity.onTravelEnd} />
     </div>
     <WorldHud settings={settings} xp={xp} area={area} timestamp={clock.timestamp} clockConnected={clock.connected}
-      onHub={() => setHubOpen(true)} onPause={() => dispatch(togglePause())}
+      onHub={() => settings.mode === 'driving' ? activity.setToast('برای یادگیری، اول از ماشین پیاده شو.') : setHubOpen(true)} onPause={() => dispatch(togglePause())}
       onSettings={() => setSettingsOpen(open => !open)} onCamera={toggleCamera} />
-    <MiniMap position={position} greenhouseOpen={activity.life.greenhouseOpen} />
+    <MiniMap position={position} vehicle={vehicle} greenhouseOpen={activity.life.greenhouseOpen} />
+    {driving && <><DrivingHud vehicle={vehicle} onExit={exitCar} /><TouchMovement driving /></>}
+    {(exploring || driving) && activity.toast && <div className="room-toast" role="status"><span>{tx(activity.toast)}</span><button aria-label={tx('بستن پیام اتاق')} onClick={() => activity.setToast('')}><Icon name="close" size={16} /></button></div>}
     {exploring && <>
       <WorldDock onNavigate={activity.onNavigate} active={activity.activeSpot} drops={activity.rewards.drops}
         cards={activity.rewards.cards} greenhouseOpen={activity.life.greenhouseOpen} keyCollected={activity.life.keyCollected} xp={xp} />
       <MovementGuide moved={hasMoved} />
       <TouchMovement />
       {settings.cameraView === 'firstPerson' && <div className="first-person-crosshair" aria-hidden="true">+</div>}
-      {activity.toast && <div className="room-toast" role="status"><span>{tx(activity.toast)}</span><button aria-label={tx("بستن پیام اتاق")} onClick={() => activity.setToast('')}><Icon name="close" size={16} /></button></div>}
       {settings.destination && <div className="room-destination">{tx("در حال رفتن به مقصد… ")}<button onClick={activity.onTravelEnd}>{tx("توقف حرکت")}</button></div>}
       {activity.nearest && <button className="interaction-prompt panel" onClick={activity.nearest.onInteract}><kbd>E</kbd><span>{tx(activity.nearest.label)}</span><Icon name="arrow" size={17} /></button>}
     </>}

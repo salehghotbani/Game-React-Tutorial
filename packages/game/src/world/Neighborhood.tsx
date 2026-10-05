@@ -19,7 +19,7 @@ function Destination({ id, position, label, life }: { id: RoomSpotId; position: 
 function Architecture({ cameraView }: { cameraView: GameSettings['cameraView'] }) {
   useLanguage();
   const walls = [...ROOM_COLLIDERS.filter(collider => collider.id.startsWith('wall-') && collider.id !== 'wall-east'), ...NEIGHBORHOOD_COLLIDERS.filter(collider =>
-    !collider.id.endsWith('floor') && (collider.id.startsWith('world-') || collider.id.startsWith('upper-') || collider.id.startsWith('annex-') || collider.id.startsWith('yard-') && !collider.id.includes('tree') && !collider.id.includes('bench') || collider.id.startsWith('net-') && collider.id !== 'net-desks' && !collider.id.startsWith('net-chair') || collider.id === 'quiet-south')
+    !collider.id.endsWith('floor') && (collider.id.startsWith('upper-') || collider.id.startsWith('annex-') || collider.id.startsWith('yard-') && !collider.id.includes('tree') && !collider.id.includes('bench') || collider.id.startsWith('net-') && collider.id !== 'net-desks' && !collider.id.startsWith('net-chair') || collider.id === 'quiet-south')
   )];
   return <>{walls.map(wall => {
     const outdoor = wall.id.startsWith('world-') || wall.id.startsWith('yard-');
@@ -91,8 +91,11 @@ export function Neighborhood({ settings, life, timestamp, gameNetUnlocked }: { s
   useLanguage();
   const night = worldDaylight(timestamp, settings.themeMode) < 0.2;
   return <>
-    <WorldBox position={[0, -0.12, 7]} size={[60, 0.2, 60]} color="#677e53" surface="grass" />
-    {FLOOR_AREAS.filter(area => area.id !== 'studio').map(area => <WorldBox key={area.id} position={[area.x, -0.1, area.z]} size={[area.width, 0.2, area.depth]} color={area.id === 'street' ? '#464b50' : area.id.includes('walk') ? '#b6b6ac' : '#d0b696'} surface={area.id === 'street' ? 'asphalt' : area.id.includes('walk') ? 'stone' : 'wood'} />)}
+    <WorldBox position={[0, -0.12, 10]} size={[150, 0.2, 130]} color="#677e53" surface="grass" />
+    {FLOOR_AREAS.filter(area => area.id !== 'studio').map(area => {
+      const road = ['street', 'country-road', 'road-link'].includes(area.id), paving = area.id.includes('walk') || area.id === 'parking';
+      return <WorldBox key={area.id} position={[area.x, -0.1, area.z]} size={[area.width, 0.2, area.depth]} color={road ? '#464b50' : paving ? '#b6b6ac' : '#d0b696'} surface={road ? 'asphalt' : paving ? 'stone' : 'wood'} />;
+    })}
     <Architecture cameraView={settings.cameraView} />
     {settings.cameraView === 'firstPerson' && settings.mode === 'explore' && WORLD_CEILINGS.map(ceiling => <WorldBox key={ceiling.id} position={ceiling.position} size={[ceiling.halfExtents[0] * 2, ceiling.halfExtents[1] * 2, ceiling.halfExtents[2] * 2]} color="#e4decb" />)}
     <ExtraRooms life={life} />
@@ -107,5 +110,9 @@ export function Neighborhood({ settings, life, timestamp, gameNetUnlocked }: { s
       {night && <pointLight position={[0, 3.3, 0]} intensity={8} distance={7} color="#f9d29b" />}
     </group>)}
     <Tree x={18.5} z={20} scale={1.1} /><Tree x={-19.3} z={20} />
+    {Array.from({ length: 29 }, (_, i) => <WorldBox key={`road-stripe-${i}`} position={[-84 + i * 6, 0.013, 36]} size={[2.8, 0.025, 0.13]} color="#e6d899" />)}
+    {[-1, 1].map(side => <WorldBox key={`road-edge-${side}`} position={[0, 0.013, 36 + side * 3.7]} size={[176, 0.025, 0.1]} color="#d9ddcf" />)}
+    <WorldSign text="دشت آفتاب" position={[29.3, 2.1, 30]} width={3} rotation={[0, Math.PI, 0]} />
+    <WorldBox position={[29.3, 1, 30.03]} size={[0.09, 2, 0.09]} color="#69766a" />
   </>;
 }

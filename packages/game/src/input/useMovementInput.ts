@@ -8,10 +8,10 @@ const bindings: Record<string, keyof MovementInput> = {
   KeyA: 'left', ArrowLeft: 'left',
   KeyD: 'right', ArrowRight: 'right'
 };
-export type PlayerInput = MovementInput & { sprint: boolean; jump: boolean };
+export type PlayerInput = MovementInput & { sprint: boolean; jump: boolean; brake: boolean };
 
 export function useMovementInput(paused: boolean) {
-  const input = useRef<PlayerInput>({ forward: false, backward: false, left: false, right: false, sprint: false, jump: false });
+  const input = useRef<PlayerInput>({ forward: false, backward: false, left: false, right: false, sprint: false, jump: false, brake: false });
 
   useEffect(() => {
     const heldKeys = new Set<string>();
@@ -21,6 +21,7 @@ export function useMovementInput(paused: boolean) {
         input.current[action] = touchDirections.has(action) || [...heldKeys].some((key) => bindings[key] === action);
       }
       input.current.sprint = touchDirections.has('sprint') || heldKeys.has('ShiftLeft') || heldKeys.has('ShiftRight');
+      input.current.brake = touchDirections.has('brake') || heldKeys.has('Space');
     };
     const clear = () => { heldKeys.clear(); touchDirections.clear(); input.current.jump = false; updateInput(); };
     const touch = (event: Event) => {
@@ -29,7 +30,7 @@ export function useMovementInput(paused: boolean) {
       if (!detail || typeof detail !== 'object' || !('direction' in detail) || !('pressed' in detail)) return;
       const direction = detail.direction;
       if (direction === 'jump') { if (detail.pressed === true) input.current.jump = true; return; }
-      if (direction !== 'forward' && direction !== 'backward' && direction !== 'left' && direction !== 'right' && direction !== 'sprint') return;
+      if (direction !== 'forward' && direction !== 'backward' && direction !== 'left' && direction !== 'right' && direction !== 'sprint' && direction !== 'brake') return;
       if (detail.pressed === true) touchDirections.add(direction);
       else touchDirections.delete(direction);
       updateInput();
@@ -39,6 +40,7 @@ export function useMovementInput(paused: boolean) {
       if (event.code === 'Space') {
         event.preventDefault();
         if (!event.repeat) input.current.jump = true;
+        heldKeys.add('Space'); updateInput();
       } else if (bindings[event.code] || event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
         event.preventDefault();
         heldKeys.add(event.code);

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { gameSlice, resetPlayer, setMovementSpeed, togglePause, setCameraView, setDestination, setThemeMode } from './gameSlice';
+import { gameSlice, resetPlayer, setMovementSpeed, togglePause, setCameraView, setDestination, setThemeMode, startDriving, requestCarExit } from './gameSlice';
 
 describe('game settings', () => {
   const initial = gameSlice.reducer(undefined, { type: 'init' });
@@ -7,6 +7,17 @@ describe('game settings', () => {
     expect(gameSlice.reducer(initial, setMovementSpeed(100)).movementSpeed).toBe(5);
     expect(gameSlice.reducer(initial, setMovementSpeed(-1)).movementSpeed).toBe(1.5);
     expect(gameSlice.reducer(initial, setMovementSpeed(NaN)).movementSpeed).toBe(initial.movementSpeed);
+  });
+  it('gates driving and exit requests while preserving camera and walking preferences', () => {
+    expect(gameSlice.reducer(initial, startDriving(1999)).mode).toBe('explore');
+    expect(gameSlice.reducer(initial, startDriving(Infinity)).mode).toBe('explore');
+    expect(gameSlice.reducer({ ...initial, paused: true }, startDriving(2000)).mode).toBe('explore');
+    const driving = gameSlice.reducer(initial, startDriving(2000));
+    expect(driving.mode).toBe('driving'); expect(driving.movementSpeed).toBe(initial.movementSpeed);
+    expect(gameSlice.reducer(driving, setDestination({ x: 24, z: 25 })).destination).toBeUndefined();
+    expect(gameSlice.reducer(driving, requestCarExit()).vehicleExitRequest).toBe(1);
+    expect(gameSlice.reducer(initial, requestCarExit()).vehicleExitRequest).toBeUndefined();
+    expect(gameSlice.reducer(driving, resetPlayer()).mode).toBe('explore');
   });
   it('toggles pause and resets only the player, preserving settings', () => {
     const paused = gameSlice.reducer(initial, togglePause());

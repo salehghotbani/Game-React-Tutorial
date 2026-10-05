@@ -31,7 +31,7 @@ function simulate(start: [number, number, number], velocity: { x: number; z: num
 describe('Rapier player collision against the scene geometry', () => {
   it.each([
     ['north', [1, PLAYER_CONFIG.spawn[1], 2], { x: 0, z: -5 }, 'z', -11.63],
-    ['south', [19, PLAYER_CONFIG.spawn[1], 15], { x: 0, z: 5 }, 'z', 26.00],
+    ['south', [19, PLAYER_CONFIG.spawn[1], 65], { x: 0, z: 5 }, 'z', 74.50],
     ['west', [1, PLAYER_CONFIG.spawn[1], 2], { x: -5, z: 0 }, 'x', -4.63],
     ['east', [1, PLAYER_CONFIG.spawn[1], 2], { x: 5, z: 0 }, 'x', 4.63]
   ] as const)('cannot walk through the %s wall at maximum speed', (_, start, velocity, axis, boundary) => {

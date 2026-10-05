@@ -18,11 +18,12 @@ export type GameSettings = {
   cameraView: 'firstPerson' | 'thirdPerson';
   themeMode: ThemeMode;
   themeChosen: boolean;
+  vehicleExitRequest?: number;
 };
 
 export type ThemeMode = 'light' | 'dark' | 'auto';
 
-export type GameMode = 'explore' | 'enteringComputer' | 'computer' | 'arcade' | 'reading' | 'enteringReading' | 'readingOnSofa' | 'enteringTV' | 'watching' | 'gameNet';
+export type GameMode = 'explore' | 'driving' | 'enteringComputer' | 'computer' | 'arcade' | 'reading' | 'enteringReading' | 'readingOnSofa' | 'enteringTV' | 'watching' | 'gameNet';
 
 export type RoomLife = { wateredLessons: string[]; keyCollected: boolean; greenhouseOpen: boolean; bookPages: Record<string, number> };
 

@@ -1,21 +1,32 @@
 import { getRoomColliders, PLAYER_CONFIG } from '../config';
-import { isOnWorldFloor, WORLD_BOUNDS, type WorldPoint } from '../world/layout';
+import { isOnWorldFloor, WORLD_BOUNDS, type WorldPoint, type WorldCollider } from '../world/layout';
 
 export type Point = WorldPoint;
 const GRID_STEP = 0.3;
 const CLEARANCE = PLAYER_CONFIG.capsuleRadius + 0.07;
 
 /** Navigation and physics share walls and furniture, including locked doorways. */
-export function findWalkingPath(start: Point, goal: Point, greenhouseOpen = false, arcadeUnlocked = false): Point[] {
-  if (!isOnWorldFloor(goal, greenhouseOpen)) return [];
-  const width = Math.ceil((WORLD_BOUNDS.maxX - WORLD_BOUNDS.minX) / GRID_STEP) + 1;
-  const depth = Math.ceil((WORLD_BOUNDS.maxZ - WORLD_BOUNDS.minZ) / GRID_STEP) + 1;
+export function findWalkingPath(start: Point, goal: Point, greenhouseOpen = false, arcadeUnlocked = false, extraObstacles: WorldCollider[] = []): Point[] {
+  if (![start.x, start.z, goal.x, goal.z].every(Number.isFinite) || !isOnWorldFloor(goal, greenhouseOpen)) return [];
   const standingHeight = PLAYER_CONFIG.spawn[1] + PLAYER_CONFIG.capsuleHalfHeight + PLAYER_CONFIG.capsuleRadius;
-  const obstacles = getRoomColliders(greenhouseOpen, arcadeUnlocked).filter(collider => !collider.id.endsWith('floor') && collider.position[1] - collider.halfExtents[1] < standingHeight);
+  const obstacles = [...getRoomColliders(greenhouseOpen, arcadeUnlocked), ...extraObstacles].filter(collider => !collider.id.endsWith('floor') && collider.position[1] - collider.halfExtents[1] < standingHeight);
+  const nearby = searchRoute(start, goal, greenhouseOpen, obstacles, 12);
+  // Returning from the meadow can require going around a building to its courtyard entrance.
+  return nearby.length ? nearby : searchRoute(start, goal, greenhouseOpen, obstacles, 24);
+}
+
+function searchRoute(start: Point, goal: Point, greenhouseOpen: boolean, obstacles: WorldCollider[], margin: number): Point[] {
+  // Scope the grid to this journey; enlarging the landscape must not scan the whole world for every destination.
+  const minX = Math.max(WORLD_BOUNDS.minX, WORLD_BOUNDS.minX + Math.floor((Math.min(start.x, goal.x) - margin - WORLD_BOUNDS.minX) / GRID_STEP) * GRID_STEP);
+  const minZ = Math.max(WORLD_BOUNDS.minZ, WORLD_BOUNDS.minZ + Math.floor((Math.min(start.z, goal.z) - margin - WORLD_BOUNDS.minZ) / GRID_STEP) * GRID_STEP);
+  const maxX = Math.min(WORLD_BOUNDS.maxX, Math.max(start.x, goal.x) + margin);
+  const maxZ = Math.min(WORLD_BOUNDS.maxZ, Math.max(start.z, goal.z) + margin);
+  const width = Math.floor((maxX - minX) / GRID_STEP) + 1;
+  const depth = Math.floor((maxZ - minZ) / GRID_STEP) + 1;
   const cache = new Map<number, boolean>();
   const pointAt = (index: number): Point => ({
-    x: WORLD_BOUNDS.minX + (index % width) * GRID_STEP,
-    z: WORLD_BOUNDS.minZ + Math.floor(index / width) * GRID_STEP
+    x: minX + (index % width) * GRID_STEP,
+    z: minZ + Math.floor(index / width) * GRID_STEP
   });
 
   const blocked = (index: number): boolean => {
@@ -33,7 +44,11 @@ export function findWalkingPath(start: Point, goal: Point, greenhouseOpen = fals
   const nearestCell = (point: Point): number => {
     let best = -1;
     let distance = Infinity;
-    for (let index = 0; index < width * depth; index++) {
+    const column = Math.round((point.x - minX) / GRID_STEP), row = Math.round((point.z - minZ) / GRID_STEP);
+    for (let dz = -4; dz <= 4; dz++) for (let dx = -4; dx <= 4; dx++) {
+      const x = column + dx, z = row + dz;
+      if (x < 0 || x >= width || z < 0 || z >= depth) continue;
+      const index = z * width + x;
       if (blocked(index)) continue;
       const candidate = pointAt(index);
       const candidateDistance = (point.x - candidate.x) ** 2 + (point.z - candidate.z) ** 2;

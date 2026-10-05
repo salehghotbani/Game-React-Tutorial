@@ -27,7 +27,7 @@ export function useCameraLook(enabled: boolean, cameraView: GameSettings['camera
         look.current.pitch = Math.max(-1.1, Math.min(1.1, look.current.pitch - dy));
       } else {
         look.current.orbitYaw -= dx;
-        look.current.orbitPitch = Math.max(0.3, Math.min(1.18, look.current.orbitPitch - dy));
+        look.current.orbitPitch = Math.max(0.15, Math.min(1.18, look.current.orbitPitch - dy));
       }
       pointer = { id: event.pointerId, x: event.clientX, y: event.clientY };
     };

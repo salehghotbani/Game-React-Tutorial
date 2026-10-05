@@ -45,11 +45,11 @@ export function MovementGuide({ moved }: { moved: boolean }) {
   </section>;
 }
 
-export function TouchMovement() {
+export function TouchMovement({ driving = false }: { driving?: boolean }) {
   useLanguage();
   const signal = (direction: string, pressed: boolean) => window.dispatchEvent(new CustomEvent('react-quest-movement', { detail: { direction, pressed } }));
   return <div className="touch-movement" aria-label={tx("حرکت لمسی")}>
-    {([{ direction: 'forward', label: 'حرکت به جلو', symbol: '↑' }, { direction: 'left', label: 'حرکت به چپ', symbol: '←' }, { direction: 'backward', label: 'حرکت به عقب', symbol: '↓' }, { direction: 'right', label: 'حرکت به راست', symbol: '→' }, { direction: 'jump', label: 'پرش', symbol: '↟' }, { direction: 'sprint', label: 'دویدن', symbol: '»' }]).map(button => <button key={button.direction} className={button.direction} aria-label={tx(button.label)}
+    {([{ direction: 'forward', label: driving ? 'گاز' : 'حرکت به جلو', symbol: '↑' }, { direction: 'left', label: driving ? 'فرمان چپ' : 'حرکت به چپ', symbol: '←' }, { direction: 'backward', label: driving ? 'دنده عقب' : 'حرکت به عقب', symbol: '↓' }, { direction: 'right', label: driving ? 'فرمان راست' : 'حرکت به راست', symbol: '→' }, ...(driving ? [{ direction: 'brake', label: 'ترمز', symbol: '■' }] : [{ direction: 'jump', label: 'پرش', symbol: '↟' }, { direction: 'sprint', label: 'دویدن', symbol: '»' }])]).map(button => <button key={button.direction} className={button.direction === 'brake' ? 'jump' : button.direction} aria-label={tx(button.label)}
       onPointerDown={event => { event.currentTarget.setPointerCapture(event.pointerId); signal(button.direction, true); }}
       onPointerUp={() => signal(button.direction, false)} onPointerCancel={() => signal(button.direction, false)} onLostPointerCapture={() => signal(button.direction, false)}>{tx(button.symbol)}</button>)}
   </div>;
