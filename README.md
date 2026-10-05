@@ -1,27 +1,91 @@
 # React Quest
 
-آموزش React در یک خانهٔ سه‌بعدی، با تمرکز روی یادگیری: **۱۵ فصل، ۵۴ تمرین، ۱۸ مهارت و ۷ پروژه**. مسیر اصلی «یادگیری ← تمرین ← ساخت ← رفع باگ ← تسلط» است و بازی Bug Hunter پاداش جانبی آن است.
+**English** · [فارسی](README.fa.md)
 
-## اجرا با pnpm
+Learn React from scratch while exploring a 3D home and neighborhood. React Quest combines **15 chapters, 54 exercises, 18 skills and 7 projects** with an interactive world: study at the computer, earn XP, grow flowers, read React books and unlock games and driving.
 
-Node 22.12 یا جدیدتر و pnpm 11 لازم است. این workspace از pnpm و `workspace:*` استفاده می‌کند؛ lockfile مرجع `pnpm-lock.yaml` است.
+[Live demo](https://salehghotbani.github.io/Game-React-Tutorial/) · [Repository](https://github.com/salehghotbani/Game-React-Tutorial) · [MIT license](LICENSE)
 
-```powershell
+## Getting started
+
+Use Node.js **22.12 or newer** and the declared **pnpm 11.19.0** version. This monorepo uses pnpm workspaces and `workspace:*` dependencies; `pnpm-lock.yaml` is the authoritative lockfile.
+
+```sh
 pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-سایت: http://127.0.0.1:5173
+Open [http://127.0.0.1:5173](http://127.0.0.1:5173).
 
-## انتشار روی GitHub Pages
+## Learn before you practice
 
-مخزن: [Game-React-Tutorial](https://github.com/salehghotbani/Game-React-Tutorial) · سایت: [React Quest](https://salehghotbani.github.io/Game-React-Tutorial/)
+The learning loop is **Learn → Practice → Build → Debug → Master**. New learners begin with “What is React?” and learn what HTML tags, functions, `return`, `export` and JSX do before answering questions or writing code. Each exercise starts with explanations, annotated examples and runnable, ungraded demonstrations. Lesson progress is saved, and reviewing is free.
 
-در Settings → Pages، گزینهٔ Source را روی **GitHub Actions** قرار بده. workflow موجود با هر push به `main` یا اجرای دستی از Actions، وابستگی‌ها را با pnpm نصب می‌کند، TypeScript/lint/test را بررسی می‌کند و خروجی `apps/web/dist` را منتشر می‌کند. مسیر پایه از تنظیمات Pages خوانده می‌شود؛ نام مخزن در کد برنامه ثابت نیست. GitHub Pages برای مخزن عمومی روی GitHub Free قابل استفاده است. [راهنمای رسمی](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages)
+- The knowledge map contains chapters, skills, projects, books, reviews and themed rooms.
+- Topics include JavaScript, JSX, components, props, state, lists, forms, hooks, APIs, routing, Redux, React Query, performance, testing, architecture and a final project.
+- Eight exercise formats cover writing, debugging, predicting, reading, completing, refactoring, adding features and boss challenges.
+- The judge checks actual React behavior and relevant source requirements. Personal wording and harmless punctuation differences are accepted when the expected behavior is correct.
+- Skills progress from new to introduced, practiced and mastered. Only a fresh assessment completed without hints or a revealed solution grants mastery; old completions migrate as practice.
+- Four progressive hints reduce XP to 90%, 75%, 60% and 45%; revealing a solution gives 30%. Assistance survives reload, and mastery assessments have no hints or ready-made solutions.
+- Seven projects include a Profile Card, an eight-stage Todo app, Weather, Movie Search, a shop, an Admin Panel and a Study Planner. The next mission continues from the learner's own saved code.
+- Execution tools show state, render calls, DOM, props, effects and cleanup, requests, Redux and Query data. The JSX tree is static analysis; component call counts are observations, not production benchmarks.
+- Daily practice awards 20 XP once per Tehran calendar day. Spaced reviews, weak areas and recommendations follow learning progress; missed days do not remove XP.
+- Nine themed knowledge rooms reuse a shared physical layout. Specialist rooms unlock through mastery.
+- The Hooks Boss has seven behavioral checks, including dependencies, cleanup, immutable state and HTTP errors.
 
-این خروجی به backend نیاز ندارد: آموزش، ویرایشگر، پیش‌نمایش و داوری با React محلی اجرا می‌شوند. ساعت از هدرهای `Date` و `Age` پاسخ HTTP هاست گرفته می‌شود و دقت آن در حد ثانیه است؛ ساعت سیستم کاربر منبع زمان نیست. تشخیص کشور مستقیماً از مرورگر با IP-country انجام می‌شود و انتخاب دستی زبان همیشه در دسترس است. حالت اختیاری WebContainers به هدرهای cross-origin isolation نیاز دارد؛ در Pages از موتور محلی استفاده کن، یا حالت خودکار که در نبود این هدرها به React محلی برمی‌گردد.
+Lesson and practice panes can be resized, closed and reopened. Drag a separator to resize, use a pane's × button to close it, and reopen it from the always-visible window toolbar. Reset layout restores the defaults. Separate lesson/practice layouts survive reload without losing drafts or preview state; on mobile, stacked panes have adjustable heights.
 
-برای ساخت همین خروجی در PowerShell:
+## Explore and unlock rewards
+
+The fullscreen world includes a learning room, television lounge, kitchen, quiet room, greenhouse, courtyard, alley, four neighboring homes and a gaming café. The playable ground measures **150 × 130 m**, surrounded by a wildflower meadow, trees, rocky and snowy mountains, drifting clouds and a sun. Distant mountains are scenery outside the playable bounds.
+
+- Each fully passed exercise grants one knowledge drop. Water a plant to spend a drop and grow lasting blossoms; repeating an exercise gives no extra drop and watering does not spend XP.
+- The beginner React book is available immediately. Read on the sofa, turn pages and keep your bookmark; completed exercise topics join your collection.
+- After two completed exercises, sit by the television and watch the freeCodeCamp React course. The video is in English, with authored notes in the selected interface language; playback requires internet access and access to YouTube.
+- After three completed exercises, collect the key from the desk and use it to open the greenhouse. Garden growth and the opened door are saved.
+- Children, adults and elderly residents greet the learner with short speech bubbles.
+- At **1000 XP**, the gaming café offers a three-minute Bug Hunter session without spending XP. Its timer starts when play begins and continues through questions and pauses.
+- Four cars travel along the meadow road in both directions and yield to pedestrians and obstacles.
+- The blue car in the parking area unlocks at **2000 earned XP**, without spending XP. Driving supports first-person, third-person and touch controls. Exiting checks for clear space beside the car. Its position resets to the parking area on reload or player reset; saved XP remains.
+
+Use the destination menu or an object's overhead marker to walk toward an accessible interaction point, then press E or tap the interaction button. Walking routes respect physical obstacles. The computer marker identifies where lessons begin, and the initial movement guide fades after the first movement.
+
+## Controls and preferences
+
+| Action | Keyboard / mouse |
+|---|---|
+| Walk | W / A / S / D |
+| Run | Hold Shift while moving |
+| Jump | Space |
+| Rotate the camera | Drag with the mouse; touch dragging is also supported |
+| Interact / enter or leave the car | E |
+| Accelerate / reverse while driving | W / S |
+| Steer while driving | A / D |
+| Brake while driving | Space |
+| Return from the computer / pause | Esc |
+| Run code in the editor | Ctrl+Enter |
+
+Mobile controls include movement, running, jumping, interaction, steering and braking. Hold the run control and use another finger to move. Both first-person and third-person views are available from the floating controls or settings.
+
+On the first visit, choose light, dark or server-time appearance; the preference is saved and can be changed in settings. The world uses the server clock in the Tehran time zone, including automatic lighting. Locally generated textures, rounded characters, pitched roofs, detailed windows, vegetation and atmospheric lighting give the neighborhood its visual style.
+
+The application supports **English and Persian**. Automatic language selection uses the visitor's IP country: Iran selects Persian, and other countries select English. Settings and the theme dialog offer a saved manual override. If country lookup is unavailable, a disclosed browser-language/time-zone fallback is used. No GPS permission is requested, and changing language preserves code, XP and pane layouts.
+
+## Exercise runtime and saved progress
+
+The default runtime uses locally bundled React in an isolated iframe. JSX and interactions run for real, with React Router, Redux Toolkit, React Redux, React Query and Testing Library available in the learning lab. API exercises use deterministic `/api/weather`, `/api/movies`, `/api/users` and `/api/fail` fixtures; no external API keys are needed. Project storage is isolated by project, and evaluation uses separate data and clocks.
+
+Automatic mode and the optional Vite-project engine can use WebContainers. Generated projects also install and run with **pnpm**. This path requires network access and a compatible browser; automatic mode reports connection failures and falls back to local React. Ordinary GitHub Pages hosting does not supply the cross-origin isolation headers required by WebContainers, so use the local engine or automatic fallback there.
+
+Progress, drafts, rewards, bookmarks and preferences are stored in the current browser. Historic progress migrates without granting unearned mastery. Accounts, a persistent profile backend and an AI Tutor are future work. Development and preview middleware provide server-time and visitor-country endpoints; the application does not yet implement the planned FastAPI/PostgreSQL backend.
+
+## GitHub Pages deployment
+
+The [live demo](https://salehghotbani.github.io/Game-React-Tutorial/) is hosted on GitHub Pages. In **Settings → Pages**, select **GitHub Actions** as the source. The workflow deploys after each push to `main` or a manual Actions run: it installs dependencies with pnpm, runs TypeScript, lint and unit checks, builds `apps/web/dist` and publishes it. The base path comes from Pages configuration instead of a hardcoded repository name. Public repositories can use Pages on GitHub Free; see the [official Pages documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages).
+
+Static hosting needs no backend for lessons, Monaco, previews or grading. The clock reads the host's HTTP `Date` and `Age` headers with second-level precision rather than using the visitor's system clock. Country detection uses the browser's IP-country lookup, with manual language selection available.
+
+To create the same static build in PowerShell:
 
 ```powershell
 $env:VITE_BASE_PATH = '/Game-React-Tutorial/'
@@ -30,73 +94,31 @@ pnpm build
 Remove-Item Env:VITE_BASE_PATH, Env:VITE_STATIC_HOST
 ```
 
-- «نقشهٔ دانش» فصل‌ها، مهارت‌ها، پروژه‌ها، کتابخانه، مرور و اتاق‌ها را باز می‌کند.
-- «شروع یادگیری» برای کاربر تازه از «React چیست؟» آغاز می‌شود. اول توضیح و نمونه را می‌بینی و سپس وارد تمرین می‌شوی. پیشرفت درس ذخیره می‌شود و مرور آن رایگان است. در اتاق نیز با WASD حرکت کن، به کامپیوتر نزدیک شو و E بزن.
-- در ویرایشگر Ctrl+Enter کد را اجرا می‌کند؛ «ارسال پاسخ» تست‌های رفتار را اجرا می‌کند.
-- در صفحهٔ آموزش و تمرین، خط بین پنجره‌ها را بکش تا اندازهٔ آن‌ها تغییر کند. هر پنجره با × بسته می‌شود و از نوار «پنجره‌ها» دوباره باز می‌شود. «بازنشانی چیدمان» همه را به اندازهٔ اولیه برمی‌گرداند. چیدمان ذخیره می‌شود؛ روی موبایل می‌توان ارتفاع پنجره‌ها را تغییر داد.
-- Esc از میز به اتاق برمی‌گردد یا بازی را متوقف می‌کند.
+## Validation
 
-## اتاق زنده و پاداش مراحل
-
-- هر تمرین که تمام تست‌هایش موفق شود، یک «قطرهٔ دانش» برای گل‌ها می‌دهد. کنار گلدان E بزن تا آب بدهی و شکوفه‌ها را ببینی؛ تکرار همان تمرین قطرهٔ اضافه نمی‌دهد.
-- کتاب «React از صفر» از ابتدا روی قفسه در دسترس است. کتاب‌ها را ورق بزن؛ موضوع تمرین‌های کامل‌شده به مجموعه اضافه می‌شود و نشان صفحه ذخیره می‌ماند.
-- پس از ۲ تمرین کامل، روی صندلی تلویزیون بنشین و فیلم واقعی آموزش React را ببین. دورهٔ freeCodeCamp به زبان انگلیسی است و یادداشت متناسب با زبان سایت کنارش قرار دارد؛ فیلم به اینترنت و دسترسی YouTube نیاز دارد.
-- پس از ۳ تمرین کامل، کلید روی میز ظاهر می‌شود. آن را بردار، کنار در استفاده کن و وارد گلخانه شو. باز شدن در و رشد باغچه ذخیره می‌شود.
-- از «اتاق زندهٔ تو» یا برچسب روی وسیله، مقصد را انتخاب کن تا بازیکن با رعایت برخوردها به آن نزدیک شود؛ سپس E یا دکمهٔ تعامل را بزن. این مسیر روی موبایل هم با لمس در دسترس است.
-
-## محلهٔ قابل گردش
-
-- محیط تمام‌صفحه است؛ نوار بالا و کارت‌های بزرگ معرفی/قدم بعدی حذف شده‌اند. راهنمای حرکت با اولین قدم محو می‌شود و علامت بالای کامپیوتر مسیر آموزش را نشان می‌دهد.
-- خانهٔ دارای اتاق یادگیری، نشیمن تلویزیون، آشپزخانه، اتاق آرام و گلخانه به حیاط و کوچه متصل است؛ چهار خانهٔ همسایه و گیم‌نت به محیط اضافه شده‌اند.
-- نمای اول‌شخص/سوم‌شخص را از دکمهٔ شناور یا تنظیمات انتخاب کن. در هر دو نما تصویر را با ماوس یا انگشت بکش تا دوربین بچرخد؛ حرکت با زاویهٔ دوربین هماهنگ است.
-- با Space بپر و با نگه داشتن Shift هنگام حرکت بدو. موبایل دکمهٔ پرش و دویدن هم دارد؛ برای دویدن، دکمه‌اش را نگه دار و با انگشت دیگر جهت را بگیر.
-- اولین ورود، انتخاب روشن، تاریک یا «با ساعت سرور» را نشان می‌دهد. انتخاب ذخیره می‌شود و از تنظیمات قابل تغییر است.
-- سایت فارسی و انگلیسی است: کشور ایران فارسی و سایر کشورها انگلیسی، با تشخیص کشور از IP. در تنظیمات یا پنجرهٔ انتخاب تم، زبان را دستی انتخاب کن یا به حالت خودکار برگرد. انتخاب دستی ذخیره می‌شود؛ پیشرفت و کد تغییر نمی‌کنند. در صورت ناممکن بودن تشخیص کشور، تنظیمات مرورگر مبنای زبان می‌شود و این وضعیت نمایش داده می‌شود.
-- محیط با بافت چوب، آجر، پارچه، آسفالت و سنگ‌فرش، شخصیت‌های گردتر، پوشش گیاهی، سقف‌های شیب‌دار، جزئیات پنجره‌ها و نور آسمان طبیعی‌تر شده است.
-- روی مبل بنشین و کتاب‌های React را ورق بزن. کودک، بزرگسال، مادربزرگ و پدربزرگ با نزدیک شدن یا تعامل، بالای سرشان جملهٔ کوتاه می‌گویند.
-- گیم‌نت پس از ۱۰۰۰ XP یک نوبت سه‌دقیقه‌ای Bug Hunter می‌دهد. زمان با شروع بازی آغاز می‌شود و هنگام سؤال یا توقف هم ادامه دارد؛ XP کم نمی‌شود.
-- زمین ۱۵۰×۱۳۰ متر است و اطراف محله، دشت، گل‌های وحشی، درخت، کوه، ابر متحرک و خورشید قرار دارد. کوه‌های دوردست منظره‌اند؛ در زمین محله و دشت می‌توان قدم زد.
-- چهار ماشین در دو جهت جادهٔ دشت رفت‌وآمد می‌کنند و برای مانع یا عابر می‌ایستند. از فهرست مقصدها، «ماشین» یا «دشت آفتاب» را انتخاب کن.
-- ماشین آبی پارکینگ با **۲۰۰۰ XP** باز می‌شود؛ امتیاز مصرف نمی‌شود. کنار در ماشین E بزن؛ **W/S** گاز و دنده عقب، **A/D** فرمان، **Space** ترمز و **E** پیاده شدن است. اول‌شخص، سوم‌شخص و کنترل لمسی در دسترس‌اند. پیاده شدن جای خالی کنار ماشین را بررسی می‌کند. جای ماشین با reload یا بازنشانی به پارکینگ برمی‌گردد؛ XP ذخیره‌شده باقی می‌ماند.
-- ساعت سرور به وقت تهران نمایش داده می‌شود؛ در تم خودکار، روشنایی هم با همان ساعت هماهنگ است. در اجرای معمول از `/api/time` و در خروجی Pages از هدرهای HTTP هاست استفاده می‌شود.
-- `/api/locale` کشور بازدیدکننده را از هدرهای کشور هاست برمی‌گرداند. وقتی کشور مشخص نباشد، یا در خروجی Pages، مرورگر از سرویس IP-country استفاده می‌کند؛ دسترسی GPS درخواست نمی‌شود.
-
-## سیستم آموزشی
-
-- فصل‌های JavaScript، JSX، Components/Props، State، لیست‌ها، فرم‌ها، Hooks، API، Router، Redux، React Query، کارایی، تست، معماری و پروژهٔ نهایی.
-- هشت قالب: نوشتن، رفع باگ، پیش‌بینی، خواندن، تکمیل، بازآرایی، افزودن قابلیت و Boss.
-- چهار وضعیت مهارت: یاد نگرفته، آشنا شده، تمرین کرده و مسلط. فقط گواه تازه و بدون راهنما، تسلط می‌دهد.
-- چهار راهنمای تدریجی با پاداش ۹۰٪، ۷۵٪، ۶۰٪، ۴۵٪؛ پاسخ آموزشی ۳۰٪. کمک‌ها با reload پاک نمی‌شوند. گواه تسلط راهنما و پاسخ آماده ندارد.
-- پروژه‌های Profile Card، Todo هشت‌مرحله‌ای، Weather، Movie Search، فروشگاه، Admin Panel و Study Planner. مرحلهٔ بعد از کد خود کاربر ادامه می‌یابد.
-- مشاهدهٔ واقعی state، render، DOM، props، effect/cleanup، درخواست، Redux و Query؛ درخت JSX و شمارندهٔ فراخوانی کامپوننت. شمارنده جای benchmark یا Profiler تولید نیست.
-- تمرین روزانه با ۲۰ XP فقط یک بار در روز، مرور فاصله‌دار، نقاط ضعف و پیشنهاد بر اساس پیشرفت. غیبت XP را کم نمی‌کند.
-- نه اتاق موضوعی با رنگ و تابلو و درس‌های مرتبط؛ اتاق‌های تخصصی با **تسلط** باز می‌شوند. اتاق‌ها از پلان فیزیکی مشترک استفاده می‌کنند.
-- Hooks Boss با هفت بررسی واقعی، از dependency و cleanup تا state immutable و خطای HTTP؛ هر تست موفق قدرت باگ‌ها را کم می‌کند.
-- امتیاز کیفیت با شواهد مشخص رفتار/ساختار. برای خوانایی و کارایی بدون اندازه‌گیری درصد ساختگی داده نمی‌شود.
-
-## اجرای تمرین‌ها
-
-پیش‌فرض، React محلی داخل iframe با origin جداست؛ JSX و تعاملات واقعی‌اند. React Router، Redux Toolkit، React Redux، React Query و Testing Library در آزمایشگاه موجودند. درس‌های API از fixtureهای قطعی `/api/weather`، `/api/movies`، `/api/users` و `/api/fail` استفاده می‌کنند؛ کلید سرویس بیرونی لازم نیست. localStorage پروژه در فضای اختصاصی همان پروژه ذخیره می‌شود و تست‌ها داده و ساعت جدا دارند.
-
-حالت «خودکار» یا «پروژهٔ Vite» از WebContainers استفاده می‌کند. پروژهٔ تولیدشده هم با **pnpm** نصب و اجرا می‌شود. این مسیر به شبکه و مرورگر سازگار نیاز دارد؛ در حالت خودکار، خطای اتصال با دلیل نمایش داده می‌شود و React محلی ادامه می‌دهد. اجرای موفق Vite بیرونی باید در شبکهٔ مقصد نیز بررسی شود.
-
-پیشرفت قبلی پنج درس و XP آن‌ها به نسخهٔ جدید مهاجرت می‌کند؛ completion قدیمی به‌تنهایی نشان تسلط نمی‌دهد. پروفایل در همین مرورگر ذخیره می‌شود. حساب، backend پروفایل و AI Tutor در این نسخه وجود ندارند؛ سرور فعلی فقط زمان را با `/api/time` ارائه می‌کند. طبق پیشنهاد مرجع، Tutor هوشمند برای مرحلهٔ بعد است.
-
-## بررسی
-
-```powershell
+```sh
 pnpm check
 pnpm browsers:install
 pnpm test:e2e
 ```
 
-برای Edge نصب‌شده در ویندوز:
+`pnpm check` runs strict TypeScript, zero-warning lint, unit tests and the production build. To use installed Microsoft Edge on Windows:
 
 ```powershell
 $env:PLAYWRIGHT_CHANNEL = 'msedge'
 pnpm test:e2e
 ```
 
-برای خروجی production، `pnpm build` و `pnpm preview` را اجرا کن و در ترمینال تست، `PLAYWRIGHT_BASE_URL` را `http://127.0.0.1:4173` قرار بده. تصاویر و traceها در `artifacts/` ذخیره می‌شوند.
+For production browser checks, run `pnpm build` and `pnpm preview`, then set `PLAYWRIGHT_BASE_URL` to `http://127.0.0.1:4173` in the test terminal. Screenshots and traces are stored under ignored `artifacts/` directories. See [validation evidence and runtime limits](docs/VALIDATION.md).
 
-جزئیات: [معماری](docs/ARCHITECTURE.md)، [سیستم درس](docs/LESSON_SYSTEM.md)، [محصول](docs/PRODUCT.md)، [اعتبارسنجی](docs/VALIDATION.md).
+## Project documentation
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Lesson system](docs/LESSON_SYSTEM.md)
+- [Product scope](docs/PRODUCT.md)
+- [Validation](docs/VALIDATION.md)
+- [Development rules](AGENTS.md)
+
+## License
+
+This project's original code and documentation are licensed under the [MIT License](LICENSE), copyright © 2026 Saleh Ghotbani. Third-party dependencies and linked learning resources retain their respective licenses and terms.
