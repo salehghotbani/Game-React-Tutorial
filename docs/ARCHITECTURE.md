@@ -130,3 +130,5 @@ References: [Vite static deployment](https://vite.dev/guide/static-deploy.html),
 ## pnpm tooling
 
 Scripts invoke the installed CLI through Node when a Windows package-bin launcher is unreliable (the browser test/install commands); the public workflow remains pnpm. Store/cache/state directories are workspace-local and ignored. esbuild is explicitly allowed in pnpm-workspace.yaml because the preview build needs its native binary. A frozen install was verified after importing the old exact resolutions; package-lock.json was removed.
+
+The root explicitly declares `@types/babel__core` for the compiler's typed Babel plugin, and the learning-engine package declares the challenges workspace as a development dependency for its evaluation tests. These declarations keep fresh pnpm installs independent of leftover npm modules; they reuse the existing locked versions and add no runtime library.

@@ -5,6 +5,7 @@ Verified 2026-10-06 on Windows with Node 24.18.0, pnpm 11.19.0, installed Micros
 | Check | Result |
 |---|---|
 | pnpm frozen workspace install | Passed; pnpm-lock.yaml is the sole lockfile |
+| Fresh pnpm dependency verification | A separate tracked-source copy installed all 435 packages from the frozen lockfile without existing modules, then passed the complete `pnpm check` (strict TypeScript, zero-warning lint, 108 tests and production build) |
 | Strict TypeScript | Passed |
 | ESLint with zero warnings | Passed |
 | Vitest | 108 passed across twenty-four files |
@@ -28,6 +29,7 @@ Verified 2026-10-06 on Windows with Node 24.18.0, pnpm 11.19.0, installed Micros
 | Landscape/vehicle physics | Eleven new pure/actual-Rapier checks passed: XP boundary, throttle/reverse/steering/braking, bounded time steps, reachable doors, terrain/road planting, traffic wrap, grounded meadow driving, buildings/boundaries, safe exit and traffic yielding/resuming |
 | Landscape browser checks | Both desktop/mobile scenario bodies passed: a fresh learner's 2000-XP gate and physical meadow route, driving/braking/pause, both cameras, detached safe exit/re-entry, touch acceleration/braking, ground-height checks, retained XP and reload |
 | Expanded navigation | Reachable computer routes from the meadow, parking and both distant field corners passed; wider retry handles detours around the home |
+| Landscape production regression | Driving/touch controls, retained XP/reload and returning to the learning computer passed; all three existing movement, pause/reset, wall/focus-loss and narrow-layout scenarios also passed. The beginner explanation/example/first-grading scenario passed on production; the expanded meadow-to-computer teaching return passed on the final development scene |
 | Production build | Passed |
 | Visual review | Knowledge map, editor/preview, execution inspector, mobile hub/projects, beginner teaching, resizable panes, furnished room, flowers, greenhouse, book/cinema poster, courtyard/street, café and first-person interiors on desktop/mobile reviewed |
 

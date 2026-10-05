@@ -20,6 +20,9 @@ importers:
       '@playwright/test':
         specifier: ^1.56.0
         version: 1.63.0
+      '@types/babel__core':
+        specifier: 7.20.5
+        version: 7.20.5
       '@types/babel__standalone':
         specifier: ^7.1.9
         version: 7.1.9
@@ -191,6 +194,10 @@ importers:
       react-router-dom:
         specifier: ^7.9.0
         version: 7.18.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+    devDependencies:
+      '@react-quest/challenges':
+        specifier: workspace:*
+        version: link:../challenges
 
   packages/localization:
     dependencies:

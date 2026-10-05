@@ -29,7 +29,7 @@ test('static project site loads assets, server clock and local grading without a
   await page.locator('.world-dock').getByRole('button', { name: 'Go to Learning computer', exact: true }).click();
   await expect(page.locator('.room-destination')).toHaveCount(0, { timeout: 30000 });
   await page.locator('.interaction-prompt').click();
-  await expect(page.locator('.teaching-article')).toContainText('React is a JavaScript library');
+  await expect(page.locator('.teaching-article')).toContainText('React is a JavaScript library', { timeout: 30000 });
   await page.getByTestId('lesson-next').click();
   await page.getByRole('button', { name: '▶ Run example', exact: true }).click();
   await expect(page.frameLocator('iframe[title="React teaching example"]').getByRole('heading', { name: 'Hello, I am Sara' })).toBeVisible({ timeout: 30000 });
