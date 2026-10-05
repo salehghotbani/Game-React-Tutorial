@@ -115,6 +115,8 @@ References: [Vite static deployment](https://vite.dev/guide/static-deploy.html),
 
 `pnpm check` runs typecheck, lint, domain tests and production build. `pnpm test:e2e` reuses or starts Vite; PLAYWRIGHT_CHANNEL selects an installed Edge/Chrome. The browser suite enables software WebGL. Screenshots/traces, install cache and build output are ignored.
 
+`pnpm preview:static` runs `scripts/serve-static.mjs`, a Node-only loopback file server for `apps/web/dist`. Its base-path/port arguments permit testing a subpath build without Vite's API middleware or isolation headers. It validates paths within build output and needs no new dependency. Contributor setup, test selection and fork deployment are documented in [the documentation index](README.md); GitHub issue/PR templates collect reproducible behavior and actual validation results. The existing workflow publishes `main` and does not run on pull requests.
+
 ## References
 
 - https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/

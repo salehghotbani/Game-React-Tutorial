@@ -5,6 +5,7 @@ Verified 2026-10-06 on Windows with Node 24.18.0, pnpm 11.19.0, installed Micros
 | Check | Result |
 |---|---|
 | pnpm frozen workspace install | Passed; pnpm-lock.yaml is the sole lockfile |
+| Developer documentation/tooling | 150 local links/anchors verified across 22 Markdown documents. The Node-only static preview passed HTML/JS/HEAD/MIME/clock, missing-file, method and path-boundary checks with no API/isolation headers; the Pages teaching/example/real-grading/persistence/mobile scenario body passed on that helper |
 | Fresh pnpm dependency verification | A separate tracked-source copy installed all 435 packages from the frozen lockfile without existing modules, then passed the complete `pnpm check` (strict TypeScript, zero-warning lint, 108 tests and production build) |
 | Strict TypeScript | Passed |
 | ESLint with zero warnings | Passed |

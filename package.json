@@ -11,6 +11,7 @@
     "dev": "pnpm --filter @react-quest/web dev",
     "build": "pnpm --filter @react-quest/web build",
     "preview": "pnpm --filter @react-quest/web preview",
+    "preview:static": "node scripts/serve-static.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --max-warnings 0",
     "test": "vitest run",

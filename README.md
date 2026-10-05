@@ -6,6 +6,8 @@ Learn React from scratch while exploring a 3D home and neighborhood. React Quest
 
 [Live demo](https://salehghotbani.github.io/Game-React-Tutorial/) · [Repository](https://github.com/salehghotbani/Game-React-Tutorial) · [MIT license](LICENSE)
 
+For developers and fork maintainers: [development setup](docs/DEVELOPMENT.md), [contributing](CONTRIBUTING.md), [testing](docs/TESTING.md), [publishing your fork](docs/DEPLOYMENT.md) and the [documentation index](docs/README.md).
+
 ## Getting started
 
 Use Node.js **22.12 or newer** and the declared **pnpm 11.19.0** version. This monorepo uses pnpm workspaces and `workspace:*` dependencies; `pnpm-lock.yaml` is the authoritative lockfile.
@@ -113,6 +115,12 @@ For production browser checks, run `pnpm build` and `pnpm preview`, then set `PL
 
 ## Project documentation
 
+- [Documentation index and reading paths](docs/README.md)
+- [Development environment](docs/DEVELOPMENT.md) · [فارسی](docs/DEVELOPMENT.fa.md)
+- [Contributing](CONTRIBUTING.md) · [فارسی](CONTRIBUTING.fa.md)
+- [Testing](docs/TESTING.md)
+- [Deployment and forks](docs/DEPLOYMENT.md)
+- [Extension recipes](docs/EXTENDING.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Lesson system](docs/LESSON_SYSTEM.md)
 - [Product scope](docs/PRODUCT.md)
