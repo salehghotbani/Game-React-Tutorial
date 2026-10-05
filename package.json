@@ -1,0 +1,42 @@
+{
+  "name": "react-quest",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @react-quest/web dev",
+    "build": "pnpm --filter @react-quest/web build",
+    "preview": "pnpm --filter @react-quest/web preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "test": "vitest run",
+    "test:e2e": "node node_modules/@playwright/test/cli.js test",
+    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build",
+    "browsers:install": "node node_modules/@playwright/test/cli.js install chromium"
+  },
+  "devDependencies": {
+    "@types/babel__standalone": "^7.1.9",
+    "esbuild": "^0.28.0",
+    "@dimforge/rapier3d-compat": "0.19.2",
+    "@playwright/test": "^1.56.0",
+    "@eslint/js": "^9.39.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.180.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "eslint": "^9.39.0",
+    "eslint-plugin-react-hooks": "^7.0.0",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.0.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.0",
+    "vite": "^7.1.0",
+    "vitest": "^3.2.0",
+    "@babel/core": "^7.28.0"
+  },
+  "packageManager": "pnpm@11.19.0"
+}

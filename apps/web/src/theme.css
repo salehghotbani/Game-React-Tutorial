@@ -1,0 +1,38 @@
+:root { --surface: #f7f8f3ed; --surface-solid: #f7f8f3; --surface-soft: #e8eee7; --text: #253c35; --muted: #64796f; --edge: #d1ddd2; --accent: #47775e; }
+:root[data-theme="dark"] { --surface: #182529ed; --surface-solid: #182529; --surface-soft: #25363a; --text: #e4ece8; --muted: #a5bbb1; --edge: #3c5151; --accent: #a2cfba; background: #101b22; color: var(--text); }
+.theme-picker { margin: auto; width: min(650px, calc(100% - 32px)); padding: 36px; border: 1px solid var(--edge); border-radius: 24px; background: var(--surface-solid); color: var(--text); box-shadow: 0 30px 100px #0005; }
+.theme-picker::backdrop { background: #0c172782; backdrop-filter: blur(8px); }
+.theme-picker-eyebrow { font: 11px Consolas, monospace; letter-spacing: 4px; color: var(--accent); }
+.theme-picker h1 { font-size: 24px; margin: 20px 0 12px; line-height: 1.8; }
+.theme-picker>p { color: var(--muted); font-size: 12px; line-height: 2; }
+.theme-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 26px; }
+.theme-options button { padding: 24px 12px; border: 1px solid var(--edge); background: var(--surface-soft); border-radius: 15px; text-align: center; transition: border-color .2s, transform .2s; }
+.theme-options button:hover { border-color: var(--accent); transform: translateY(-3px); }
+.theme-options button>span { display: block; font-size: 34px; color: var(--accent); }
+.theme-options b { display: block; font-size: 13px; margin: 15px 0 8px; }
+.theme-options small { font-size: 9px; line-height: 1.9; color: var(--muted); display: block; }
+.theme-settings { display: flex; gap: 10px; flex-wrap: wrap; border: 0; border-bottom: 1px solid var(--edge); padding: 13px 0 17px; margin-bottom: 18px; }
+.theme-settings legend { font-size: 12px; margin-bottom: 9px; }.theme-settings label { display: flex; gap: 5px; align-items: center; font-size: 10px; }.theme-settings input { accent-color: #78a18b; }
+.settings-panel { max-height: calc(100dvh - 120px); overflow-y: auto; }
+.touch-movement .jump { grid-row: 1; grid-column: 3; }.touch-movement .sprint { grid-row: 1; grid-column: 1; }
+:root[data-theme="dark"] :is(.panel, .world-tool, .camera-toggle, .world-information, .world-dock, .movement-guide, .room-marker, .neighbor-label>button, .room-destination, .touch-movement button, .neighborhood-page .neighborhood-map) { background: var(--surface); color: var(--text); border-color: var(--edge); }
+:root[data-theme="dark"] :is(.world-information small, .movement-guide p, .settings-note, .setting-label, .room-dock-toggle small, .room-dock-list small, #world-destinations>p, .pause-card p, .pause-shortcut, .eyebrow) { color: var(--muted); }
+:root[data-theme="dark"] :is(kbd, .room-dock-icon, .room-dock-list>button, .icon-button:hover) { background: var(--surface-soft); border-color: var(--edge); color: var(--text); }
+:root[data-theme="dark"] .neighbor-speech { background: #30483d; color: #ecf3dd; border-color: #62826e; }
+:root[data-theme="dark"] :is(.computer-mode, .learning-hub, .learning-layout, .teaching-screen, .teaching-workspace, .room-dialog, .room-dialog>header, .room-book, .book-pagination, .book-layout>nav, .lesson-sidebar, .challenge-details, .quiz-area, .preview-area, .editor-area, .workspace-toolbar, .workspace-pane-heading, .coding-actions, .teaching-article, .teaching-path, .hub-body, .hub-header, .learning-header, .teaching-header) { background: var(--surface-solid); color: var(--text); border-color: var(--edge); }
+:root[data-theme="dark"] :is(.lesson-stage span, .teaching-example, .concept-lab, .library-layout>article, .review-layout article, .room-card, .chapter-card, .skill-card, .project-card, .book-layout>nav>button, .knowledge-questions label, .chapter-select select, .component-nodes>div, .room-dock-list>button:hover) { background: var(--surface-soft); color: var(--text); border-color: var(--edge); }
+:root[data-theme="dark"] :is(.challenge-content, .challenge-details, .teaching-article, .teaching-path, .hub-body, .learning-hub, .room-dialog, .lesson-sidebar, .workspace-toolbar, .preview-heading, .learning-heading) :is(h1, h2, h3, h4, p, b, label, li, small, legend, dt, dd) { color: var(--text); }
+:root[data-theme="dark"] :is(.teaching-reference, .book-page a, .detail-tabs button, .lesson-stage, .workspace-toolbar button, .preview-heading, .chapter-select) { color: var(--muted); }
+:root[data-theme="dark"] :is(.book-pagination button, .teaching-example button, .quiz-lesson-summary button, .teaching-navigation button) { background: #385a48; color: #edf5e8; border-color: #537962; }
+:root[data-theme="dark"] .neighborhood-map svg>rect:first-child { fill: #233237; }
+:root[data-theme="dark"] .workspace-pane { border-color: var(--edge); }
+:root[data-theme="dark"] :is(.computer-screen, .computer-header, .workspace-pane, .workspace-pane-header, .workspace-pane-content, .challenge-content) { background: var(--surface-solid); color: var(--text); border-color: var(--edge); }
+:root[data-theme="dark"] :is(.panel-toggles>button, .panel-toggles>button.closed, .daily-card, .recommended-card, .knowledge-room, .lesson-nav.selected, .runtime-options select, .library-layout>nav, .workspace-empty button) { background: var(--surface-soft); color: var(--text); border-color: var(--edge); }
+:root[data-theme="dark"] :is(.computer-header, .preview-heading, .workspace-pane-header) :is(b, span, button, small), :root[data-theme="dark"] :is(.learning-stats, .challenge-content p, .lesson-nav b, .lesson-nav small, .runtime-options, .runtime-status, .hub-note, .hub-intro, .chapter-card small) { color: var(--muted); }
+:root[data-theme="dark"] :is(.hub-tabs button.active, .book-layout>nav>button.active, .lesson-stage .active, .teaching-path button[aria-current]) { background: #385a48; color: #edf5e8; }
+:root[data-theme="dark"] .runtime-status.error { background: #493532; color: #f3c6ae; }
+:root[data-theme="dark"] :is(.back-room, .map-button) { background: var(--surface-soft); color: var(--text); border-color: var(--edge); }
+:root[data-theme="light"] .coding-area { background: #eef3ec; border-color: #d0dccc; }
+:root[data-theme="light"] .coding-actions { border-color: #d0dccc; }:root[data-theme="light"] .coding-actions>button { color: #466149; }
+@media (max-width: 520px) { .theme-picker { padding: 24px; }.theme-picker h1 { font-size: 20px; }.theme-options { grid-template-columns: 1fr; gap: 9px; }.theme-options button { padding: 14px 18px; display: grid; grid-template-columns: 40px 1fr; text-align: right; column-gap: 14px; }.theme-options button>span { grid-row: span 2; font-size: 29px; }.theme-options b { margin: 0 0 5px; }.theme-options small { font-size: 10px; } }
+@media (prefers-reduced-motion: reduce) { .theme-options button { transition: none; } }

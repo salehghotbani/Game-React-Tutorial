@@ -1,0 +1,25 @@
+{
+  "name": "@react-quest/learning-engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./evaluation": "./src/evaluation.ts"
+  },
+  "dependencies": {
+    "@react-quest/shared": "workspace:*",
+    "@babel/standalone": "^7.28.0",
+    "@webcontainer/api": "^1.6.0",
+    "@tanstack/react-query": "^5.90.0",
+    "@reduxjs/toolkit": "^2.9.0",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.9.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/dom": "^10.4.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

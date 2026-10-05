@@ -1,0 +1,28 @@
+{
+  "name": "@react-quest/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^3.28.0",
+    "@emotion/react": "^11.14.0",
+    "@react-quest/game": "workspace:*",
+    "@react-quest/shared": "workspace:*",
+    "@react-quest/challenges": "workspace:*",
+    "@react-quest/learning-engine": "workspace:*",
+    "@react-quest/arcade": "workspace:*",
+    "@monaco-editor/react": "^4.7.0",
+    "monaco-editor": "^0.55.0",
+    "@reduxjs/toolkit": "^2.9.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-redux": "^9.2.0",
+    "react-router": "^7.9.0",
+    "@react-quest/localization": "workspace:*"
+  }
+}

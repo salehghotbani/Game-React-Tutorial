@@ -1,0 +1,66 @@
+.neighborhood-page { min-height: 0; background: #cbded7; }
+.neighborhood-page .world, .neighborhood-page .pause-overlay { inset: 0; }
+.neighborhood-page .world canvas { touch-action: none; }
+.world-tools { position: absolute; left: 18px; top: 18px; z-index: 15; display: flex; gap: 7px; align-items: center; direction: ltr; }
+.world-tool, .camera-toggle { background: #f6f6eae8; border: 1px solid #fff9; color: #496c5a; border-radius: 12px; backdrop-filter: blur(12px); box-shadow: 0 5px 20px #183d2a14; }
+.world-tool { width: 39px; height: 39px; display: grid; place-items: center; }
+.camera-toggle { display: flex; gap: 12px; align-items: center; padding: 11px 14px; font-size: 11px; direction: rtl; }
+.world-information { position: absolute; right: 18px; top: 18px; z-index: 12; display: flex; gap: 10px; align-items: center; padding: 10px 14px; background: #f6f6eae8; color: #486452; border-radius: 15px; backdrop-filter: blur(12px); border: 1px solid #fff9; }
+.world-information .brand-mark { width: 33px; height: 33px; }
+.world-information b { display: block; font-size: 12px; }
+.world-information small { display: block; font-size: 10px; color: #84917d; margin-top: 6px; }
+.world-information small>span { margin: 0 5px; }
+.neighborhood-page .neighborhood-map { left: 18px; bottom: 18px; padding: 5px; width: 134px; background: #f5f4e9c9; border-radius: 16px; border: 1px solid #fff8; }
+.neighborhood-map .map-svg { width: 122px; height: 118px; margin: 0; }
+.neighborhood-page .world-dock { right: 18px; bottom: 18px; width: 232px; }
+#world-destinations { overflow: auto; max-height: min(580px, calc(100dvh - 170px)); padding: 10px 13px 15px; }
+#world-destinations>p { font-size: 10px; line-height: 2; color: #85967c; margin-bottom: 12px; }
+.movement-guide { position: absolute; z-index: 13; bottom: 28px; left: 50%; transform: translateX(-50%); background: #f5f5e9d9; border: 1px solid #fff8; border-radius: 16px; padding: 13px 19px; transition: opacity .45s, transform .45s; pointer-events: none; }
+.movement-guide>div { display: flex; gap: 5px; justify-content: center; }
+.movement-guide p { display: flex; gap: 6px; align-items: center; font-size: 10px; color: #748b6b; margin-top: 8px; }
+.movement-guide p>span { display: block; }
+.movement-guide.faded { opacity: 0; transform: translate(-50%, 12px); }
+.neighborhood-page .interaction-prompt { bottom: 125px; z-index: 14; max-width: calc(100% - 30px); white-space: normal; }
+.neighborhood-page .room-toast { top: 82px; }
+.neighborhood-page .room-destination { top: 82px; bottom: auto; }
+.first-person-crosshair { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #f8f6dd; text-shadow: 0 1px 4px #233d33; opacity: .8; font: 20px monospace; pointer-events: none; }
+.neighbor-label { direction: rtl; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 90px; }
+.neighbor-label>button { white-space: nowrap; border: 1px solid #fff8; border-radius: 18px; background: #f8f6e8dd; padding: 5px 9px; color: #5d7763; font: 9px Tahoma; }
+.neighbor-speech { white-space: nowrap; background: #fff9e9; color: #456449; font: 13px Tahoma; padding: 13px 17px; border-radius: 15px 15px 3px 15px; box-shadow: 0 6px 20px #344d2c24; border: 1px solid #e6d9be; animation: neighbor-greeting .2s ease-out; }
+@keyframes neighbor-greeting { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+.camera-settings { display: flex; gap: 17px; padding: 12px 0; border: 0; border-bottom: 1px solid #dfe5d4; }
+.camera-settings legend { font-size: 12px; margin-bottom: 8px; }
+.camera-settings label { display: flex; align-items: center; gap: 7px; font-size: 11px; }
+.camera-settings input { accent-color: #668b66; }
+.world-resume { background: #426b59; color: white; padding: 13px 20px; border-radius: 9px; width: 100%; font-size: 12px; }
+.touch-movement { display: none; }
+.game-net-timer { position: absolute; top: 105px; left: 50%; transform: translateX(-50%); z-index: 36; display: flex; align-items: center; gap: 13px; background: #1c453bef; color: #cce2cb; padding: 9px 15px; border-radius: 12px; }
+.game-net-timer b { font: 18px monospace; }
+.game-net-timer span { font-size: 10px; }
+.game-net-finished { position: absolute; inset: 0; z-index: 45; background: #1f4138; color: #deead0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; }
+.game-net-finished>span { font: 12px monospace; letter-spacing: 4px; color: #94c7b2; }
+.game-net-finished h2 { font-size: 24px; }
+.game-net-finished button { padding: 13px 22px; background: #dbe5c0; color: #335141; border-radius: 10px; }
+@media (max-width: 760px) {
+  .world-tools { top: 12px; left: 12px; gap: 4px; flex-wrap: wrap; width: 150px; }
+  .world-tool { width: 33px; height: 33px; border-radius: 10px; }
+  .camera-toggle { font-size: 9px; padding: 7px 10px; }
+  .world-information { top: 12px; right: 12px; padding: 8px 10px; gap: 7px; }
+  .world-information .brand-mark { width: 27px; height: 27px; }
+  .world-information b { font-size: 10px; }.world-information small { font-size: 8px; }
+  .neighborhood-page .neighborhood-map { left: 12px; bottom: 12px; width: 98px; padding: 3px; }
+  .neighborhood-map .map-svg { width: 90px; height: 87px; }
+  .neighborhood-page .world-dock { bottom: 12px; right: 12px; width: 192px; }
+  .neighborhood-page .world-dock.expanded { width: min(320px, calc(100% - 24px)); }
+  .movement-guide { bottom: 108px; padding: 11px; width: max-content; max-width: calc(100% - 24px); }
+  .movement-guide p { font-size: 8px; flex-wrap: wrap; justify-content: center; }
+  .neighborhood-page .interaction-prompt { bottom: 206px; font-size: 10px; padding: 11px 14px; }
+  .neighborhood-page .room-destination { top: 95px; font-size: 9px; }
+  .neighborhood-page .room-toast { top: 95px; }
+  .neighborhood-page .settings-panel { top: 93px; }
+  .touch-movement { display: grid; position: absolute; left: 12px; bottom: 112px; z-index: 15; grid-template: repeat(2, 34px) / repeat(3, 34px); gap: 3px; direction: ltr; }
+  .touch-movement button { background: #f5f5e8ce; color: #4e725b; border: 1px solid #fff9; border-radius: 9px; touch-action: none; }
+  .touch-movement .forward { grid-column: 2; }.touch-movement .left { grid-column: 1; grid-row: 2; }.touch-movement .backward { grid-column: 2; grid-row: 2; }.touch-movement .right { grid-column: 3; grid-row: 2; }
+  .game-net-timer { top: 100px; max-width: calc(100% - 28px); width: max-content; padding: 8px 12px; }.game-net-timer span { font-size: 8px; }.game-net-finished h2 { font-size: 19px; }
+}
+@media (prefers-reduced-motion: reduce) { .movement-guide { transition: none; }.neighbor-speech { animation: none; } }

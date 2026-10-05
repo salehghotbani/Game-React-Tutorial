@@ -1,0 +1,9 @@
+.locale-loading { min-height:100dvh; display:grid; place-content:center; justify-items:center; gap:20px; background:#17252a; color:#d5e8dc; }.locale-loading img { width:78px; height:78px; border-radius:18px; }.locale-loading p { font-size:14px; }
+.language-select { display:grid; gap:9px; margin:14px 0 22px; color:var(--text); }.language-select>span { font-size:12px; }.language-select select { border:1px solid var(--edge); background:var(--surface-solid); color:var(--text); border-radius:9px; padding:8px 10px; font:inherit;font-size:12px; min-width:0; }.language-select small { font-size:10px; line-height:1.8; color:var(--muted); }.language-select.compact { margin:0; }.language-select.compact select { font-size:10px; max-width:160px; height:37px; }
+html[dir="ltr"] { font-family:"Segoe UI",Arial,sans-serif; }
+html[dir="ltr"] :is(.panel-strip,.camera-toggle,.neighbor-label,.room-marker,.control-copy,.scene-loading,.scene-error) { direction:ltr; }
+html[dir="ltr"] :is(.room-dock-list>button,.book-layout>nav>button,.teaching-path button,.lesson-nav,.chapter-card,.skill-card,.project-card,.knowledge-room) { text-align:left; }
+html[dir="ltr"] .book-page { transform-origin:left; }
+@media(max-width:520px) { .language-select.compact select { max-width:110px; font-size:9px; }.world-tools { gap:4px; }.camera-toggle { padding:9px; gap:5px; } }
+
+@media(max-width:760px) { .world-tools .language-select.compact { display:none; } }
