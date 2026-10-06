@@ -4,7 +4,7 @@ import { getTeachingLesson } from '@react-quest/challenges';
 import { CodeRuntime, idleStatus, type RuntimeStatus } from '@react-quest/learning-engine';
 import type { Challenge, TeachingStep } from '@react-quest/shared';
 import { useAppDispatch, useAppSelector } from '../store';
-import { advanceLesson } from '../store/progressSlice';
+import { advanceLesson, startPractice } from '../store/progressSlice';
 import { getProgressTotals } from '../store/progression';
 import { Icon } from './Icon';
 import { SiteLogo } from './SiteLogo';
@@ -54,11 +54,11 @@ export function TeachingLesson({ challenge, onExit, onHub, onFinish, review, dai
   return <section className="computer-screen teaching-screen" aria-label={tx("محیط آموزش React")} data-lesson={challenge.id}>
     <header className="computer-header"><div className="computer-brand"><SiteLogo /><b dir="ltr">reactquest<span>.</span></b><button className="map-button" onClick={onHub}>{tx("نقشهٔ دانش ↗")}</button></div><div className="learning-stats"><span dir="ltr"><b data-testid="total-xp">{tx(getProgressTotals(progress).xp)}</b> XP</span><button className="back-room" onClick={onExit}>{tx("بازگشت به اتاق ")}<Icon name="arrow" size={17}/></button></div></header>
     <ResizableWorkspace storageKey="teaching" panels={[
-      {id:'path',title:'بخش‌های درس',size:260,height:320,minWidth:200,minHeight:180,content:(<aside className="teaching-path"><span className="eyebrow">{tx("اول یاد بگیر، بعد تمرین کن")}</span><h2>{tx(lesson.title)}</h2><p>{tx("درس ← نمونه ← تمرین")}</p><ol>{lesson.steps.map((item, i) => <li key={item.id}><button aria-current={i === index ? 'step' : undefined} disabled={i > Math.max(completed, index) && !review} onClick={() => setIndex(i)}><span>{tx(i < completed ? '✓' : i + 1)}</span>{tx(item.title)}</button></li>)}</ol><small>{tx("خواندن و مرور درس رایگان است.")}</small></aside>)},
+      {id:'path',title:'بخش‌های درس',size:260,height:320,minWidth:200,minHeight:180,content:(<aside className="teaching-path"><span className="eyebrow">{tx("اول یاد بگیر، بعد تمرین کن")}</span><h2>{tx(lesson.title)}</h2><p>{tx("درس ← نمونه ← تمرین")}</p><ol>{lesson.steps.map((item, i) => <li key={item.id}><button aria-current={i === index ? 'step' : undefined} onClick={() => setIndex(i)}><span>{tx(i < completed ? '✓' : i + 1)}</span>{tx(item.title)}</button></li>)}</ol><small>{tx("خواندن و مرور درس رایگان است.")}</small></aside>)},
       {id:'lesson',title:'آموزش و مثال',size:850,height:900,minWidth:450,minHeight:350,content:(<article className="teaching-article" ref={layout}>
         <div className="lesson-stage"><span className="active">{tx("۱. یادگیری")}</span><span>{tx("۲. تمرین")}</span>{daily && <span>{tx("درسِ تمرین امروز")}</span>}</div>
         <div className="challenge-heading"><span>{tx("آموزش پیش از تمرین: ")}{tx(challenge.title)}</span><h1>{tx(step.title)}</h1></div>
-        <div className="teaching-progress"><span>{tx("بخش ")}{tx(index + 1)}{tx(" از ")}{tx(lesson.steps.length)}</span><progress value={index + 1} max={lesson.steps.length}/></div>
+        <p className="hub-note">{tx("از هر بخش دلخواه شروع کن؛ می‌توانی مستقیم سراغ تمرین بروی.")}</p><button className="hub-primary" onClick={() => { dispatch(startPractice(challenge.id)); onFinish(); }}>{tx("رفتن مستقیم به تمرین ←")}</button><div className="teaching-progress"><span>{tx("بخش ")}{tx(index + 1)}{tx(" از ")}{tx(lesson.steps.length)}</span><progress value={index + 1} max={lesson.steps.length}/></div>
         <TeachingStepContent key={step.id} step={step}/>
         <footer className="teaching-navigation"><button disabled={index === 0} onClick={() => setIndex(index - 1)}>{tx("بخش قبلی →")}</button><button className="hub-primary" data-testid="lesson-next" onClick={next}>{tx(last ? 'ورود به تمرین ←' : 'ادامهٔ درس ←')}</button></footer>
         <a className="teaching-reference" href={lesson.reference} target="_blank" rel="noreferrer">{tx("منبع و مطالعهٔ بیشتر ↗")}</a>

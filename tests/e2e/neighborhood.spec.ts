@@ -10,7 +10,7 @@ async function load(page: Page, completed = 0) {
 }
 
 async function go(page: Page, title: string) {
-  await page.getByRole('button', { name: /اتاق زندهٔ تو/ }).click();
+  await page.getByRole('button', { name: /خانهٔ تو/ }).click();
   await page.locator('.world-dock').getByRole('button', { name: `رفتن به ${title}`, exact: true }).click();
   await expect(page.locator('.room-destination')).toHaveCount(0, { timeout: 40000 });
 }
@@ -32,7 +32,7 @@ test('full-screen exploration uses server time, fades the guide, and offers real
   expect(Number(await page.getByTestId('server-clock').getAttribute('data-server-timestamp')) - server.timestamp).toBeLessThan(30000);
   expect(await page.locator('canvas').boundingBox()).toMatchObject({ x: 0, y: 0, width: 1440, height: 1000 });
   await expect(page.locator('.topbar,.journey-card,.world-learning-card')).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'رفتن به کامپیوتر · آموزش React', exact: true })).toBeVisible();
+  await expect(page.locator('.room-marker,.neighbor-label')).toHaveCount(0);
   await expect(page.getByRole('region', { name: 'راهنمای کنترل' })).toBeVisible();
   const start = await position(page);
   await page.keyboard.down('w');
@@ -53,24 +53,18 @@ test('full-screen exploration uses server time, fades the guide, and offers real
   expect(errors).toEqual([]);
 });
 
-test('walks through the yard and street, talks to a child, and enforces the game-net XP gate', async ({ page }) => {
-  test.setTimeout(120000);
+test('the home has quiet destinations, no outdoor neighborhood and proximity-only interaction', async ({ page }) => {
   await load(page);
-  await go(page, 'حیاط خانه');
-  expect((await position(page)).z).toBeGreaterThan(7);
-  await page.getByRole('button', { name: 'گفتگو با نیما · کودک', exact: true }).click();
-  await expect(page.locator('.neighbor-speech')).toBeVisible({ timeout: 15000 });
-  await expect(page.locator('.neighbor-speech')).toContainText(/سلام همسایه|بازی کنیم/);
-  await page.screenshot({ path: 'artifacts/neighborhood-neighbor.png' });
-  await expect(page.locator('.room-destination')).toHaveCount(0, { timeout: 15000 });
-  await go(page, 'کوچهٔ یادگیری');
-  expect((await position(page)).z).toBeGreaterThan(14);
-  await page.screenshot({ path: 'artifacts/neighborhood-street.png' });
-  await go(page, 'گیم‌نت محله');
-  await expect(page.locator('main')).toHaveAttribute('data-world-area', 'گیم‌نت محله');
-  await page.locator('.interaction-prompt').click();
-  await expect(page.locator('.room-toast')).toContainText('1000 XP لازم داری');
-  await expect(page.locator('main')).toHaveAttribute('data-game-mode', 'explore');
+  await expect(page.locator('.room-marker,.neighbor-label')).toHaveCount(0);
+  await expect(page.locator('.interaction-prompt')).toHaveCount(0);
+  await page.screenshot({path:'artifacts/home-overview.png'});
+  await page.getByRole('button', { name: /خانهٔ تو/ }).click();
+  await expect(page.locator('.world-dock').getByRole('button', { name: /کوچه|ماشین|دشت|گیم‌نت/ })).toHaveCount(0);
+  await page.locator('.world-dock').getByRole('button', { name: 'رفتن به کامپیوتر یادگیری', exact: true }).click();
+  await expect(page.locator('.room-destination')).toHaveCount(0, {timeout:30000});
+  await expect(page.locator('.interaction-prompt')).toHaveText('Eبرای تعامل E را بزن');
+  await page.keyboard.press('e');
+  await expect(page.locator('.teaching-screen')).toBeVisible({timeout:15000});
 });
 
 test('physically sits on the sofa to read React and returns to the approach', async ({ page }) => {
@@ -87,28 +81,6 @@ test('physically sits on the sofa to read React and returns to the approach', as
   await page.getByRole('button', { name: 'بستن کتابخانهٔ اتاق', exact: true }).click();
   await expect.poll(async () => (await position(page)).x).toBeCloseTo(before.x, 1);
   await expect.poll(async () => (await position(page)).z).toBeCloseTo(before.z, 1);
-});
-
-test('earned XP opens a three-minute game-net session that expires even while paused', async ({ page }) => {
-  test.setTimeout(120000);
-  await load(page, 5);
-  await expect(page.getByTestId('room-xp')).toHaveText('1000');
-  await go(page, 'گیم‌نت محله');
-  const before = await position(page);
-  await page.locator('.interaction-prompt').click();
-  await expect(page.getByRole('region', { name: 'بازی Bug Hunter' })).toBeVisible();
-  await page.clock.install();
-  await page.getByRole('button', { name: 'شروع بازی', exact: true }).click();
-  await expect(page.getByRole('timer')).toContainText('3:00');
-  await page.getByRole('button', { name: 'توقف', exact: true }).click();
-  await page.clock.fastForward(120000);
-  await expect(page.getByRole('timer')).toContainText('1:00');
-  await page.clock.fastForward(61000);
-  await expect(page.getByRole('region', { name: 'پایان نوبت گیم‌نت' })).toBeVisible();
-  await page.getByRole('button', { name: 'بازگشت به محله', exact: true }).click();
-  await expect(page.locator('main')).toHaveAttribute('data-game-mode', 'explore');
-  expect((await position(page)).x).toBeCloseTo(before.x, 1);
-  await expect(page.getByTestId('room-xp')).toHaveText('1000');
 });
 
 test('mobile touch movement and camera choice stay accessible without horizontal overflow', async ({ page }) => {

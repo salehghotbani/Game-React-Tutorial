@@ -1,6 +1,6 @@
-import { tx, useLanguage } from '@react-quest/localization';
+import { useLanguage } from '@react-quest/localization';
 import { useRef } from 'react';
-import { Html, RoundedBox } from '@react-three/drei';
+import { RoundedBox } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { Group } from 'three';
 import type { Vector3Tuple } from '@react-quest/shared';
@@ -39,10 +39,6 @@ export function BloomingGarden({blooms,watering,position=[3.95,0,2.65]}:{blooms:
     {watering&&<><group ref={water}>{Array.from({length:9},(_,i)=><mesh key={i} scale={[.026,.064,.026]}><sphereGeometry args={[1,6,6]}/><meshStandardMaterial color="#88e0df" emissive="#3a9599" emissiveIntensity={.3}/></mesh>)}</group><group position={[-.6,1.25,0]} rotation={[0,0,-.5]}><mesh><cylinderGeometry args={[.15,.15,.25,12]}/><meshStandardMaterial color="#6caaaa"/></mesh><mesh position={[.22,.04,0]} rotation={[0,0,-1]}><cylinderGeometry args={[.04,.05,.35,8]}/><meshStandardMaterial color="#6caaaa"/></mesh><mesh position={[-.14,0,0]} rotation={[Math.PI/2,0,0]}><torusGeometry args={[.16,.025,6,12]}/><meshStandardMaterial color="#6caaaa"/></mesh></group></>}
   </group>;
 }
-function Marker({id,position,label,ready,view}:{id:keyof typeof ROOM_SPOTS;position:Vector3Tuple;label:string;ready:boolean;view:RoomLifeView}) {
-  useLanguage();
-  return <Html position={position} center zIndexRange={[9,0]}><button className={`room-marker ${ready?'ready':'locked'} ${view.activeSpot===id?'selected':''}`} aria-label={tx(`رفتن به ${label}`)} onClick={()=>view.onNavigate?.(id)}><span>{tx(ready?'✦':'◇')}</span>{tx(label)}</button></Html>;
-}
 function KnowledgeShelf({ cards }: { cards: number }) {
   const shelfHeight = 1.78;
   const shelfThickness = 0.06;
@@ -79,7 +75,7 @@ export function LivingRoomDetails({view, timestamp}: {view:RoomLifeView; timesta
       <Solid position={[0,.99,0]} size={[.07,.38,.07]} color="#384747"/><Solid position={[0,.8,.03]} size={[.55,.055,.22]} color="#384747"/>
       <Solid position={[-.78,.81,.06]} size={[.11,.025,.27]} color="#354542"/>
     </group>
-    <group position={[2.7,0,-2.9]}>
+    <group position={[1.9,0,-2.9]}>
       <Solid position={[0,.93,0]} size={[.82,.09,.66]} color="#d1a47a"/>
       {[-.31,.31].map(x=><Solid key={x} position={[x,.45,0]} size={[.09,.9,.5]} color="#8c795c"/>)}
       <Solid position={[0,1,0]} size={[.5,.025,.32]} color="#e6d0a6"/>
@@ -87,12 +83,6 @@ export function LivingRoomDetails({view, timestamp}: {view:RoomLifeView; timesta
     </group>
     <RoomClock timestamp={timestamp} position={[0.85,2.15,-11.92]} />
     <KnowledgeShelf cards={view.cards} />
-    <Marker id="books" position={[3.65,2.85,-4.35]} label={tx("کتاب‌های React")} ready view={view}/>
-    <Marker id="computer" position={[-1.5,3,-3.8]} label={tx("کامپیوتر · آموزش React")} ready view={view}/>
-    <Marker id="sofa" position={[-3.95,2.1,0]} label={tx("مطالعه روی مبل")} ready view={view}/>
-    <Marker id="plant" position={[3.95,2.12,2.65]} label={tx("باغچهٔ یادگیری")} ready={view.drops>0} view={view}/>
-    <Marker id="television" position={[3.4,2.45,-11.4]} label={tx("سینمای React")} ready={view.television} view={view}/>
-    {view.keyEarned&&!view.keyCollected&&<Marker id="key" position={[2.7,1.65,-2.9]} label={tx("کلید گلخانه")} ready view={view}/>}
   </>;
 }
 export function Greenhouse({view}:{view:RoomLifeView}) {
@@ -109,7 +99,6 @@ export function Greenhouse({view}:{view:RoomLifeView}) {
       <Solid position={[0,2.64,1.32]} size={[.25,.2,2.92]} color="#ddc9a3"/>
       {[0,2.64].map(z=><Solid key={z} position={[0,1.32,z]} size={[.25,2.64,.14]} color="#ddc9a3"/>)}
     </group>
-    <Marker id="door" position={[4.98,3.05,0]} label={tx(view.greenhouseOpen?'درِ گلخانه':view.keyCollected?'باز کردن گلخانه':'گلخانهٔ قفل‌شده')} ready={view.keyCollected} view={view}/>
     <group position={[7.5,0,0]}>
       <Solid position={[0,-.22,0]} size={[5,.44,6.3]} color="#b6a88b"/>
       {Array.from({length:10},(_,i)=><Solid key={i} position={[-2.25+i*.5,.01,0]} size={[.49,.035,6]} color={i%2?'#d9c8a8':'#e0d2b5'}/>)}
@@ -125,7 +114,6 @@ export function Greenhouse({view}:{view:RoomLifeView}) {
       {[-.95,.55].map(x=><Solid key={x} position={[x,.3,-2.4]} size={[.12,.6,.6]} color="#b28c67"/>)}
       <Solid position={[-.2,.025,.15]} size={[2.7,.04,2.4]} color="#c2caaa"/>
       <pointLight position={[0,3,-1.5]} intensity={3} distance={7} color="#c6edce"/>
-      {view.greenhouseOpen&&<Marker id="greenhouse" position={[-.25,1.15,0]} label={tx("باغچهٔ گلخانه")} ready={view.drops>0} view={view}/>}
     </group>
   </>;
 }

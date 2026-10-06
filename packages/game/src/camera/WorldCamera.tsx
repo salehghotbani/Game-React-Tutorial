@@ -6,19 +6,16 @@ import { CAMERA_CONFIG } from '../config';
 import type { CameraLook } from '../input/useCameraLook';
 import { getActivityPose, isEnteringActivity } from '../player/activityPose';
 import type { PlayerBodyRef, PlayerPosition } from '../player/types';
-import { CAR, type VehicleState } from '../vehicles/driving';
 
 type Props = {
   bodyRef: PlayerBodyRef;
   settings: GameSettings;
   look: RefObject<CameraLook>;
-  carRef: PlayerBodyRef;
-  vehicle: RefObject<VehicleState>;
   onPosition?: (position: PlayerPosition) => void;
   onActivityReady?: () => void;
 };
 
-export function WorldCamera({ bodyRef, carRef, vehicle, settings, look, onPosition, onActivityReady }: Props) {
+export function WorldCamera({ bodyRef, settings, look, onPosition, onActivityReady }: Props) {
   const initialized = useRef(false);
   const target = useRef(new Vector3());
   const desired = useRef(new Vector3());
@@ -29,8 +26,7 @@ export function WorldCamera({ bodyRef, carRef, vehicle, settings, look, onPositi
   const completedMode = useRef<string | undefined>(undefined);
 
   useFrame(({ camera, size }, delta) => {
-    const driving = settings.mode === 'driving';
-    const body = driving ? carRef.current : bodyRef.current;
+    const body = bodyRef.current;
     if (!body) return;
     const position = body.translation();
     const pose = getActivityPose(settings.mode);
@@ -41,21 +37,19 @@ export function WorldCamera({ bodyRef, carRef, vehicle, settings, look, onPositi
       desired.current.set(...pose.camera);
       target.current.set(...pose.target);
     } else if (firstPerson) {
-      const carYaw = driving ? vehicle.current.yaw : 0;
-      const [seatX, seatY, seatZ] = CAR.driverEye;
-      desired.current.set(position.x + (driving ? seatX * Math.cos(carYaw) + seatZ * Math.sin(carYaw) : 0), position.y + (driving ? seatY : CAMERA_CONFIG.firstPersonEyeOffset), position.z + (driving ? -seatX * Math.sin(carYaw) + seatZ * Math.cos(carYaw) : 0));
-      const yaw = look.current.yaw + carYaw, pitch = look.current.pitch;
+      desired.current.set(position.x, position.y + CAMERA_CONFIG.firstPersonEyeOffset, position.z);
+      const yaw = look.current.yaw, pitch = look.current.pitch;
       target.current.set(desired.current.x - Math.sin(yaw) * Math.cos(pitch), desired.current.y + Math.sin(pitch), desired.current.z - Math.cos(yaw) * Math.cos(pitch));
     } else {
-      const orbitYaw = look.current.orbitYaw + (driving ? vehicle.current.yaw : 0), orbitPitch = look.current.orbitPitch;
-      const distance = Math.hypot(...CAMERA_CONFIG.offset) * viewScale * (driving ? 1.15 : 1);
+      const orbitYaw = look.current.orbitYaw, orbitPitch = look.current.orbitPitch;
+      const distance = Math.hypot(...CAMERA_CONFIG.offset) * viewScale;
       const horizontal = Math.cos(orbitPitch) * distance;
       desired.current.set(position.x + Math.sin(orbitYaw) * horizontal, position.y + Math.sin(orbitPitch) * distance, position.z + Math.cos(orbitYaw) * horizontal);
-      target.current.set(position.x + CAMERA_CONFIG.framingOffset[0], position.y + (driving ? 1 : CAMERA_CONFIG.lookHeight), position.z + CAMERA_CONFIG.framingOffset[2]);
+      target.current.set(position.x + CAMERA_CONFIG.framingOffset[0], position.y + CAMERA_CONFIG.lookHeight, position.z + CAMERA_CONFIG.framingOffset[2]);
     }
 
     if (camera instanceof PerspectiveCamera) {
-      const fov = firstPerson ? 72 : driving ? 58 : CAMERA_CONFIG.fov;
+      const fov = firstPerson ? 72 : CAMERA_CONFIG.fov;
       if (camera.fov !== fov) { camera.fov = fov; camera.updateProjectionMatrix(); }
     }
     if (!initialized.current || firstPerson) {
@@ -79,10 +73,9 @@ export function WorldCamera({ bodyRef, carRef, vehicle, settings, look, onPositi
     if (sampleTime.current > 0.12) {
       const dx = position.x - previous.current.x;
       const dz = position.z - previous.current.z;
-      if (driving) heading.current = vehicle.current.yaw + Math.PI;
-      else if (firstPerson) heading.current = look.current.yaw + Math.PI;
+      if (firstPerson) heading.current = look.current.yaw + Math.PI;
       else if (Math.hypot(dx, dz) > 0.005) heading.current = Math.atan2(dx, dz);
-      onPosition?.({ x: position.x, y: position.y, z: position.z, heading: heading.current, cameraYaw: (firstPerson ? look.current.yaw : look.current.orbitYaw) + (driving ? vehicle.current.yaw : 0) });
+      onPosition?.({ x: position.x, y: position.y, z: position.z, heading: heading.current, cameraYaw: (firstPerson ? look.current.yaw : look.current.orbitYaw) });
       previous.current.set(position.x, position.y, position.z);
       sampleTime.current = 0;
     }

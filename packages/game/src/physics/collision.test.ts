@@ -31,7 +31,7 @@ function simulate(start: [number, number, number], velocity: { x: number; z: num
 describe('Rapier player collision against the scene geometry', () => {
   it.each([
     ['north', [1, PLAYER_CONFIG.spawn[1], 2], { x: 0, z: -5 }, 'z', -11.63],
-    ['south', [19, PLAYER_CONFIG.spawn[1], 65], { x: 0, z: 5 }, 'z', 74.50],
+    ['south', [0, PLAYER_CONFIG.spawn[1], 8.5], { x: 0, z: 5 }, 'z', 11.73],
     ['west', [1, PLAYER_CONFIG.spawn[1], 2], { x: -5, z: 0 }, 'x', -4.63],
     ['east', [1, PLAYER_CONFIG.spawn[1], 2], { x: 5, z: 0 }, 'x', 4.63]
   ] as const)('cannot walk through the %s wall at maximum speed', (_, start, velocity, axis, boundary) => {
@@ -71,11 +71,12 @@ describe('Rapier player collision against the scene geometry', () => {
     expect(open.x).toBeGreaterThan(7.2);
     expect(open.x).toBeLessThan(8.7);
     expect(open.y).toBeCloseTo(.925,2);
-    expect(simulate([12, PLAYER_CONFIG.spawn[1], 0], { x: -5, z: 0 }).x).toBeGreaterThan(10.4);
+    expect(simulate([10.25, PLAYER_CONFIG.spawn[1], 0], { x: -5, z: 0 }).x).toBeGreaterThan(10);
   });
-  it('crosses the front entrance into the yard and street while remaining grounded', () => {
+  it('crosses the front entrance into the courtyard and stops at the house boundary', () => {
     const position = simulate([0, PLAYER_CONFIG.spawn[1], 2.2], { x: 0, z: 5 }, 300);
-    expect(position.z).toBeGreaterThan(15);
+    expect(position.z).toBeGreaterThan(8.5);
+    expect(position.z).toBeLessThan(12);
     expect(position.y).toBeCloseTo(0.925, 2);
   });
   it('allows the quiet-room doorway while blocking solid courtyard fences', () => {

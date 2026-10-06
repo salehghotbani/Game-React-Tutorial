@@ -7,7 +7,7 @@ async function load(page:Page,completed=0) {
   await page.goto('/');await expect(page.getByText('در حال آماده‌سازی اتاق…')).toBeHidden({timeout:30000});
 }
 async function go(page:Page,title:string,interaction:string) {
-  await page.getByRole('button',{name:/اتاق زندهٔ تو/}).click();
+  await page.getByRole('button',{name:/خانهٔ تو/}).click();
   await page.locator('.world-dock').getByRole('button',{name:`رفتن به ${title}`,exact:true}).click();
   await expect(page.locator('.room-destination')).toHaveCount(0,{timeout:30000});
   await expect(page.locator('.interaction-prompt')).toContainText(interaction,{timeout:10000});
@@ -58,7 +58,7 @@ test('television seats the player, loads the real video URL on demand, and resto
   test.setTimeout(90000);await load(page,2);
   // External streaming is not part of deterministic CI; verify the player contract and real source URL.
   await page.route('https://www.youtube-nocookie.com/embed/**',route=>route.fulfill({contentType:'text/html',body:'<p>Test video host</p>'}));
-  await page.getByRole('button',{name:/اتاق زندهٔ تو/}).click();await page.locator('.world-dock').getByRole('button',{name:'رفتن به نشستن پای تلویزیون',exact:true}).click();
+  await page.getByRole('button',{name:/خانهٔ تو/}).click();await page.locator('.world-dock').getByRole('button',{name:'رفتن به نشستن پای تلویزیون',exact:true}).click();
   await expect(page.locator('.room-destination')).toHaveCount(0,{timeout:20000});
   const before={x:Number(await page.getByTestId('player-marker').getAttribute('data-player-x')),z:Number(await page.getByTestId('player-marker').getAttribute('data-player-z'))};
   await page.locator('.interaction-prompt').click();

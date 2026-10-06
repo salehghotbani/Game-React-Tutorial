@@ -19,7 +19,7 @@ test('a novice reads explanations and runs a free example before a personal firs
   await expect(page.getByRole('radio')).toHaveCount(0);
   await expect(page.getByRole('textbox',{name:'ویرایشگر کد React'})).toHaveCount(0);
   await expect(page.getByRole('button',{name:'ارسال پاسخ',exact:true})).toHaveCount(0);
-  await expect(page.locator('.teaching-path button').filter({hasText:'JSX: نوشتن ظاهر داخل JavaScript'})).toBeDisabled();
+  await expect(page.locator('.teaching-path button').filter({hasText:'JSX: نوشتن ظاهر داخل JavaScript'})).toBeEnabled();
   await page.screenshot({path:'artifacts/react-quest-beginner-start.png'});
   await page.getByTestId('lesson-next').click();
   await page.getByRole('button',{name:'اجرای نمونه'}).click();

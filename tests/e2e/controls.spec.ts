@@ -6,7 +6,7 @@ async function load(page: Page) {
   await expect(page.getByText('در حال آماده‌سازی اتاق…')).toBeHidden({ timeout: 30000 });
 }
 async function go(page: Page, destination: string) {
-  await page.getByRole('button', { name: /اتاق زندهٔ تو/ }).click();
+  await page.getByRole('button', { name: /خانهٔ تو/ }).click();
   await page.locator('.world-dock').getByRole('button', { name: `رفتن به ${destination}`, exact: true }).click();
   await expect(page.locator('.room-destination')).toHaveCount(0, { timeout: 40000 });
 }

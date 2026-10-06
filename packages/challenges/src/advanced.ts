@@ -1,4 +1,5 @@
 import type { Challenge, TestStep } from '@react-quest/shared';
+import { buildProjects } from './builds';
 import { contentHelpers as h, todoCode } from './content';
 const { lesson, quiz, q, t, text, click, input, count } = h;
 
@@ -91,7 +92,8 @@ export const projectDefinitions = [
   { id: 'movies', title: 'Movie Search', description: 'جست‌وجو و debounce', chapterId: 7 },
   { id: 'shop', title: 'E-commerce', description: 'کاتالوگ، reducer سبد و فیلتر', chapterId: 9 },
   { id: 'admin', title: 'Admin Panel', description: 'کاربران و نقش رابط', chapterId: 13 },
-  { id: 'final', title: 'Study Planner', description: 'برنامه از صفحهٔ خالی', chapterId: 14 }
+  { id: 'final', title: 'Study Planner', description: 'برنامه از صفحهٔ خالی', chapterId: 14 },
+  ...buildProjects
 ];
 export const fixtureEndpoints = ['/api/weather?city=Tehran', '/api/weather?city=Shiraz', '/api/weather?city=Error', '/api/movies?q=react', '/api/movies?q=hooks', '/api/users', '/api/fail'];
 export const exampleClockStep: TestStep = { type: 'clock', milliseconds: 2000 };

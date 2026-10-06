@@ -89,3 +89,12 @@ input[type="checkbox"] { accent-color: #638059; width: 17px; height: 17px; }
 @media (max-width: 760px) { .topbar { height: 65px; padding: 0 16px; } .brand { font-size: 21px; gap: 8px; } .brand-mark { width: 34px; height: 34px; } .location, .build-label { display: none; } .world, .world-vignette, .pause-overlay { top: 65px; } .journey-card { top: 84px; width: 198px; padding: 14px 16px; } .journey-card h1 { font-size: 14px; margin: 12px 0 6px; } .journey-card > p { font-size: 9px; margin-bottom: 14px; } .stage-row { padding-top: 11px; } .stage-track { margin: 12px 0 10px; } .scene-label { display: none; } .minimap { width: 116px; bottom: 148px; padding: 11px 10px; } .map-svg { width: 95px; height: 95px; } .tiny-label { display: none; } .map-caption { font-size: 7px; } .controls-panel { bottom: 47px; max-width: calc(100% - 28px); gap: 15px; } .control-copy b { font-size: 11px; } .control-copy span { font-size: 8px; } .controls-divider, .escape-hint { display: none; } .settings-panel { top: 78px; left: 14px; width: min(300px, calc(100% - 28px)); } .world-status { bottom: 17px; right: 17px; } }
 @media (max-height: 680px) and (min-width: 761px) { .journey-card { top: 96px; } .journey-card > p { display: none; } .journey-card h1 { margin: 13px 0; } .minimap { bottom: 39px; padding: 12px; width: 142px; } .map-svg { width: 105px; height: 105px; } .controls-panel { bottom: 42px; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+.project-showcase { width: min(1200px, calc(100vw - 32px)); height: calc(100dvh - 48px); max-height: calc(100dvh - 48px); padding: 20px; border: 1px solid var(--line, #d4d7c8); border-radius: 18px; background: var(--surface, #faf9f1); color: inherit; }
+.project-showcase[open] { display: flex; flex-direction: column; gap: 12px; }
+.project-showcase::backdrop { background: #142823bb; }
+.project-showcase header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.project-showcase h2 { margin: 4px 0; font-size: 20px; }
+.project-showcase p { margin: 0; font-size: 13px; }
+.project-showcase iframe { flex: 1; width: 100%; min-height: 180px; border: 0; border-radius: 10px; background: white; }
+.project-showcase button { border: 1px solid #94a79b; padding: 8px 12px; border-radius: 8px; }

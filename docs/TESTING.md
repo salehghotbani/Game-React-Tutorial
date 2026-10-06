@@ -47,14 +47,14 @@ Playwright starts Vite automatically if its target URL is unavailable, and reuse
 | Pane sizing / hidden preview | `workspace.spec.ts` |
 | Rewards, projects or mastery | `education.spec.ts`, `roomLife.spec.ts` |
 | Movement, input or colliders | `game.spec.ts`, `controls.spec.ts`, `neighborhood.spec.ts` |
-| Vehicle behavior / enlarged terrain | `driving.spec.ts` |
+| Advanced builds and saved creations | `builds.spec.ts` |
 | Translation / country / RTL | `locale.spec.ts` |
 | Static subpath, workers and grading | `pages.spec.ts` with the static-host setup below |
 
 Run a selected file or scenario before the full suite:
 
 ```sh
-pnpm test:e2e tests/e2e/driving.spec.ts --trace off
+pnpm test:e2e tests/e2e/builds.spec.ts --trace off
 pnpm test:e2e tests/e2e/education.spec.ts --grep "all curriculum reference solutions" --trace off
 pnpm test:e2e tests/e2e/locale.spec.ts --grep "all English curriculum solutions" --trace off
 ```

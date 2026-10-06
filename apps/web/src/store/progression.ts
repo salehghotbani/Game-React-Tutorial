@@ -1,4 +1,4 @@
-import { challenges, foundationIds, getChallenge, getTeachingLesson, isChallengeAvailable, rooms } from '@react-quest/challenges';
+import { challenges, foundationIds, getChallenge, getTeachingLesson, isChallengeAvailable, hasRecommendedPrerequisites, rooms } from '@react-quest/challenges';
 import type { Challenge, RoomLife } from '@react-quest/shared';
 import { emptyRoomLife, restoreRoomLife } from './roomLife';
 
@@ -32,7 +32,7 @@ export function getSkillStatus(state: ProgressState, skill: string): 'new' | 'in
   return state.introduced.includes(skill) ? 'introduced' : 'new';
 }
 export const skillLabels = { new: 'یاد نگرفته', introduced: 'آشنا شده', practiced: 'تمرین کرده', mastered: 'مسلط' };
-export function isRoomAvailable(state: ProgressState, id: string) { return rooms.find(r => r.id === id)?.mastery.every(skill => getSkillStatus(state, skill) === 'mastered') ?? false; }
+export function isRoomAvailable(_state: ProgressState, id: string) { return rooms.some(room => room.id === id); }
 export function getDraft(state: ProgressState, challenge: Challenge) { return state.drafts[challenge.id] ?? challenge.starterFiles['src/App.jsx'] ?? ''; }
 export function dayKey(at = Date.now()) { return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran', calendar: 'gregory', year: 'numeric', month: '2-digit', day: '2-digit' }).format(at); }
 export function getStreak(state: ProgressState, at = Date.now()) {
@@ -43,15 +43,15 @@ export function getStreak(state: ProgressState, at = Date.now()) {
 }
 export function dueChallenges(state: ProgressState, at = Date.now()) { return challenges.filter(c => state.receipts[c.id] && at - (state.reviewed[c.id] ?? state.receipts[c.id]!.at) >= (state.receipts[c.id]!.mastery ? 14 : 3) * 86400000); }
 export function recommendations(state: ProgressState, at = Date.now()) {
-  const open = challenges.filter(c => isChallengeAvailable(c, state.completedLessons) && !state.completedLessons.includes(c.id));
+  const open = challenges.filter(c => hasRecommendedPrerequisites(c, state.completedLessons) && !state.completedLessons.includes(c.id));
   const recentFailed = [...state.attempts].reverse().find(a => a.failed.length && open.some(c => c.id === a.id));
   const failed = recentFailed && getChallenge(recentFailed.id);
   return [...(failed ? [failed] : []), ...dueChallenges(state, at).slice(0, 1), ...open.filter(c => c.mastery && c.skills?.some(s => getSkillStatus(state, s) === 'practiced')), ...open].filter((c, i, all) => all.findIndex(x => x.id === c.id) === i).slice(0, 3);
 }
 export function dailyChallenge(state: ProgressState, at = Date.now()) {
-  const assigned = getChallenge(state.dailyAssignments[dayKey(at)] ?? ''); if (assigned && isChallengeAvailable(assigned,state.completedLessons)) return assigned;
+  const assigned = getChallenge(state.dailyAssignments[dayKey(at)] ?? ''); if (assigned && isChallengeAvailable(assigned)) return assigned;
   if (!state.completedLessons.includes('hello-react')) return challenges[0]!;
-  const accessible = challenges.filter(c => isChallengeAvailable(c, state.completedLessons) && c.kind !== 'boss' && !c.mastery);
+  const accessible = challenges.filter(c => hasRecommendedPrerequisites(c, state.completedLessons) && c.kind !== 'boss' && !c.mastery);
   const taught = accessible.filter(c => state.learnedLessons.includes(c.id));
   const pool = taught.length ? taught : accessible;
   const hash = [...dayKey(at)].reduce((sum, x) => sum + x.charCodeAt(0), 0);
@@ -69,8 +69,8 @@ export function restoreProgress(value: unknown): ProgressState {
   const data = value as Record<string, unknown>;
   if (data.version !== 1 && data.version !== 2 && data.version !== 3) return state;
   const wanted = Array.isArray(data.completedLessons) ? data.completedLessons : [];
-  // Fixed point also handles prerequisite chains whose source order is not topological.
-  for (let round = 0; round < challenges.length; round++) for (const c of challenges) if (wanted.includes(c.id) && !state.completedLessons.includes(c.id) && isChallengeAvailable(c, state.completedLessons)) state.completedLessons.push(c.id);
+  // Any valid completed exercise can be restored, including learners starting mid-course.
+  state.completedLessons = challenges.filter(c => wanted.includes(c.id)).map(c => c.id);
   for (const c of challenges) {
     const code = data.drafts && typeof data.drafts === 'object' ? (data.drafts as Record<string, unknown>)[c.id] : undefined;
     if (typeof code === 'string' && code.length <= 65536) state.drafts[c.id] = code;
@@ -85,7 +85,7 @@ export function restoreProgress(value: unknown): ProgressState {
     }
     const count = getTeachingLesson(c).steps.length;
     const savedStep = data.lessonSteps && typeof data.lessonSteps === 'object' ? (data.lessonSteps as Record<string, unknown>)[c.id] : undefined;
-    if (isChallengeAvailable(c, state.completedLessons) && typeof savedStep === 'number' && Number.isInteger(savedStep) && savedStep >= 0) state.lessonSteps[c.id] = Math.min(count, savedStep);
+    if (isChallengeAvailable(c) && typeof savedStep === 'number' && Number.isInteger(savedStep) && savedStep >= 0) state.lessonSteps[c.id] = Math.min(count, savedStep);
     // Existing passed exercises remain reviewable; reading a library page alone is not lesson completion.
     if (state.completedLessons.includes(c.id) || state.lessonSteps[c.id] === count) {
       state.learnedLessons.push(c.id);
@@ -97,10 +97,10 @@ export function restoreProgress(value: unknown): ProgressState {
   if (data.reviewed && typeof data.reviewed === 'object') for (const [id, at] of Object.entries(data.reviewed)) if (state.receipts[id] && typeof at === 'number' && Number.isFinite(at)) state.reviewed[id] = Math.min(Date.now(), at);
   if (data.projectStorage && typeof data.projectStorage === 'object') for (const [id, storage] of Object.entries(data.projectStorage)) if (challenges.some(c => (c.project?.id ?? c.id) === id)) state.projectStorage[id] = cleanStorage(storage);
   if (Array.isArray(data.dailyDays)) state.dailyDays = [...new Set(data.dailyDays.filter((d): d is string => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d) && d <= dayKey()))].slice(-40000);
-  if (data.dailyAssignments && typeof data.dailyAssignments === 'object') for (const [day,id] of Object.entries(data.dailyAssignments).slice(-400)) if (/^\d{4}-\d{2}-\d{2}$/.test(day) && typeof id === 'string' && getChallenge(id) && isChallengeAvailable(getChallenge(id)!,state.completedLessons)) state.dailyAssignments[day]=id;
+  if (data.dailyAssignments && typeof data.dailyAssignments === 'object') for (const [day,id] of Object.entries(data.dailyAssignments).slice(-400)) if (/^\d{4}-\d{2}-\d{2}$/.test(day) && typeof id === 'string' && getChallenge(id) && isChallengeAvailable(getChallenge(id)!)) state.dailyAssignments[day]=id;
   state.arcadeBestScore = typeof data.arcadeBestScore === 'number' && Number.isFinite(data.arcadeBestScore) ? Math.max(0, Math.min(100000, Math.floor(data.arcadeBestScore))) : 0;
   const selected = getChallenge(String(data.selectedChallengeId));
-  if (selected && isChallengeAvailable(selected, state.completedLessons)) state.selectedChallengeId = selected.id;
+  if (selected && isChallengeAvailable(selected)) state.selectedChallengeId = selected.id;
   if (typeof data.selectedRoom === 'string' && isRoomAvailable(state, data.selectedRoom)) state.selectedRoom = data.selectedRoom;
   state.roomLife = restoreRoomLife(data.roomLife, state.completedLessons);
   return state;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { challenges, getChallenge } from '@react-quest/challenges';
-import { answerQuestion, completeChallenge, progressSlice, revealHint, revealSolution, saveDraft, selectChallenge, visitRoom } from './progressSlice';
+import { answerQuestion, completeChallenge, progressSlice, revealHint, revealSolution, saveDraft, saveProjectStorage, selectChallenge, visitRoom } from './progressSlice';
 import { dailyChallenge, dayKey, dueChallenges, emptyProgress, getProgressTotals, getSkillStatus, getStreak, isRoomAvailable, restoreProgress } from './progression';
 import { learn } from './progressTestHelpers';
 const result = (id:string) => ({passed:true,score:100,tests:getChallenge(id)!.tests.map(t=>({id:t.id,name:t.name,passed:true}))});
@@ -15,7 +15,7 @@ describe('mastery, guidance, migration and learning recommendations',()=>{
   const state=accessible('js-immutable');
   expect(getProgressTotals(state).xp).toBeGreaterThan(1000);
   expect(getSkillStatus(state,'components')).toBe('practiced');
-  expect(isRoomAvailable(state,'workshop')).toBe(false);
+  expect(isRoomAvailable(state,'workshop')).toBe(true);
   expect(state.receipts['components-mastery']?.mastery).toBe(false);
  });
  it('persists assistance and reduced reward across reopening and reload',()=>{
@@ -29,12 +29,13 @@ describe('mastery, guidance, migration and learning recommendations',()=>{
   solution=finish(solution,'hello-react');
   expect(getProgressTotals(solution).xp).toBe(60);
  });
- it('requires a fresh unaided mastery exercise before opening a room',()=>{
+ it('keeps mastery earned while rooms remain freely accessible',()=>{
   let state=accessible('components-mastery');
   state=progressSlice.reducer(state,revealHint('components-mastery'));
   state=progressSlice.reducer(state,revealSolution('components-mastery'));
   expect(state.assistance['components-mastery']).toBeUndefined();
-  expect(progressSlice.reducer(state,visitRoom('workshop')).selectedRoom).toBe('bedroom');
+  expect(progressSlice.reducer(state,visitRoom('workshop')).selectedRoom).toBe('workshop');
+  expect(getSkillStatus(state,'components')).toBe('practiced');
   state=finish(state,'components-mastery');
   expect(getSkillStatus(state,'components')).toBe('mastered');
   expect(progressSlice.reducer(state,visitRoom('workshop')).selectedRoom).toBe('workshop');
@@ -47,6 +48,16 @@ describe('mastery, guidance, migration and learning recommendations',()=>{
   expect(state.drafts['todo-render']).toBe(state.drafts['todo-item']);
   state=progressSlice.reducer(state,saveDraft({id:'todo-render',code:'edited'}));
   expect(progressSlice.reducer(state,selectChallenge('todo-render')).drafts['todo-render']).toBe('edited');
+ });
+ it('saves a reopened creation independently of the currently selected lesson without changing progress',()=>{
+  let state=progressSlice.reducer(emptyProgress,saveDraft({id:'build-board',code:'export default function App(){return <main>My board</main>}'}));
+  state=progressSlice.reducer(state,selectChallenge('build-budget'));
+  const reopened=progressSlice.reducer(state,saveProjectStorage({id:'board',values:{board:'[{"title":"Saved creation"}]'}}));
+  expect(reopened.projectStorage.board).toEqual({board:'[{"title":"Saved creation"}]'});
+  expect(reopened.selectedChallengeId).toBe('build-budget');
+  expect(reopened.completedLessons).toEqual([]);
+  expect(getProgressTotals(reopened).xp).toBe(0);
+  expect(progressSlice.reducer(reopened,saveProjectStorage({id:'unknown-project',values:{bad:'value'}}))).toEqual(reopened);
  });
  it('rejects a stale quiz answer even when the earlier answer was right',()=>{
   let state=progressSlice.reducer(learn(emptyProgress,'js-map'),answerQuestion({id:'js-map',question:'map',answer:1}));

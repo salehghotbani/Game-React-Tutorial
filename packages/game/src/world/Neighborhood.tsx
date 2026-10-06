@@ -1,20 +1,9 @@
-import { tx, useLanguage } from '@react-quest/localization';
-import { Html } from '@react-three/drei';
-import type { GameSettings, Vector3Tuple } from '@react-quest/shared';
-import { ROOM_COLLIDERS, type RoomSpotId } from '../config';
-import { worldDaylight } from '../logic/appearance';
-import type { RoomLifeView } from '../room/RoomLife';
-import { FLOOR_AREAS, GAME_NET, NEIGHBORHOOD_COLLIDERS, NEIGHBOR_HOUSES, WORLD_CEILINGS } from './layout';
-import { WorldBox, WorldSign } from './Primitives';
-import { ForegroundBuilding } from './ForegroundBuilding';
+import { useLanguage } from '@react-quest/localization';
+import type { GameSettings } from '@react-quest/shared';
+import { ROOM_COLLIDERS } from '../config';
+import { FLOOR_AREAS, NEIGHBORHOOD_COLLIDERS, WORLD_CEILINGS } from './layout';
+import { WorldBox } from './Primitives';
 import { NaturalTree as Tree } from './NaturalTree';
-import { NeighborHouse as House } from './NeighborHouse';
-import { NeighborhoodDetails } from './NeighborhoodDetails';
-
-function Destination({ id, position, label, life }: { id: RoomSpotId; position: Vector3Tuple; label: string; life: RoomLifeView }) {
-  useLanguage();
-  return <Html position={position} center zIndexRange={[9, 0]}><button className="room-marker ready" onClick={() => life.onNavigate?.(id)} aria-label={tx(`رفتن به ${label}`)}><span>✦</span>{tx(label)}</button></Html>;
-}
 
 function Architecture({ cameraView }: { cameraView: GameSettings['cameraView'] }) {
   useLanguage();
@@ -30,7 +19,7 @@ function Architecture({ cameraView }: { cameraView: GameSettings['cameraView'] }
   })}</>;
 }
 
-function ExtraRooms({ life }: { life: RoomLifeView }) {
+function ExtraRooms() {
   useLanguage();
   return <>
     <WorldBox position={[-3.8, 0.65, -11.4]} size={[2.2, 1.3, 1.1]} color="#b6c6b4" />
@@ -49,12 +38,10 @@ function ExtraRooms({ life }: { life: RoomLifeView }) {
     <WorldBox position={[-7.6, 1.8, -4.86]} size={[0.05, 1.35, 0.06]} color="#e5e3ce" />
     <WorldBox position={[-7.6, 1.8, -4.86]} size={[2.4, 0.05, 0.06]} color="#e5e3ce" />
     <WorldBox position={[2.5, 0.025, -8.9]} size={[3.8, 0.04, 4.8]} color="#c7c2b0" />
-    <Destination id="kitchen" position={[-2.2, 2, -7.5]} label={tx("آشپزخانه")} life={life} />
-    <Destination id="quietRoom" position={[-7.3, 2, 0]} label={tx("اتاق آرام")} life={life} />
   </>;
 }
 
-function Yard({ life }: { life: RoomLifeView }) {
+function Yard() {
   useLanguage();
   return <>
     <WorldBox position={[0, 0.013, 8.5]} size={[4, 0.035, 7]} color="#b5ad9b" surface="stone" />
@@ -63,56 +50,17 @@ function Yard({ life }: { life: RoomLifeView }) {
     <WorldBox position={[4, 0.58, 9.5]} size={[3, 0.15, 0.9]} color="#b5936e" />
     <WorldBox position={[4, 1, 9.9]} size={[3, 0.72, 0.12]} color="#b5936e" />
     {[-1, 1].map(side => <WorldBox key={side} position={[4 + side, 0.25, 9.5]} size={[0.12, 0.5, 0.6]} color="#678779" />)}
-    <Destination id="yard" position={[0, 2.2, 8.2]} label={tx("حیاط خانه")} life={life} />
-    <Destination id="street" position={[0, 2.3, 12.5]} label={tx("کوچهٔ یادگیری")} life={life} />
   </>;
 }
 
-function GameNetBuilding({ life, unlocked }: { life: RoomLifeView; unlocked: boolean }) {
-  useLanguage();
+export function Neighborhood({ settings }: { settings: GameSettings }) {
   return <>
-    <WorldBox position={[-15, 0.015, 7.5]} size={[8.8, 0.04, 6.8]} color="#536c77" />
-    <WorldBox position={[-15, 1.45, 4.03]} size={[8.8, 2.9, 0.2]} color="#527982" />
-    <WorldSign text={tx("REACT PLAY / گیم‌نت")} position={[-15, 2.6, 11.12]} width={5} color="#a9efe2" />
-    <WorldBox position={[-15, 2.6, 11.05]} size={[5.4, 1.5, 0.12]} color="#335b60" />
-    <WorldBox position={[-15, 1.4, 5.1]} size={[6.2, 0.13, 1.2]} color="#b5a485" />
-    {[-17.2, -15, -12.8].map(x => <group key={x} position={[x, 0, 5.1]}>
-      <WorldBox position={[0, 1.98, -0.1]} size={[1.45, 0.94, 0.13]} color="#263c48" />
-      <WorldBox position={[0, 1.98, -0.02]} size={[1.31, 0.79, 0.015]} color={unlocked ? '#66b9a2' : '#557080'} emissive={unlocked ? '#66b9a2' : undefined} />
-      <WorldBox position={[0, 1.5, 0.24]} size={[0.75, 0.04, 0.28]} color="#405561" />
-      <WorldBox position={[0, 0.5, 1.1]} size={[0.65, 0.4, 0.7]} color="#759a9c" />
-      <WorldBox position={[0, 0.9, 1.35]} size={[0.65, 0.65, 0.12]} color="#648b92" />
-    </group>)}
-    <Destination id="gameNet" position={[-15, 2.6, 7.2]} label={tx(unlocked ? 'گیم‌نت · ۳ دقیقه بازی' : `گیم‌نت · ${GAME_NET.requiredXp} XP`)} life={life} />
-  </>;
-}
-
-export function Neighborhood({ settings, life, timestamp, gameNetUnlocked }: { settings: GameSettings; life: RoomLifeView; timestamp: number | null; gameNetUnlocked: boolean }) {
-  useLanguage();
-  const night = worldDaylight(timestamp, settings.themeMode) < 0.2;
-  return <>
-    <WorldBox position={[0, -0.12, 10]} size={[150, 0.2, 130]} color="#677e53" surface="grass" />
-    {FLOOR_AREAS.filter(area => area.id !== 'studio').map(area => {
-      const road = ['street', 'country-road', 'road-link'].includes(area.id), paving = area.id.includes('walk') || area.id === 'parking';
-      return <WorldBox key={area.id} position={[area.x, -0.1, area.z]} size={[area.width, 0.2, area.depth]} color={road ? '#464b50' : paving ? '#b6b6ac' : '#d0b696'} surface={road ? 'asphalt' : paving ? 'stone' : 'wood'} />;
-    })}
+    {FLOOR_AREAS.filter(area => area.id !== 'studio').map(area => <WorldBox key={area.id}
+      position={[area.x, -0.1, area.z]} size={[area.width, 0.2, area.depth]} color="#d0b696" surface="wood" />)}
     <Architecture cameraView={settings.cameraView} />
     {settings.cameraView === 'firstPerson' && settings.mode === 'explore' && WORLD_CEILINGS.map(ceiling => <WorldBox key={ceiling.id} position={ceiling.position} size={[ceiling.halfExtents[0] * 2, ceiling.halfExtents[1] * 2, ceiling.halfExtents[2] * 2]} color="#e4decb" />)}
-    <ExtraRooms life={life} />
-    <Yard life={life} />
-    <NeighborhoodDetails />
-    <GameNetBuilding life={life} unlocked={gameNetUnlocked} />
-    {NEIGHBOR_HOUSES.map((house, index) => <ForegroundBuilding key={index} bounds={house} cameraView={settings.cameraView}><House house={house} index={index} night={night} /></ForegroundBuilding>)}
-    {[-18, -9, 0, 9, 18].map(x => <WorldBox key={x} position={[x, 0.012, 15.7]} size={[3, 0.025, 0.12]} color="#dfe1cd" />)}
-    {[-19, 8, 19].map(x => <group key={x} position={[x, 0, 18.6]}>
-      <WorldBox position={[0, 1.8, 0]} size={[0.09, 3.6, 0.09]} color="#607b76" />
-      <WorldBox position={[0, 3.5, 0]} size={[0.46, 0.32, 0.46]} color="#e7cf91" emissive={night ? '#f0c477' : undefined} />
-      {night && <pointLight position={[0, 3.3, 0]} intensity={8} distance={7} color="#f9d29b" />}
-    </group>)}
-    <Tree x={18.5} z={20} scale={1.1} /><Tree x={-19.3} z={20} />
-    {Array.from({ length: 29 }, (_, i) => <WorldBox key={`road-stripe-${i}`} position={[-84 + i * 6, 0.013, 36]} size={[2.8, 0.025, 0.13]} color="#e6d899" />)}
-    {[-1, 1].map(side => <WorldBox key={`road-edge-${side}`} position={[0, 0.013, 36 + side * 3.7]} size={[176, 0.025, 0.1]} color="#d9ddcf" />)}
-    <WorldSign text="دشت آفتاب" position={[29.3, 2.1, 30]} width={3} rotation={[0, Math.PI, 0]} />
-    <WorldBox position={[29.3, 1, 30.03]} size={[0.09, 2, 0.09]} color="#69766a" />
+    <ExtraRooms />
+    <Yard />
+    <WorldBox position={[0, 0.4, 12.2]} size={[20.8, 0.8, 0.24]} color="#c4c9ae" surface="stone" />
   </>;
 }

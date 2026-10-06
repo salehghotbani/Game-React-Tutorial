@@ -27,13 +27,13 @@ describe('neighborhood rules', () => {
     expect(getWorldTime(midnight)).toMatchObject({ hour: 0, minute: 0, daylight: 0 });
   });
   it('distinguishes physical areas and rejects unsupported floor destinations', () => {
-    expect(getWorldArea({ x: 0, z: 15 })).toBe('کوچهٔ یادگیری');
-    expect(getWorldArea({ x: -15, z: 7 })).toBe('گیم‌نت محله');
+    expect(getWorldArea({ x: 0, z: 8.5 })).toBe('حیاط خانه');
+    expect(getWorldArea({ x: -7, z: 0 })).toBe('اتاق آرام');
     expect(isOnWorldFloor({ x: 7, z: 0 }, false)).toBe(false);
     expect(isOnWorldFloor({ x: 7, z: 0 }, true)).toBe(true);
-    expect(isOnWorldFloor({ x: 22, z: -10 }, true)).toBe(true);
+    expect(isOnWorldFloor({ x: 0, z: -10 }, true)).toBe(true);
     expect(isOnWorldFloor({ x: 76, z: -10 }, true)).toBe(false);
-    expect(getWorldArea({ x: 0, z: 36 })).toBe('جادهٔ دشت');
-    expect(getWorldArea({ x: -32, z: -18 })).toBe('دشت آفتاب');
+    expect(isOnWorldFloor({ x: 0, z: 15 }, true)).toBe(false);
+    expect(isOnWorldFloor({ x: -32, z: -18 }, true)).toBe(false);
   });
 });

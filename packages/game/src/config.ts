@@ -48,7 +48,7 @@ export const ROOM_COLLIDERS: RoomCollider[] = [
   { id: 'coffee-table', position: [-2.65, 0.24, 0.35], halfExtents: [0.43, 0.24, 0.65] },
   { id: 'television', position: [3.4, 0.38, -11.5], halfExtents: [1.1, 0.38, 0.28] },
   { id: 'lounge-chair', position: [2.5, 0.58, -9.4], halfExtents: [0.46, 0.58, 0.46] },
-  { id: 'key-console', position: [2.7, 0.48, -2.9], halfExtents: [0.4, 0.48, 0.33] }
+  { id: 'key-console', position: [1.9, 0.48, -2.9], halfExtents: [0.4, 0.48, 0.33] }
 ];
 
 export const ROOM_SPOTS = {
@@ -57,17 +57,13 @@ export const ROOM_SPOTS = {
   sofa: { position: [-3.95, 0, 0], approach: { x: -2.6, z: -0.9 } },
   plant: { position: [3.95, 0, 2.65], approach: { x: 3.95, z: 1.65 } },
   television: { position: [2.5, 0, -9.4], approach: { x: 1.4, z: -9 } },
-  key: { position: [2.7, 0, -2.9], approach: { x: 1.75, z: -2.9 } },
+  key: { position: [1.9, 0, -2.9], approach: { x: 0.95, z: -2.9 } },
   door: { position: [4.98, 0, 0], approach: { x: 4.05, z: 0 } },
   greenhouse: { position: [7.25, 0, 0], approach: { x: 7.25, z: 0 } },
   arcade: { position: [3.9, 0, -1.6], approach: { x: 2.85, z: -1.6 } },
   yard: { position: [0, 0, 8.5], approach: { x: 0, z: 8.5 } },
-  street: { position: [0, 0, 15], approach: { x: 0, z: 15 } },
-  gameNet: { position: [-15, 0, 6.7], approach: { x: -15, z: 7.3 } },
   kitchen: { position: [-2, 0, -7], approach: { x: -2, z: -7 } },
   quietRoom: { position: [-7, 0, 2.5], approach: { x: -7, z: 2.5 } },
-  car: { position: [24, 0, 25], approach: { x: 22.4, z: 25 } },
-  meadow: { position: [-32, 0, -18], approach: { x: -32, z: -18 } }
 } satisfies Record<string, { position: Vector3Tuple; approach: { x: number; z: number } }>;
 
 export type RoomSpotId = keyof typeof ROOM_SPOTS;

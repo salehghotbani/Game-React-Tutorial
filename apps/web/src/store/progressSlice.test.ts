@@ -22,13 +22,13 @@ describe('progression and persistence', () => {
     const restored = restoreProgress({ version: 1, ...repeated });
     expect(progressSlice.reducer(restored, award).completedLessons).toHaveLength(1);
   });
-  it('rejects failed, stale and locked submissions', () => {
+  it('rejects failed and stale submissions while allowing mid-course selection', () => {
     const first = challenges[0]!;
     const failed = progressSlice.reducer(learn(emptyProgress, first.id), completeChallenge({ id: first.id, source: first.starterFiles['src/App.jsx']!, result: { ...resultFor(0), passed: false } }));
     expect(failed.completedLessons).toEqual([]);
     const modified = progressSlice.reducer(learn(emptyProgress, first.id), saveDraft({ id: first.id, code: 'changed code' }));
     expect(progressSlice.reducer(modified, completeChallenge({ id: first.id, source: first.starterFiles['src/App.jsx']!, result: resultFor(0) })).completedLessons).toEqual([]);
-    expect(progressSlice.reducer(emptyProgress, selectChallenge(challenges[4]!.id)).selectedChallengeId).toBe(first.id);
+    expect(progressSlice.reducer(emptyProgress, selectChallenge(challenges[4]!.id)).selectedChallengeId).toBe(challenges[4]!.id);
   });
   it('unlocks the arcade only after all five 200-XP lessons', () => {
     let state = emptyProgress;
@@ -39,12 +39,12 @@ describe('progression and persistence', () => {
     expect(getLevelInfo(1000).level).toBe(2);
     expect(getLevelInfo(1200).level).toBe(3);
   });
-  it('restores valid prerequisite chains and derives XP rather than trusting saved totals', () => {
+  it('restores valid mid-course progress and derives XP rather than trusting saved totals', () => {
     const restored = restoreProgress({ version: 1, completedLessons: ['hello-react', 'hello-react', 'unknown', 'state-counter'], xp: 99999, drafts: { 'hello-react': 'saved JSX', unknown: 'bad' }, selectedChallengeId: 'state-counter' });
-    expect(restored.completedLessons).toEqual(['hello-react']);
-    expect(getProgressTotals(restored.completedLessons).xp).toBe(200);
+    expect(restored.completedLessons).toEqual(['hello-react','state-counter']);
+    expect(getProgressTotals(restored.completedLessons).xp).toBe(400);
     expect(restored.drafts).toEqual({ 'hello-react': 'saved JSX' });
-    expect(restored.selectedChallengeId).toBe('hello-react');
+    expect(restored.selectedChallengeId).toBe('state-counter');
     expect(restoreProgress({ version: 999 })).toEqual(emptyProgress);
   });
 });

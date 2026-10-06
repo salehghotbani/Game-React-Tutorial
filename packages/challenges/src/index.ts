@@ -1,5 +1,6 @@
 import type { Challenge } from '@react-quest/shared';
 import { extraChallenges } from './content';
+import { buildChallenges } from './builds';
 import { advancedChallenges } from './advanced';
 import { chapters } from './curriculum';
 export { chapters, skills, rooms, challengeKinds } from './curriculum';
@@ -82,6 +83,7 @@ const foundationMeta = [
   { chapterId: 3, skills: ['state'], solution: 'import {useState} from "react";\nexport default function App(){const[n,setN]=useState(0);return <main><h1>Counter</h1><output>{n}</output><div><button onClick={()=>setN(v=>v+1)}>+1</button><button onClick={()=>setN(v=>v-1)}>-1</button><button onClick={()=>setN(0)}>Reset</button></div></main>;}' }
 ];
 export const foundationIds = foundationChallenges.map(challenge => challenge.id);
-export const challenges: Challenge[] = [...foundationChallenges.map((challenge, index) => ({ ...challenge, kind: 'write' as const, difficulty: 1, minutes: 6, ...foundationMeta[index], concept: chapters.find(chapter => chapter.id === foundationMeta[index]!.chapterId)!.concept, hints: [...challenge.hints, 'در handler مقدار تازه را با دادهٔ ورودی همان کامپوننت بساز؛ یک بخش را هر بار تست کن.'] })), ...extraChallenges, ...advancedChallenges];
+export const challenges: Challenge[] = [...foundationChallenges.map((challenge, index) => ({ ...challenge, kind: 'write' as const, difficulty: 1, minutes: 6, ...foundationMeta[index], concept: chapters.find(chapter => chapter.id === foundationMeta[index]!.chapterId)!.concept, hints: [...challenge.hints, 'در handler مقدار تازه را با دادهٔ ورودی همان کامپوننت بساز؛ یک بخش را هر بار تست کن.'] })), ...extraChallenges, ...advancedChallenges, ...buildChallenges];
 export function getChallenge(id: string) { return challenges.find((challenge) => challenge.id === id); }
-export function isChallengeAvailable(challenge: Challenge, completed: string[]) { return challenge.prerequisites.every((id) => completed.includes(id)); }
+export function hasRecommendedPrerequisites(challenge: Challenge, completed: string[]) { return challenge.prerequisites.every((id) => completed.includes(id)); }
+export function isChallengeAvailable(challenge: Challenge) { return getChallenge(challenge.id) !== undefined; }

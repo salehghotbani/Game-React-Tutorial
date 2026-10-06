@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { PLAYER_CONFIG, WORLD_BOUNDS, canDrive } from '@react-quest/game';
+import { PLAYER_CONFIG, WORLD_BOUNDS } from '@react-quest/game';
 import type { GameMode, GameSettings, ThemeMode } from '@react-quest/shared';
 
 const initialState: GameSettings = {
@@ -35,11 +35,6 @@ export const gameSlice = createSlice({
     togglePause(state) { state.paused = !state.paused; },
     setPaused(state, action: PayloadAction<boolean>) { state.paused = action.payload; },
     togglePhysics(state) { state.showPhysics = !state.showPhysics; },
-    startDriving(state, action: PayloadAction<number>) {
-      if (state.mode !== 'explore' || state.paused || !canDrive(action.payload)) return;
-      state.mode = 'driving'; state.destination = undefined;
-    },
-    requestCarExit(state) { if (state.mode === 'driving' && !state.paused) state.vehicleExitRequest = (state.vehicleExitRequest ?? 0) + 1; },
     setCameraView(state, action: PayloadAction<GameSettings['cameraView']>) { state.cameraView = action.payload; },
     setThemeMode(state, action: PayloadAction<ThemeMode>) {
       if (!['light', 'dark', 'auto'].includes(action.payload)) return;
@@ -55,4 +50,4 @@ export const gameSlice = createSlice({
   }
 });
 
-export const { setMovementSpeed, togglePause, setPaused, togglePhysics, resetPlayer, setMode, setDestination, setCameraView, setThemeMode, startDriving, requestCarExit } = gameSlice.actions;
+export const { setMovementSpeed, togglePause, setPaused, togglePhysics, resetPlayer, setMode, setDestination, setCameraView, setThemeMode } = gameSlice.actions;

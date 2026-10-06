@@ -1,5 +1,20 @@
 # Education extension validation
 
+
+## Single-home and open-learning revision
+
+The current scene contains one spacious home and its enclosed courtyard. Removed vehicle/traffic/landscape features and their obsolete integration scenarios are replaced by checks of home bounds, real Rapier collisions, reachable furniture, freely selected lessons and saved creations.
+
+Validated on Linux with Node 24.19.0, pnpm 11.19.0 and installed Chromium using software WebGL:
+
+- `pnpm typecheck`, `pnpm lint`, `pnpm test` and `pnpm build` completed successfully. The unit runner executed **98 tests across 22 files**.
+- `tests/e2e/builds.spec.ts` completed **2 passing scenarios** against production preview: direct advanced entry, rejection of incomplete React code, successful board/budget behavior, one-time XP, interactive creation display and project storage after reload.
+- `tests/e2e/neighborhood.spec.ts` completed **4 passing scenarios** against production preview: server clock and first-person controls, a quiet home with nearby generic E interaction, sofa entry/return and mobile touch movement without horizontal overflow. The nearby-interaction scenario also passed against development Vite.
+- Both browser runners exited normally. The ignored cloud Playwright helper selects `/usr/bin/chromium`; ordinary installations use the repository's standard browser installation and configuration.
+- `artifacts/home-overview.png` was reviewed visually. House walls, furniture, room routes, the compact map and absence of floating names were verified.
+
+The full curriculum browser sweep and optional external services were not rerun for this revision. The production build retains the existing large-chunk advisory; Rapier retains its initialization deprecation warning without failing physics tests.
+
 Verified 2026-10-06 on Windows with Node 24.18.0, pnpm 11.19.0, installed Microsoft Edge and software WebGL.
 
 | Check | Result |

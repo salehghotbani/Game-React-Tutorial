@@ -11,14 +11,14 @@ export function findWalkingPath(start: Point, goal: Point, greenhouseOpen = fals
   const standingHeight = PLAYER_CONFIG.spawn[1] + PLAYER_CONFIG.capsuleHalfHeight + PLAYER_CONFIG.capsuleRadius;
   const obstacles = [...getRoomColliders(greenhouseOpen, arcadeUnlocked), ...extraObstacles].filter(collider => !collider.id.endsWith('floor') && collider.position[1] - collider.halfExtents[1] < standingHeight);
   const nearby = searchRoute(start, goal, greenhouseOpen, obstacles, 12);
-  // Returning from the meadow can require going around a building to its courtyard entrance.
+  // Retry with the complete house bounds if furniture blocks the narrower search.
   return nearby.length ? nearby : searchRoute(start, goal, greenhouseOpen, obstacles, 24);
 }
 
 function searchRoute(start: Point, goal: Point, greenhouseOpen: boolean, obstacles: WorldCollider[], margin: number): Point[] {
-  // Scope the grid to this journey; enlarging the landscape must not scan the whole world for every destination.
-  const minX = Math.max(WORLD_BOUNDS.minX, WORLD_BOUNDS.minX + Math.floor((Math.min(start.x, goal.x) - margin - WORLD_BOUNDS.minX) / GRID_STEP) * GRID_STEP);
-  const minZ = Math.max(WORLD_BOUNDS.minZ, WORLD_BOUNDS.minZ + Math.floor((Math.min(start.z, goal.z) - margin - WORLD_BOUNDS.minZ) / GRID_STEP) * GRID_STEP);
+  // Align the route grid to zero so house approaches remain stable when outer bounds change.
+  const minX = Math.max(Math.ceil(WORLD_BOUNDS.minX / GRID_STEP) * GRID_STEP, Math.floor((Math.min(start.x, goal.x) - margin) / GRID_STEP) * GRID_STEP);
+  const minZ = Math.max(Math.ceil(WORLD_BOUNDS.minZ / GRID_STEP) * GRID_STEP, Math.floor((Math.min(start.z, goal.z) - margin) / GRID_STEP) * GRID_STEP);
   const maxX = Math.min(WORLD_BOUNDS.maxX, Math.max(start.x, goal.x) + margin);
   const maxZ = Math.min(WORLD_BOUNDS.maxZ, Math.max(start.z, goal.z) + margin);
   const width = Math.floor((maxX - minX) / GRID_STEP) + 1;

@@ -58,7 +58,7 @@ test('completes the five-lesson loop, persists rewards, unlocks the real arcade 
   await enterComputer(page);
   const lessonNames = ['اولین کامپوننت تو', 'کارت یک برنامه‌نویس', 'یک کارت، چند محصول', 'آمادهٔ پرتاب!', 'شمارندهٔ زنده'];
   await page.getByLabel('فصل آموزشی').selectOption('all');
-  await expect(page.getByRole('button', { name: /شمارندهٔ زنده/ })).toBeDisabled();
+  await expect(page.getByRole('button', { name: /شمارندهٔ زنده/ })).toBeEnabled();
   for (let i = 0; i < solutions.length; i++) {
     await submit(page, solutions[i]!, (i + 1) * 200);
     if (i === 0) await page.screenshot({ path: 'artifacts/react-quest-learning.png' });
@@ -71,11 +71,15 @@ test('completes the five-lesson loop, persists rewards, unlocks the real arcade 
   await expect(page.getByText('این تمرین قبلاً پاداش گرفته؛ مرور موفق ثبت شد.')).toBeVisible({ timeout: 30000 });
   await expect(page.getByTestId('total-xp')).toHaveText('1000');
   await page.getByRole('button', { name: 'بازگشت به اتاق', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'رفتن به گیم‌نت · ۳ دقیقه بازی', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: /خانهٔ تو/ }).click();
+  await expect(page.locator('.world-dock').getByRole('button', {name:'رفتن به بازی Bug Hunter',exact:true})).toBeVisible();
+  await page.getByRole('button', { name: /خانهٔ تو/ }).click();
   await page.screenshot({ path: 'artifacts/react-quest-unlocked-room.png' });
   await page.reload();
   await expect(page.getByTestId('room-xp')).toContainText('1000');
-  await expect(page.getByRole('button', { name: 'رفتن به گیم‌نت · ۳ دقیقه بازی', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: /خانهٔ تو/ }).click();
+  await expect(page.locator('.world-dock').getByRole('button', {name:'رفتن به بازی Bug Hunter',exact:true})).toBeVisible();
+  await page.getByRole('button', { name: /خانهٔ تو/ }).click();
   await expect(page.getByText('در حال آماده‌سازی اتاق…')).toBeHidden();
   await walkToArcade(page);
   await page.getByRole('button', { name: 'شروع بازی', exact: true }).click();

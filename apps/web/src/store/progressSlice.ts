@@ -10,7 +10,7 @@ export const progressSlice = createSlice({
   reducers: {
     selectChallenge(state, action: PayloadAction<string>) {
       const challenge = getChallenge(action.payload);
-      if (!challenge || !isChallengeAvailable(challenge, state.completedLessons)) return;
+      if (!challenge || !isChallengeAvailable(challenge)) return;
       if (challenge.project && !state.drafts[challenge.id]) {
         const previous = Object.keys(state.drafts).map(getChallenge).filter(c => c?.project?.id === challenge.project!.id && c.project.step < challenge.project!.step && state.completedLessons.includes(c.id)).sort((a, b) => b!.project!.step - a!.project!.step)[0];
         if (previous) state.drafts[challenge.id] = state.drafts[previous.id]!;
@@ -20,22 +20,29 @@ export const progressSlice = createSlice({
     saveDraft(state, action: PayloadAction<{ id: string; code: string }>) { if (getChallenge(action.payload.id) && action.payload.code.length <= 65536) state.drafts[action.payload.id] = action.payload.code; },
     advanceLesson(state, action: PayloadAction<{id: string; step: number}>) {
       const c = getChallenge(action.payload.id);
-      if (!c || !isChallengeAvailable(c, state.completedLessons) || state.learnedLessons.includes(c.id)) return;
-      const current = state.lessonSteps[c.id] ?? 0;
-      if (current !== action.payload.step) return;
+      if (!c || state.learnedLessons.includes(c.id)) return;
       const count = getTeachingLesson(c).steps.length;
-      state.lessonSteps[c.id] = Math.min(count, current + 1);
+      const step = action.payload.step;
+      if (!Number.isInteger(step) || step < 0 || step >= count) return;
+      state.lessonSteps[c.id] = Math.max(state.lessonSteps[c.id] ?? 0, step + 1);
       if (state.lessonSteps[c.id] === count) {
         state.learnedLessons.push(c.id);
         for (const skill of c.skills ?? []) if (!state.introduced.includes(skill)) state.introduced.push(skill);
       }
+    },
+    startPractice(state, action: PayloadAction<string>) {
+      const c = getChallenge(action.payload);
+      if (!c || state.learnedLessons.includes(c.id)) return;
+      state.learnedLessons.push(c.id);
+      state.lessonSteps[c.id] = getTeachingLesson(c).steps.length;
+      for (const skill of c.skills ?? []) if (!state.introduced.includes(skill)) state.introduced.push(skill);
     },
     revealHint(state, action: PayloadAction<string>) { const c = getChallenge(action.payload); if (!c || c.mastery) return; const a = state.assistance[c.id] ??= { hints: 0, solution: false }; a.hints = Math.min(c.hints.length, 4, a.hints + 1); },
     revealSolution(state, action: PayloadAction<string>) { const c = getChallenge(action.payload); if (!c || c.mastery || !c.solution) return; (state.assistance[c.id] ??= { hints: 0, solution: false }).solution = true; },
     answerQuestion(state, action: PayloadAction<{ id: string; question: string; answer: number }>) { const { id, question, answer } = action.payload; const q = getChallenge(id)?.questions?.find(x => x.id === question); if (state.learnedLessons.includes(id) && q && Number.isInteger(answer) && answer >= 0 && answer < q.options.length) (state.answers[id] ??= {})[question] = answer; },
     completeChallenge(state, action: PayloadAction<{ id: string; source: string; result: EvaluationResult; answers?: Record<string, number>; at?: number; daily?: boolean }>) {
       const { id, source, result, answers = {}, at = Date.now(), daily } = action.payload, c = getChallenge(id);
-      if (!c || !state.learnedLessons.includes(id) || !isChallengeAvailable(c, state.completedLessons) || source !== getDraft(state, c) || !Number.isFinite(at)) return;
+      if (!c || !state.learnedLessons.includes(id) || !isChallengeAvailable(c) || source !== getDraft(state, c) || !Number.isFinite(at)) return;
       for (const q of c.questions ?? []) if (answers[q.id] !== state.answers[id]?.[q.id]) return;
       const passed = isSuccessfulEvaluation(c, result);
       const dailyId = dailyChallenge(state, at).id;
@@ -47,7 +54,7 @@ export const progressSlice = createSlice({
       state.reviewed[id] = at;
       if (daily && dailyId === id && !state.dailyDays.includes(dayKey(at))) state.dailyDays.push(dayKey(at));
     },
-    saveProjectStorage(state, action: PayloadAction<{ id: string; values: Record<string, string> }>) { if (getChallenge(state.selectedChallengeId)?.project?.id === action.payload.id || state.selectedChallengeId === action.payload.id) state.projectStorage[action.payload.id] = cleanStorage(action.payload.values); },
+    saveProjectStorage(state, action: PayloadAction<{ id: string; values: Record<string, string> }>) { if (Object.keys(state.drafts).some(id => { const c = getChallenge(id); return c && (c.project?.id ?? c.id) === action.payload.id; })) state.projectStorage[action.payload.id] = cleanStorage(action.payload.values); },
     assignDaily(state) { const c = dailyChallenge(state); state.dailyAssignments[dayKey()] = c.id; },
     visitRoom(state, action: PayloadAction<string>) { if (isRoomAvailable(state, action.payload)) state.selectedRoom = action.payload; },
     waterPlant(state) { const id=state.completedLessons.find(id=>!state.roomLife.wateredLessons.includes(id)); if(id) state.roomLife.wateredLessons.push(id); },
@@ -60,4 +67,4 @@ export const progressSlice = createSlice({
     recordArcadeScore(state, action: PayloadAction<number>) { if (Number.isFinite(action.payload) && getProgressTotals(state).xp >= 1000) state.arcadeBestScore = Math.min(100000, Math.max(state.arcadeBestScore, Math.floor(action.payload))); }
   }
 });
-export const { selectChallenge, saveDraft, completeChallenge, recordArcadeScore, advanceLesson, revealHint, revealSolution, answerQuestion, saveProjectStorage, assignDaily, visitRoom, waterPlant, collectRoomKey, openGreenhouse, bookmarkRoomBook } = progressSlice.actions;
+export const { selectChallenge, saveDraft, completeChallenge, recordArcadeScore, advanceLesson, startPractice, revealHint, revealSolution, answerQuestion, saveProjectStorage, assignDaily, visitRoom, waterPlant, collectRoomKey, openGreenhouse, bookmarkRoomBook } = progressSlice.actions;

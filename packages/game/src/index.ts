@@ -1,13 +1,9 @@
 export { GameScene } from './GameScene';
 export { PLAYER_CONFIG, ROOM_SPOTS, TV_SEAT } from './config';
 export type { RoomSpotId } from './config';
-export { WORLD_BOUNDS, GAME_NET, NEIGHBORS, FLOOR_AREAS, NEIGHBOR_HOUSES, getWorldArea } from './world/layout';
-export type { NeighborId } from './world/layout';
+export { WORLD_BOUNDS, GAME_NET, FLOOR_AREAS, getWorldArea } from './world/layout';
 export { canUseGameNet, gameNetSecondsLeft } from './logic/gameNet';
 export type { PlayerPosition } from './player/types';
 export { resolveTheme, worldDaylight } from './logic/appearance';
 export { isTypingTarget } from './logic/movement';
-export { CAR, canDrive, initialVehicleState, exitCandidates } from './vehicles/driving';
-export type { VehicleState } from './vehicles/driving';
-export { findCarApproach } from './vehicles/vehicleNavigation';
 export { getNearestInteraction, COMPUTER_POSITION, ARCADE_POSITION } from './interaction/interaction';
