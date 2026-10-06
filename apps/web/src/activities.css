@@ -315,6 +315,35 @@ button:disabled { cursor: not-allowed; }
 .teaching-example button,.quiz-lesson-summary button { border:1px solid #96ad80; border-radius:7px; padding:10px 14px; font-size:12px; background:#e1ebd4; }
 .teaching-example iframe { background:#fff; border:0; width:100%; height:220px; border-radius:8px; margin-top:20px; }
 .teaching-example p { font-size:12px; }
+.lesson-outcomes { background:var(--surface-soft); border:1px solid var(--edge); border-radius:12px; padding:16px 20px; margin:20px 0; font-size:13px; line-height:2; color:var(--text); }
+.lesson-outcomes ul { margin:8px 0 0; padding-inline-start:22px; }
+.course-library { min-width:0; }
+.course-search { background:var(--surface-solid); border:1px solid var(--edge); border-radius:12px; padding:20px; margin-bottom:24px; }
+.course-search>label { display:block; margin-bottom:10px; font-size:14px; }
+.course-search>input { display:block; width:100%; min-width:0; padding:12px; border:1px solid var(--edge); border-radius:8px; background:var(--surface-soft); color:var(--text); font:inherit; font-size:13px; }
+.course-search-results>p { font-size:12px; }
+.course-search-results ul { padding:0; margin:0; list-style:none; max-height:320px; overflow-y:auto; }
+.course-search-results button { width:100%; display:grid; text-align:start; gap:5px; padding:12px; border-bottom:1px solid var(--edge); font-size:13px; }
+.course-search-results small { color:var(--muted); font-size:11px; }
+.course-navigation { display:grid; gap:16px; min-width:0; align-self:start; position:sticky; top:0; }
+.course-navigation nav { display:grid; gap:6px; border:1px solid var(--edge); border-radius:12px; padding:12px; max-height:330px; overflow-y:auto; background:var(--surface-solid); }
+.course-navigation h3 { margin:4px 8px 10px; font-size:13px; }
+.course-navigation button { width:100%; padding:10px; border-radius:8px; text-align:start; font-size:12px; line-height:1.9; }
+.course-navigation button[aria-current] { background:var(--surface-soft); color:var(--accent); font-weight:bold; }
+.course-library .library-layout>article { min-width:0; max-width:none; scroll-margin-top:20px; }
+.course-practice { border-top:1px solid var(--edge); margin-top:26px; padding-top:20px; }
+.course-practice>p { font-size:12px; line-height:2; color:var(--muted); }
+.course-practice>div { display:flex; gap:10px; flex-wrap:wrap; }
+.course-practice button,.lesson-checkpoint>button { border:1px solid var(--edge); border-radius:8px; background:var(--surface-soft); color:var(--text); font-size:12px; padding:12px 16px; text-align:start; }
+.lesson-checkpoint { border:1px solid var(--edge); border-radius:12px; background:var(--surface-solid); color:var(--text); padding:20px; margin:26px 0; }
+.lesson-checkpoint fieldset { min-width:0; padding:0; margin:16px 0; border:0; }
+.lesson-checkpoint legend { font-size:14px; font-weight:bold; line-height:2; }
+.lesson-checkpoint label { display:flex; gap:10px; align-items:baseline; font-size:13px; line-height:2; padding:10px; margin-top:8px; border:1px solid var(--edge); border-radius:8px; overflow-wrap:anywhere; }
+.lesson-checkpoint input { flex-shrink:0; accent-color:var(--accent); }
+.lesson-checkpoint pre { direction:ltr; text-align:left; white-space:pre-wrap; overflow-wrap:anywhere; background:#21332c; color:#e3ecd8; border-radius:8px; padding:16px; font:13px/1.9 Consolas,monospace; }
+.lesson-checkpoint>small { display:block; font-size:11px; line-height:2; margin-top:12px; color:var(--muted); }
+.lesson-checkpoint [role="status"] { padding:12px 0; font-size:13px; line-height:2; }
+@media(max-width:800px) { .course-navigation { position:static; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }.course-navigation nav { max-height:230px; padding:8px; }.course-navigation button { font-size:11px; padding:8px; }.course-navigation h3 { margin-inline:4px; }.course-search,.lesson-checkpoint { padding:16px; }.course-library .library-layout>article { padding:18px; }.lesson-outcomes { padding:14px; }.course-library .teaching-navigation { gap:10px; }.course-library .teaching-navigation button { padding:12px; font-size:11px; } }
 .teaching-navigation { display:flex; justify-content:space-between; gap:16px; border-top:1px solid #e0e6d5; padding-top:24px; margin-top:32px; }
 .teaching-navigation button { padding:12px 18px; border-radius:8px; font-size:13px; }
 .teaching-navigation button:disabled { opacity:.4; }

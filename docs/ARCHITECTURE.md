@@ -90,6 +90,16 @@ The provider sets HTML lang/dir before paint, title and description. `--ui-direc
 
 ## Lesson runtime and state
 
+`teaching.ts` combines foundational content with `courseDetails.ts` supplements, outcomes and ungraded knowledge questions. The five-step introductory lesson stays short; chapter lessons include the deeper material. Reused project sections are deduplicated by stable IDs. Localization coverage validates both chapter and exercise lessons, including outcomes, checks and runnable source.
+
+`CourseLibrary` renders one selected section with chapter/section menus, text/code search and direct chapter-exercise links. Pure `courseNavigation.ts` validates the separate `react-quest-course-bookmark-v1` bookmark against current chapter and section IDs and recovers from corrupted or inaccessible storage. Search normalizes Persian/Arabic letter forms and diacritics and includes translated prose. `LessonCheckpoint` holds answers locally and never dispatches progress actions; leaving the check resets its state. Library reading remains independent of assessed progress.
+
+The scene uses demand rendering whenever its settings are paused, including while the library covers exploration. Physics and input are already paused there. This keeps the hidden home from rendering continuously during study; closing the overlay restores the exploration frame loop without recreating the scene.
+
+`TeachingExample` supplies an isolated storage observer to `CodeRuntime`, retaining the example's storage between runs in that component session. Changing sections unmounts and disposes its runtime and starts a separate example session. The final miniature project demonstrates restoration without touching saved learner drafts or project data. No new dependency is introduced.
+
+Version 3 restoration retains valid `learnedLessons` even when authored lesson section counts increase. It updates their section count without granting assessed completion, rewards or mastery. Unknown lesson IDs are ignored; library bookmarks remain a separate source of reading position only.
+
 CodeRuntime attaches to an iframe, compiles in a disposable worker, runs an engine and requests behavioral evaluation over a source-checked message channel. Auto mode attempts WebContainers, then reports its failure reason before falling back to bundled local React. Explicit WebContainers mode surfaces its error instead of falling back. Vite virtual modules bundle the local React runtime and preview bridge without CDN script dependencies.
 
 Pure evaluation combines runtime results with compiler-derived component/hook evidence. Redux receives completion events only after evaluation. The reducer gates submissions on teaching/practice entry and validates test IDs, mandatory results and the exact current draft; completion receipts derive hint-adjusted XP/coins, so stored totals are not trusted. Version 3 localStorage also restores lesson steps and completed teaching, and versions 1/2 migrate passed exercises as learned. It restores valid completed exercise IDs, including mid-course work, bounded drafts, assistance, answers, review history and project data; version 1 migrates in place as practice. The same reducer keeps mastery earned while room visits remain freely selectable. Game settings and runtime processes are separate from persistent progress.

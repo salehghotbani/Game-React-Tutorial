@@ -38,13 +38,13 @@ test('a novice reads explanations and runs a free example before a personal firs
   await expect(page.getByTestId('total-xp')).toHaveText('200');
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('react-quest-progress-v1')!));
   expect(saved.assistance['hello-react']).toBeUndefined();
-  await page.getByRole('button',{name:'مأموریت بعدی: کارت یک برنامه‌نویس ←',exact:true}).click();
+  await page.getByRole('button',{name:'مأموریت بعدی: کارت یک برنامه‌نویس',exact:true}).click();
   await finishLesson(page);
   await write(page,'function ProfileCard(){return <section><h2>ada   lovelace.</h2><p>React Developer!</p><button>Follow</button></section>} export default function App(){return <ProfileCard/>}');
   await page.getByRole('button',{name:'ارسال پاسخ',exact:true}).click();
   await expect(page.locator('.evaluation-result.passed')).toBeVisible({timeout:30000});
   await expect(page.getByTestId('total-xp')).toHaveText('400');
-  await page.getByRole('button',{name:'مأموریت بعدی: یک کارت، چند محصول ←',exact:true}).click();
+  await page.getByRole('button',{name:'مأموریت بعدی: یک کارت، چند محصول',exact:true}).click();
   await finishLesson(page);
   await page.getByLabel('فصل آموزشی').selectOption('all');
   // The event lesson is gated by the props task, so revisit a taught state example
@@ -52,6 +52,7 @@ test('a novice reads explanations and runs a free example before a personal firs
   await page.getByRole('region',{name:'محیط آموزش React'}).getByRole('button',{name:'نقشهٔ دانش ↗',exact:true}).click();
   await page.getByRole('button',{name:'کتابخانه',exact:true}).click();
   await page.locator('.library-layout nav').getByRole('button',{name:'3. State و رویدادها',exact:true}).click();
+  await page.getByRole('navigation', {name:'بخش‌های این فصل', exact:true}).getByRole('button', {name:/از کلیک تا تغییر صفحه/}).click();
   const demo = page.locator('.library-teaching > section').filter({has:page.getByRole('heading',{name:'از کلیک تا تغییر صفحه',exact:true})});
   await demo.getByRole('button',{name:'اجرای نمونه'}).click();
   const preview = demo.frameLocator('iframe[title="نمونهٔ آموزشی React"]');

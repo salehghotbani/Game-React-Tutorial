@@ -1,5 +1,6 @@
 import type { Challenge, TeachingLesson, TeachingStep } from '@react-quest/shared';
 import { chapters } from './curriculum';
+import { chapterDetails, chapterSupplements } from './courseDetails';
 
 const step = (id: string, title: string, paragraphs: string[], code?: string, notes?: TeachingStep['notes'], preview?: string): TeachingStep => ({ id, title, paragraphs, code, notes, preview });
 const app = (jsx: string, before = '') => `${before}\nexport default function App() {\n  return (${jsx});\n}`.trim();
@@ -258,11 +259,13 @@ const debounce = step('debounce', 'Debounce: صبر کوتاه پس از تای�
 
 export function getChapterLesson(id: number): TeachingLesson {
   const chapter = chapters.find(c => c.id === id) ?? chapters[1]!;
-  return { title: chapter.title, steps: byChapter[chapter.id]!, reference: chapter.concept.reference };
+  return { title: chapter.title, steps: [...byChapter[chapter.id]!, ...(chapter.id === 1 ? [jsxValues] : []), ...chapterSupplements[chapter.id]!], reference: chapter.concept.reference, ...chapterDetails[chapter.id]! };
 }
 export function getTeachingLesson(challenge: Challenge): TeachingLesson {
   const lesson = getChapterLesson(challenge.chapterId ?? 1);
   let steps = [...lesson.steps];
+  // Keep the first lesson short enough for a complete beginner.
+  if (challenge.id === 'hello-react') steps = [...react];
   if (challenge.chapterId === 1 && challenge.id !== 'hello-react') steps.push(javascript[0]!, jsxValues);
   if (challenge.id === 'profile-card') steps = [...components];
   if (challenge.id === 'product-props') steps = [...props.slice(0, 1), components[1]!];
@@ -286,6 +289,8 @@ export function getTeachingLesson(challenge: Challenge): TeachingLesson {
     'این تمرین نقش را در ظاهر کنترل می‌کند. در برنامهٔ واقعی، مجوز عملیات سمت سرور هم بررسی می‌شود؛ غیرفعال‌کردن یک دکمه به‌تنهایی مجوز ایجاد نمی‌کند.'
   ], '<button disabled={role !== "Editor"} onClick={remove}>حذف</button>'));
   if (challenge.id === 'hooks-boss') steps.push(api[0]!, javascript[3]!);
+  // Some project lessons reuse material already included in the chapter.
+  steps = [...new Map(steps.map(item => [item.id, item])).values()];
   steps.push(step('ready', 'حالا آمادهٔ تمرین هستی', [
     `در مرحلهٔ بعد «${challenge.title}» را انجام می‌دهی. ${challenge.description}`,
     challenge.tests.every(t => t.questionId) ? 'حالا با مفهومی که خواندی، خروجی یا رفتار یک مثال تازه را بررسی می‌کنی. پس از پاسخ، دلیل نتیجه نمایش داده می‌شود. برای مرور، هر زمان می‌توانی به درس برگردی.' : 'نیازمندی‌ها را یکی‌یکی پیاده کن و با «اجرای کد» نتیجه را ببین. داوری رفتار صفحه را بررسی می‌کند؛ فاصله‌گذاری کد، سمی‌کالن اختیاری و نقطهٔ انتهای جمله معیار نیستند. نام‌های خواسته‌شدهٔ کامپوننت و ویژگی‌ها قرارداد تست‌اند.',

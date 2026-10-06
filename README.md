@@ -18,6 +18,8 @@
 
 Learn React from scratch while exploring a spacious 3D learning home. React Quest combines **15 chapters, 56 exercises, 18 skills and 9 projects** with an interactive world: study at the computer, earn XP, grow flowers, read React books and unlock the home arcade.
 
+The course library contains **70 teaching sections**, chapter learning goals, runnable examples and 15 optional self-checks with explanations. Search in Persian or English, open any section or chapter exercise, and resume your last reading position in the same browser. Advanced lessons include working Redux, React Query, routing, API error handling, Testing Library and project examples. Reading and self-checks do not award exercise credit.
+
 > **Learn → Practice → Build → Debug → Master**
 
 ## A look inside

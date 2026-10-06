@@ -83,7 +83,7 @@ function GameSceneView(props: Props) {
   const onReady = useCallback(() => setReady(true), []);
   return (
     <SceneBoundary>
-      <Canvas frameloop={FROZEN_MODES.includes(props.settings.mode) ? 'demand' : 'always'} shadows dpr={[1, 1.5]} camera={{ fov: CAMERA_CONFIG.fov, position: [4.5, 7, 9.2], near: 0.08, far: 100 }} gl={{ antialias: true, alpha: true }} fallback={<div className="scene-error">{tx("این مرورگر از WebGL پشتیبانی نمی‌کند.")}</div>}>
+      <Canvas frameloop={props.settings.paused || FROZEN_MODES.includes(props.settings.mode) ? 'demand' : 'always'} shadows dpr={[1, 1.5]} camera={{ fov: CAMERA_CONFIG.fov, position: [4.5, 7, 9.2], near: 0.08, far: 100 }} gl={{ antialias: true, alpha: true }} fallback={<div className="scene-error">{tx("این مرورگر از WebGL پشتیبانی نمی‌کند.")}</div>}>
         <SceneContent {...props} onReady={onReady} />
       </Canvas>
       {!ready && <div className="scene-loading-wrap" role="status"><div className="scene-loading">{tx("در حال آماده‌سازی اتاق…")}</div></div>}

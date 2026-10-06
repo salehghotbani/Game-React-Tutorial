@@ -69,6 +69,7 @@ export function restoreProgress(value: unknown): ProgressState {
   const data = value as Record<string, unknown>;
   if (data.version !== 1 && data.version !== 2 && data.version !== 3) return state;
   const wanted = Array.isArray(data.completedLessons) ? data.completedLessons : [];
+  const learned = data.version === 3 && Array.isArray(data.learnedLessons) ? data.learnedLessons : [];
   // Any valid completed exercise can be restored, including learners starting mid-course.
   state.completedLessons = challenges.filter(c => wanted.includes(c.id)).map(c => c.id);
   for (const c of challenges) {
@@ -86,8 +87,9 @@ export function restoreProgress(value: unknown): ProgressState {
     const count = getTeachingLesson(c).steps.length;
     const savedStep = data.lessonSteps && typeof data.lessonSteps === 'object' ? (data.lessonSteps as Record<string, unknown>)[c.id] : undefined;
     if (isChallengeAvailable(c) && typeof savedStep === 'number' && Number.isInteger(savedStep) && savedStep >= 0) state.lessonSteps[c.id] = Math.min(count, savedStep);
-    // Existing passed exercises remain reviewable; reading a library page alone is not lesson completion.
-    if (state.completedLessons.includes(c.id) || state.lessonSteps[c.id] === count) {
+    // Added course sections must not revoke completed teaching or passed exercises.
+    // A library reading bookmark is stored separately and never grants this credit.
+    if (state.completedLessons.includes(c.id) || learned.includes(c.id) || state.lessonSteps[c.id] === count) {
       state.learnedLessons.push(c.id);
       state.lessonSteps[c.id] = count;
       for (const skill of c.skills ?? []) if (!state.introduced.includes(skill)) state.introduced.push(skill);

@@ -1,6 +1,6 @@
 import { tx, useLanguage, translateAuthoredCode } from '@react-quest/localization';
 import { useEffect, useRef, useState } from 'react';
-import { getTeachingLesson } from '@react-quest/challenges';
+import { getChapterLesson, getTeachingLesson } from '@react-quest/challenges';
 import { CodeRuntime, idleStatus, type RuntimeStatus } from '@react-quest/learning-engine';
 import type { Challenge, TeachingStep } from '@react-quest/shared';
 import { useAppDispatch, useAppSelector } from '../store';
@@ -9,13 +9,14 @@ import { getProgressTotals } from '../store/progression';
 import { Icon } from './Icon';
 import { SiteLogo } from './SiteLogo';
 import { ResizableWorkspace } from './ResizableWorkspace';
+import { LessonCheckpoint } from './LessonCheckpoint';
 
 export function TeachingExample({ source }: { source: string }) {
   const language = useLanguage();
   const frame = useRef<HTMLIFrameElement>(null);
   const [status, setStatus] = useState<RuntimeStatus>(idleStatus);
   const [started, setStarted] = useState(false);
-  const [runtime] = useState(() => new CodeRuntime(setStatus));
+  const [runtime] = useState(() => new CodeRuntime(setStatus, { initialStorage: {} }));
   useEffect(() => runtime.attach(frame.current!), [runtime]);
   useEffect(() => runtime.setLocale(language), [runtime, language]);
   const run = () => { setStarted(true); void runtime.run(translateAuthoredCode(source, language), 'local').catch(() => { /* Status includes the error. */ }); };
@@ -38,6 +39,7 @@ export function TeachingStepContent({ step }: { step: TeachingStep }) {
 export function TeachingLesson({ challenge, onExit, onHub, onFinish, review, daily }: { challenge: Challenge; onExit: () => void; onHub: () => void; onFinish: () => void; review: boolean; daily: boolean }) {
   useLanguage();
   const lesson = getTeachingLesson(challenge);
+  const coversChapter = getChapterLesson(challenge.chapterId ?? 1).steps.every(item => lesson.steps.some(step => step.id === item.id));
   const progress = useAppSelector(s => s.progress), dispatch = useAppDispatch();
   const completed = progress.lessonSteps[challenge.id] ?? 0;
   const [index, setIndex] = useState(review ? 0 : Math.min(completed, lesson.steps.length - 1));
@@ -60,7 +62,9 @@ export function TeachingLesson({ challenge, onExit, onHub, onFinish, review, dai
         <div className="lesson-stage"><span className="active">{tx("۱. یادگیری")}</span><span>{tx("۲. تمرین")}</span>{daily && <span>{tx("درسِ تمرین امروز")}</span>}</div>
         <div className="challenge-heading"><span>{tx("آموزش پیش از تمرین: ")}{tx(challenge.title)}</span><h1>{tx(step.title)}</h1></div>
         <p className="hub-note">{tx("از هر بخش دلخواه شروع کن؛ می‌توانی مستقیم سراغ تمرین بروی.")}</p><button className="hub-primary" onClick={() => { dispatch(startPractice(challenge.id)); onFinish(); }}>{tx("رفتن مستقیم به تمرین ←")}</button><div className="teaching-progress"><span>{tx("بخش ")}{tx(index + 1)}{tx(" از ")}{tx(lesson.steps.length)}</span><progress value={index + 1} max={lesson.steps.length}/></div>
+        {index === 0 && <div className="lesson-outcomes"><b>{tx('در این فصل یاد می‌گیری:')}</b><ul>{lesson.outcomes.map(outcome => <li key={outcome}>{tx(outcome)}</li>)}</ul></div>}
         <TeachingStepContent key={step.id} step={step}/>
+        {last && coversChapter && <LessonCheckpoint key={lesson.checkpoint.id} question={lesson.checkpoint}/>}
         <footer className="teaching-navigation"><button disabled={index === 0} onClick={() => setIndex(index - 1)}>{tx("بخش قبلی →")}</button><button className="hub-primary" data-testid="lesson-next" onClick={next}>{tx(last ? 'ورود به تمرین ←' : 'ادامهٔ درس ←')}</button></footer>
         <a className="teaching-reference" href={lesson.reference} target="_blank" rel="noreferrer">{tx("منبع و مطالعهٔ بیشتر ↗")}</a>
       </article>)}

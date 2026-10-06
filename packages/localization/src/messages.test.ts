@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { challenges, chapters, rooms, skills, getTeachingLesson } from '../../challenges/src';
+import { challenges, chapters, rooms, skills, getTeachingLesson, getChapterLesson } from '../../challenges/src';
 import { compileCode } from '../../learning-engine/src/compiler/compile';
 import { languageForCountry, readLanguage, translate, translateText } from './messages';
 import { translateAuthoredCode } from './authoredCode';
@@ -29,6 +29,12 @@ describe('bilingual content and country selection', () => {
     for (const chapter of chapters) { check(chapter.title); check(chapter.description); check(chapter.concept.title); chapter.concept.paragraphs.forEach(check); }
     for (const room of rooms) { check(room.title); check(room.subtitle); }
     skills.forEach(skill => check(skill.title));
+    for (const chapter of chapters) {
+      const lesson = getChapterLesson(chapter.id);
+      lesson.outcomes.forEach(check);
+      check(lesson.checkpoint.prompt); check(lesson.checkpoint.explanation); lesson.checkpoint.options.forEach(check);
+      lesson.steps.forEach(step => { check(step.title); step.paragraphs.forEach(check); });
+    }
     for (const challenge of challenges) {
       check(challenge.title); check(challenge.description); challenge.instructions.forEach(check); challenge.hints.forEach(check); challenge.tests.forEach(test => check(test.name));
       challenge.questions?.forEach(question => { check(question.prompt); question.options.forEach(check); check(question.explanation); });
@@ -38,6 +44,10 @@ describe('bilingual content and country selection', () => {
   });
   it('keeps translated examples and authored starters valid React code', () => {
     const examples = new Set<string>();
+    for (const chapter of chapters) for (const step of getChapterLesson(chapter.id).steps) {
+      if (step.code) expect(translateAuthoredCode(step.code, 'en'), `${chapter.id}/${step.id}`).not.toMatch(persian);
+      if (step.preview) examples.add(step.preview);
+    }
     for (const challenge of challenges) {
       const original = challenge.starterFiles['src/App.jsx']!;
       const translated = translateAuthoredCode(original, 'en');

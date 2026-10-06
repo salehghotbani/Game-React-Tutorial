@@ -30,7 +30,7 @@ export function installBridge({ React: originalReact, createRoot, modules: initi
     await observation.delay();
     if (renderingError) throw new Error(renderingError);
   };
-  const imports: Record<string, unknown> = { ...libraries, react: React };
+  const imports: Record<string, unknown> = { ...libraries, react: React, ...(testing ? { '@testing-library/react': testing } : {}) };
   const toolkit = libraries['@reduxjs/toolkit'];
   if (toolkit?.configureStore) imports['@reduxjs/toolkit'] = { ...toolkit, configureStore: (options: unknown) => {
     const store = (toolkit.configureStore as (options: unknown) => { dispatch: (action: unknown) => unknown; getState: () => unknown })(options);

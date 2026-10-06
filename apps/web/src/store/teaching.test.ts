@@ -46,6 +46,15 @@ describe('teaching before assessment', () => {
     expect(state.lessonSteps['hello-react']).toBe(getTeachingLesson(getChallenge('hello-react')!).steps.length);
     expect(state.learnedLessons).not.toContain('js-map');
   });
+  it('preserves finished teaching when a chapter gains sections, without awarding practice credit', () => {
+    const state = restoreProgress({ version:3, learnedLessons:['js-map','unknown'], lessonSteps:{'js-map':5}, drafts:{'js-map':'// My draft'} });
+    expect(state.learnedLessons).toEqual(['js-map']);
+    expect(state.lessonSteps['js-map']).toBe(getTeachingLesson(getChallenge('js-map')!).steps.length);
+    expect(state.drafts['js-map']).toBe('// My draft');
+    expect(getSkillStatus(state,'javascript')).toBe('introduced');
+    expect(state.completedLessons).toEqual([]);
+    expect(getProgressTotals(state).xp).toBe(0);
+  });
   it('starts a new learner with the React introduction even on the daily entry', () => {
     for (const at of [Date.now(), Date.now()+86400000, Date.now()+2*86400000]) expect(dailyChallenge(emptyProgress,at).id).toBe('hello-react');
   });
