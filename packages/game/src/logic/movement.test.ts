@@ -22,6 +22,18 @@ describe('camera-relative movement', () => {
     expect(getMovement({ ...idle, right: true }, 0, 1.5).x).toBe(1.5);
     expect(getMovement({ ...idle, right: true }, 0, 5).x).toBe(5);
   });
+  it('preserves analog speed and rotates it with the camera', () => {
+    const result = getMovement({ ...idle, analog: { x: 0, z: -0.4 } }, Math.PI / 2, 5);
+    expect(result.x).toBeCloseTo(-2); expect(result.z).toBeCloseTo(0);
+  });
+  it('caps analog diagonal speed and stops when the joystick returns to center', () => {
+    expect(Math.hypot(...Object.values(getMovement({ ...idle, analog: { x: 1, z: 1 } }, 0.3, 3)))).toBeCloseTo(3);
+    expect(getMovement({ ...idle, analog: { x: 0, z: 0 } }, 0.3, 3)).toEqual({ x: 0, z: 0 });
+    expect(getMovement({ ...idle, analog: { x: NaN, z: 0 } }, 0, 3)).toEqual({ x: 0, z: 0 });
+  });
+  it('keeps keyboard movement at full speed when a joystick is also active', () => {
+    expect(getMovement({ ...idle, right: true, analog: { x: -0.7, z: -0.5 } }, 0, 3)).toEqual({ x: 3, z: 0 });
+  });
   it('rotates by the shortest path across the angle seam', () => {
     const result = dampAngle(Math.PI - 0.1, -Math.PI + 0.1, 12, 1 / 60);
     expect(result).toBeGreaterThan(Math.PI - 0.1);

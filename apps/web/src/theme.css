@@ -14,8 +14,7 @@
 .theme-settings { display: flex; gap: 10px; flex-wrap: wrap; border: 0; border-bottom: 1px solid var(--edge); padding: 13px 0 17px; margin-bottom: 18px; }
 .theme-settings legend { font-size: 12px; margin-bottom: 9px; }.theme-settings label { display: flex; gap: 5px; align-items: center; font-size: 10px; }.theme-settings input { accent-color: #78a18b; }
 .settings-panel { max-height: calc(100dvh - 120px); overflow-y: auto; }
-.touch-movement .jump { grid-row: 1; grid-column: 3; }.touch-movement .sprint { grid-row: 1; grid-column: 1; }
-:root[data-theme="dark"] :is(.panel, .world-tool, .camera-toggle, .world-information, .world-dock, .movement-guide, .room-marker, .neighbor-label>button, .room-destination, .touch-movement button, .neighborhood-page .neighborhood-map) { background: var(--surface); color: var(--text); border-color: var(--edge); }
+:root[data-theme="dark"] :is(.panel, .world-tool, .camera-toggle, .world-information, .world-dock, .movement-guide, .room-marker, .neighbor-label>button, .room-destination, .touch-action, .neighborhood-page .neighborhood-map) { background: var(--surface); color: var(--text); border-color: var(--edge); }
 :root[data-theme="dark"] :is(.world-information small, .movement-guide p, .settings-note, .setting-label, .room-dock-toggle small, .room-dock-list small, #world-destinations>p, .pause-card p, .pause-shortcut, .eyebrow) { color: var(--muted); }
 :root[data-theme="dark"] :is(kbd, .room-dock-icon, .room-dock-list>button, .icon-button:hover) { background: var(--surface-soft); border-color: var(--edge); color: var(--text); }
 :root[data-theme="dark"] .neighbor-speech { background: #30483d; color: #ecf3dd; border-color: #62826e; }
@@ -34,5 +33,5 @@
 :root[data-theme="dark"] :is(.back-room, .map-button) { background: var(--surface-soft); color: var(--text); border-color: var(--edge); }
 :root[data-theme="light"] .coding-area { background: #eef3ec; border-color: #d0dccc; }
 :root[data-theme="light"] .coding-actions { border-color: #d0dccc; }:root[data-theme="light"] .coding-actions>button { color: #466149; }
-@media (max-width: 520px) { .theme-picker { padding: 24px; }.theme-picker h1 { font-size: 20px; }.theme-options { grid-template-columns: 1fr; gap: 9px; }.theme-options button { padding: 14px 18px; display: grid; grid-template-columns: 40px 1fr; text-align: right; column-gap: 14px; }.theme-options button>span { grid-row: span 2; font-size: 29px; }.theme-options b { margin: 0 0 5px; }.theme-options small { font-size: 10px; } }
+@media (max-width: 520px) { .theme-picker { padding: 24px; }.theme-picker h1 { font-size: 20px; }.theme-options { grid-template-columns: 1fr; gap: 9px; }.theme-options button { padding: 14px 18px; display: grid; grid-template-columns: 40px 1fr; text-align:start; column-gap: 14px; }.theme-options button>span { grid-row: span 2; font-size: 29px; }.theme-options b { margin: 0 0 5px; }.theme-options small { font-size: 10px; } }
 @media (prefers-reduced-motion: reduce) { .theme-options button { transition: none; } }

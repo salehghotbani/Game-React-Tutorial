@@ -129,11 +129,11 @@ Use the destination menu to walk toward an accessible interaction point, then pr
 | Return from the computer / pause | Esc |
 | Run code in the editor | Ctrl+Enter |
 
-Mobile controls include movement, running, jumping and interaction. Hold the run control and use another finger to move. Both first-person and third-person views are available from the floating controls or settings.
+Android and other touch devices use a circular joystick under the left thumb: drag in any direction and drag farther to move faster. Hold the run button or tap jump with the right thumb while moving, and drag the scene with another finger to look around. Controls fit portrait and landscape screens. Both first-person and third-person views are available from the floating controls or settings.
 
 On the first visit, choose light, dark or server-time appearance; the preference is saved and can be changed in settings. The world uses the server clock in the Tehran time zone, including automatic lighting. Locally generated textures, rounded characters, pitched roofs, detailed windows, vegetation and atmospheric lighting give the neighborhood its visual style.
 
-The application supports **English and Persian**. Automatic language selection uses the visitor's IP country: Iran selects Persian, and other countries select English. Settings and the theme dialog offer a saved manual override. If country lookup is unavailable, a disclosed browser-language/time-zone fallback is used. No GPS permission is requested, and changing language preserves code, XP and pane layouts.
+The application supports **English and Persian**. Automatic language selection uses the visitor's IP country: Iran selects Persian, and other countries select English. Settings and the theme dialog offer a saved manual override. Persian uses RTL and English uses LTR across menus, learning panes and app previews; code remains LTR and the thumb controls retain their physical positions. If country lookup is unavailable, a disclosed browser-language/time-zone fallback is used. No GPS permission is requested, and changing language preserves code, XP and pane layouts.
 
 ## Exercise runtime and saved progress
 

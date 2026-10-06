@@ -17,7 +17,7 @@ button:disabled { cursor: default; }
 .location strong { font-weight: 500; color: #425647; }
 .breadcrumb-slash { color: #bbc2b4; }
 .header-actions { display: flex; align-items: center; gap: 10px; }
-.build-label { display: flex; align-items: center; gap: 8px; color: #7e8d7d; font-size: 10px; margin-left: 10px; }
+.build-label { display: flex; align-items: center; gap: 8px; color: #7e8d7d; font-size: 10px; margin-inline-end: 10px; }
 .build-label b { color: #64745f; font-family: monospace; font-weight: 500; }
 .status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #62856a; flex-shrink: 0; }
 .icon-button { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 8px; background: transparent; border: 1px solid #cad2c4; color: #536b58; transition: background .2s; }
@@ -25,7 +25,7 @@ button:disabled { cursor: default; }
 .world { position: absolute; inset: 78px 0 0; direction: ltr; }
 .world-vignette { position: absolute; pointer-events: none; inset: 78px 0 0; background: linear-gradient(0deg, #cbd6cc88, transparent 17%); }
 .panel { background: #faf9f1ef; border: 1px solid #fff8; border-radius: 15px; box-shadow: 0 10px 35px #3549360c, 0 1px 3px #3d503c06; backdrop-filter: blur(12px); }
-.journey-card { position: absolute; top: 112px; right: 28px; padding: 25px 24px 20px; width: 264px; }
+.journey-card { position: absolute; top: 112px; inset-inline-start: 28px; padding: 25px 24px 20px; width: 264px; }
 .chapter-label { display: flex; align-items: center; gap: 9px; color: #8a977e; font-size: 9px; letter-spacing: 2.3px; font-family: "Segoe UI", sans-serif; }
 .chapter-line { width: 21px; height: 1px; background: #aab799; }
 .journey-card h1 { font-size: 19px; font-weight: 600; line-height: 1.95; margin: 18px 0 10px; letter-spacing: -.6px; color: #354c38; }
@@ -35,16 +35,16 @@ button:disabled { cursor: default; }
 .stage-row > div { display: flex; flex-direction: column; gap: 5px; }
 .stage-row b { font-size: 11px; font-weight: 500; color: #425a3d; }
 .stage-row div span { font-size: 9px; color: #98a08e; }
-.stage-number { margin-right: auto; font: 21px Georgia, serif; color: #bec6b2; }
+.stage-number { margin-inline-start: auto; font: 21px Georgia, serif; color: #bec6b2; }
 .stage-track { display: flex; gap: 4px; margin: 20px 0 14px; direction: ltr; }
 .stage-track i { height: 3px; background: #e6e8dd; flex: 1; border-radius: 3px; }
 .stage-track i:nth-child(-n+4) { background: #8fa884; }
 .stage-track i.current { background: #456e50; }
 .next-stage { display: flex; align-items: center; gap: 7px; font-size: 9px; color: #8e9a84; }
-.scene-label { position: absolute; left: 34px; top: 119px; display: flex; align-items: flex-start; gap: 14px; color: #818f7e; font: 9px/1.9 "Segoe UI", sans-serif; letter-spacing: 2px; }
+.scene-label { position: absolute; inset-inline-end: 34px; top: 119px; display: flex; align-items: flex-start; gap: 14px; color: #818f7e; font: 9px/1.9 "Segoe UI", sans-serif; letter-spacing: 2px; }
 .scene-label b { font-weight: 500; color: #5d735d; }
 .scene-label-line { display: block; width: 28px; height: 1px; margin-top: 9px; background: #869c83; }
-.minimap { position: absolute; left: 28px; bottom: 51px; width: 183px; padding: 16px 15px 13px; }
+.minimap { position: absolute; inset-inline-end: 28px; bottom: 51px; width: 183px; padding: 16px 15px 13px; }
 .minimap-heading { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #677b5f; }
 .tiny-label { font: 8px "Segoe UI", sans-serif; letter-spacing: 1.7px; color: #a3ad98; }
 .map-svg { display: block; width: 142px; height: 142px; margin: 7px auto 0; direction: ltr; }
@@ -54,16 +54,16 @@ button:disabled { cursor: default; }
 .keyboard > div { display: flex; gap: 4px; }
 kbd { display: grid; place-items: center; height: 23px; min-width: 24px; padding: 0 6px; background: #edece2; border: 1px solid #d6dcca; border-bottom-width: 2px; border-radius: 4px; font: 10px "Segoe UI", sans-serif; color: #6b7f63; }
 .keyboard > kbd { background: #d9e4cd; border-color: #adbe9c; }
-.control-copy { display: flex; flex-direction: column; gap: 7px; direction: rtl; white-space: nowrap; }
+.control-copy { display: flex; flex-direction: column; gap: 7px; direction:var(--ui-direction); white-space: nowrap; }
 .control-copy b { font-size: 12px; font-weight: 500; color: #4c6242; }
 .control-copy span { font-size: 10px; color: #91a086; }
 .controls-divider { width: 1px; height: 30px; background: #dfe3d4; }
 .escape-hint { display: flex; align-items: center; gap: 8px; }
 .escape-hint span { font-size: 9px; color: #94a18b; }
-.world-status { position: absolute; bottom: 20px; right: 29px; display: flex; align-items: center; gap: 9px; font-size: 9px; color: #6e8267; }
+.world-status { position: absolute; bottom: 20px; inset-inline-start: 29px; display: flex; align-items: center; gap: 9px; font-size: 9px; color: #6e8267; }
 .world-status > span[dir] { letter-spacing: 1.6px; font: 8px "Segoe UI", sans-serif; }
 .status-divider { color: #a7b5a0; margin: 0 2px; }
-.settings-panel { position: absolute; z-index: 30; top: 93px; left: 25px; width: 300px; padding: 20px; }
+.settings-panel { position: absolute; z-index: 30; top: 93px; inset-inline-end: 25px; width: 300px; padding: 20px; }
 .settings-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 23px; }
 .settings-heading h2 { font-size: 15px; font-weight: 500; }
 .settings-heading .icon-button { border: 0; width: 28px; height: 28px; }
@@ -81,12 +81,12 @@ input[type="checkbox"] { accent-color: #638059; width: 17px; height: 17px; }
 .pause-card p { color: #8b9a80; font-size: 12px; margin: 10px 0 25px; }
 .resume-button { width: 100%; font-family: inherit; font-size: 12px !important; }
 .pause-shortcut { font-size: 9px; color: #a1ad93; margin-top: 17px; }
-.scene-loading { direction: rtl; white-space: nowrap; border-radius: 9px; padding: 14px 22px; font: 12px Tahoma; background: #faf9f1; color: #608060; }
+.scene-loading { direction:var(--ui-direction); white-space: nowrap; border-radius: 9px; padding: 14px 22px; font: 12px Tahoma; background: #faf9f1; color: #608060; }
 .scene-loading-wrap { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
-.scene-error { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 20px; justify-content: center; align-items: center; text-align: center; font-size: 14px; padding: 30px; direction: rtl; }
+.scene-error { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 20px; justify-content: center; align-items: center; text-align: center; font-size: 14px; padding: 30px; direction:var(--ui-direction); }
 .scene-error button { border: 1px solid #69826a; padding: 9px 18px; border-radius: 7px; }
-@media (max-width: 1100px) { .journey-card { width: 222px; right: 19px; padding: 20px 18px; } .journey-card h1 { font-size: 16px; } .minimap { width: 155px; left: 19px; } .map-svg { width: 120px; height: 120px; } .controls-panel { gap: 14px; padding: 14px 17px; } .scene-label { font-size: 8px; } }
-@media (max-width: 760px) { .topbar { height: 65px; padding: 0 16px; } .brand { font-size: 21px; gap: 8px; } .brand-mark { width: 34px; height: 34px; } .location, .build-label { display: none; } .world, .world-vignette, .pause-overlay { top: 65px; } .journey-card { top: 84px; width: 198px; padding: 14px 16px; } .journey-card h1 { font-size: 14px; margin: 12px 0 6px; } .journey-card > p { font-size: 9px; margin-bottom: 14px; } .stage-row { padding-top: 11px; } .stage-track { margin: 12px 0 10px; } .scene-label { display: none; } .minimap { width: 116px; bottom: 148px; padding: 11px 10px; } .map-svg { width: 95px; height: 95px; } .tiny-label { display: none; } .map-caption { font-size: 7px; } .controls-panel { bottom: 47px; max-width: calc(100% - 28px); gap: 15px; } .control-copy b { font-size: 11px; } .control-copy span { font-size: 8px; } .controls-divider, .escape-hint { display: none; } .settings-panel { top: 78px; left: 14px; width: min(300px, calc(100% - 28px)); } .world-status { bottom: 17px; right: 17px; } }
+@media (max-width: 1100px) { .journey-card { width: 222px; inset-inline-start: 19px; padding: 20px 18px; } .journey-card h1 { font-size: 16px; } .minimap { width: 155px; inset-inline-end: 19px; } .map-svg { width: 120px; height: 120px; } .controls-panel { gap: 14px; padding: 14px 17px; } .scene-label { font-size: 8px; } }
+@media (max-width: 760px) { .topbar { height: 65px; padding: 0 16px; } .brand { font-size: 21px; gap: 8px; } .brand-mark { width: 34px; height: 34px; } .location, .build-label { display: none; } .world, .world-vignette, .pause-overlay { top: 65px; } .journey-card { top: 84px; width: 198px; padding: 14px 16px; } .journey-card h1 { font-size: 14px; margin: 12px 0 6px; } .journey-card > p { font-size: 9px; margin-bottom: 14px; } .stage-row { padding-top: 11px; } .stage-track { margin: 12px 0 10px; } .scene-label { display: none; } .minimap { width: 116px; bottom: 148px; padding: 11px 10px; } .map-svg { width: 95px; height: 95px; } .tiny-label { display: none; } .map-caption { font-size: 7px; } .controls-panel { bottom: 47px; max-width: calc(100% - 28px); gap: 15px; } .control-copy b { font-size: 11px; } .control-copy span { font-size: 8px; } .controls-divider, .escape-hint { display: none; } .settings-panel { top: 78px; inset-inline-end: 14px; width: min(300px, calc(100% - 28px)); } .world-status { bottom: 17px; inset-inline-start: 17px; } }
 @media (max-height: 680px) and (min-width: 761px) { .journey-card { top: 96px; } .journey-card > p { display: none; } .journey-card h1 { margin: 13px 0; } .minimap { bottom: 39px; padding: 12px; width: 142px; } .map-svg { width: 105px; height: 105px; } .controls-panel { bottom: 42px; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 

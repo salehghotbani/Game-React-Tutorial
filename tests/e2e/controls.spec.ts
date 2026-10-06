@@ -100,6 +100,7 @@ test('dragging rotates the third-person view and walking follows its changed dir
 
 test('Space jumps and lands without an air jump; held Shift makes real movement faster', async ({ page }) => {
   test.setTimeout(90000);
+  await page.setViewportSize({ width: 960, height: 640 });
   await load(page);
   await page.getByRole('button', { name: 'تنظیمات', exact: true }).click();
   await page.getByRole('radio', { name: 'روشن', exact: true }).check();

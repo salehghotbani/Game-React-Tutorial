@@ -6,4 +6,5 @@ export { canUseGameNet, gameNetSecondsLeft } from './logic/gameNet';
 export type { PlayerPosition } from './player/types';
 export { resolveTheme, worldDaylight } from './logic/appearance';
 export { isTypingTarget } from './logic/movement';
+export { getJoystickState } from './logic/joystick';
 export { getNearestInteraction, COMPUTER_POSITION, ARCADE_POSITION } from './interaction/interaction';

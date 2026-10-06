@@ -70,8 +70,12 @@ export function installBridge({ React: originalReact, createRoot, modules: initi
   };
   window.addEventListener('message', async (event: MessageEvent) => {
     if (event.source !== window.parent || event.data?.channel !== channel) return;
-    const request = event.data as { type: string; id: string; code?: string; tests?: ChallengeTest[]; storage?: Record<string, string> };
+    const request = event.data as { type: string; id: string; code?: string; tests?: ChallengeTest[]; storage?: Record<string, string>; language?: string };
     try {
+      if (request.type === 'locale' && (request.language === 'fa' || request.language === 'en')) {
+        document.documentElement.lang = request.language;
+        document.documentElement.dir = request.language === 'fa' ? 'rtl' : 'ltr';
+      }
       if (request.type === 'render') {
         unmount(); observation.reset(); observation.setStorage(request.storage ?? {});
         const exported: { exports: Modules } = { exports: {} };

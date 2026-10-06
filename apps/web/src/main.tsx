@@ -8,6 +8,7 @@ import { GamePage } from './pages/GamePage';
 import { LocaleProvider } from './i18n/LocaleProvider';
 import './styles.css';
 import './activities.css';
+import './components/touchMovement.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -17,6 +17,7 @@ export function TeachingExample({ source }: { source: string }) {
   const [started, setStarted] = useState(false);
   const [runtime] = useState(() => new CodeRuntime(setStatus));
   useEffect(() => runtime.attach(frame.current!), [runtime]);
+  useEffect(() => runtime.setLocale(language), [runtime, language]);
   const run = () => { setStarted(true); void runtime.run(translateAuthoredCode(source, language), 'local').catch(() => { /* Status includes the error. */ }); };
   return <section className="teaching-example" aria-label={tx("مثال آموزشی قابل اجرا")}>
     <div><b>{tx("این نمونه آماده است؛ نتیجه را ببین و با آن کار کن.")}</b><button onClick={run} disabled={status.phase === 'booting' || status.phase === 'compiling'}>{tx("▶ اجرای نمونه")}</button></div>

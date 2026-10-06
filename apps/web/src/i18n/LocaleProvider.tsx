@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useState, type ReactNode } from 'react';
 import { LANGUAGE_KEY, languageForCountry, readLanguage, setLanguage, useLanguage, type Language } from '@react-quest/localization';
 import { detectCountry } from './detectCountry';
 import { LocaleContext, type LanguageSelection } from './localeContext';
@@ -25,11 +25,11 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     }
     return () => controller.abort();
   }, [selection]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.documentElement.lang = language;
     document.documentElement.dir = language === 'fa' ? 'rtl' : 'ltr';
     document.title = language === 'fa' ? 'React Quest — یادگیری React' : 'React Quest — Learn React';
-    document.querySelector('meta[name="description"]')?.setAttribute('content', language === 'fa' ? 'React را از صفر در یک محلهٔ سه‌بعدی یاد بگیر، تمرین کن و بساز.' : 'Learn React from scratch in a 3D neighborhood. Read, practice, build and explore.');
+    document.querySelector('meta[name="description"]')?.setAttribute('content', language === 'fa' ? 'React را از صفر در یک خانهٔ سه‌بعدی یاد بگیر، تمرین کن و بساز.' : 'Learn React from scratch in a 3D home. Read, practice, build and explore.');
   }, [language]);
   const choose = (next: LanguageSelection) => {
     setSelection(next);

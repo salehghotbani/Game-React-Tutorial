@@ -7,7 +7,7 @@ import { saveProjectStorage } from '../store/progressSlice';
 import { getDraft } from '../store/progression';
 
 export function ProjectShowcase({ challenge, onClose }: { challenge: Challenge; onClose: () => void }) {
-  useLanguage();
+  const language = useLanguage();
   const dispatch = useAppDispatch();
   const progress = useAppSelector(state => state.progress);
   const [source] = useState(() => getDraft(progress, challenge));
@@ -25,6 +25,7 @@ export function ProjectShowcase({ challenge, onClose }: { challenge: Challenge; 
     void runtime.run(source, 'local').catch(() => { /* The runtime displays compilation and execution errors. */ });
     return detach;
   }, [runtime, source]);
+  useEffect(() => runtime.setLocale(language), [runtime, language]);
   return <dialog ref={dialog} className="project-showcase" aria-label={tx('ساختهٔ من')} onKeyDown={event => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); onClose(); } }} onCancel={event => { event.preventDefault(); onClose(); }}>
     <header><div><span>{tx('ساختهٔ من')}</span><h2>{tx(challenge.title)}</h2></div><button autoFocus onClick={onClose}>{tx('بستن نمایش ×')}</button></header>
     <p>{tx('این برنامه با کد ذخیره‌شدهٔ خودت در همین سایت اجرا می‌شود. با آن کار کن؛ این نمایش امتیاز آزمون را تغییر نمی‌دهد.')}</p>

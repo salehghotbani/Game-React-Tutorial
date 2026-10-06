@@ -5,6 +5,11 @@ export type WorldCollider = { id: string; position: Vector3Tuple; halfExtents: V
 export type FloorArea = { id: string; x: number; z: number; width: number; depth: number };
 
 export const WORLD_BOUNDS = { minX: -10.4, maxX: 10.4, minZ: -12.3, maxZ: 12.2 };
+export const HOME_FLOOR: WorldCollider = {
+  id: 'home-floor',
+  position: [(WORLD_BOUNDS.minX + WORLD_BOUNDS.maxX) / 2, -0.12, (WORLD_BOUNDS.minZ + WORLD_BOUNDS.maxZ) / 2],
+  halfExtents: [(WORLD_BOUNDS.maxX - WORLD_BOUNDS.minX) / 2, 0.1, (WORLD_BOUNDS.maxZ - WORLD_BOUNDS.minZ) / 2]
+};
 export const GAME_NET = { requiredXp: 1000, sessionSeconds: 180 };
 export const FLOOR_AREAS: FloorArea[] = [
   { id: 'studio', x: 0, z: 0, width: 10.4, depth: 10.4 },
@@ -21,6 +26,7 @@ export const WORLD_CEILINGS: WorldCollider[] = FLOOR_AREAS
 const divider = (id: string, position: Vector3Tuple, halfExtents: Vector3Tuple): WorldCollider => ({ id, position, halfExtents });
 
 export const NEIGHBORHOOD_COLLIDERS: WorldCollider[] = [
+  HOME_FLOOR,
   ...WORLD_CEILINGS,
   ...FLOOR_AREAS.filter(area => area.id !== 'studio').map(area => divider(`${area.id}-floor`, [area.x, -0.1, area.z], [area.width / 2, 0.1, area.depth / 2])),
   divider('world-west', [-10.4, 1.7, 0], [0.12, 1.7, 12.3]),

@@ -5,6 +5,7 @@ export type MovementInput = {
   backward: boolean;
   left: boolean;
   right: boolean;
+  analog?: { x: number; z: number };
 };
 
 export type GameSettings = {

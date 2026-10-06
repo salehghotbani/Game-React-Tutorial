@@ -38,6 +38,8 @@ Places and objects have no floating names or overhead destination buttons. A gen
 
 First-person/third-person cameras, WASD, sprint, grounded jump, touch controls, appearance settings and the server clock remain available. Reading and television interactions still seat the player and restore the walking approach on exit. The earned Bug Hunter arcade is inside the home.
 
+Android and other touch devices use a circular left-thumb joystick. Dragging moves in any camera-relative direction, with a small dead zone and proportional walking speed. Separate right-thumb buttons support jumping and holding sprint while moving or looking around with another finger. Releasing/cancelling the touch, leaving exploration, changing orientation or hiding the page stops touch movement. The controls fit portrait and landscape screens, including tablets. Persian and English mirror the interface, menus, text alignment and learning panes; code, map coordinates and the physical left/right thumb controls retain their geometry.
+
 ## Advanced build assessments and personal creations
 
 The final chapter adds My Project Board and My Budget. Learners build actual React applications from a blank editor. Behavioral tests exercise card creation/movement/deletion and expense validation/filtering/totals, including storage and remounting. Passing grants the normal one-time reward; skipping earlier lessons or opening a preview grants none.

@@ -1,7 +1,7 @@
 import { useLanguage } from '@react-quest/localization';
 import type { GameSettings } from '@react-quest/shared';
 import { ROOM_COLLIDERS } from '../config';
-import { FLOOR_AREAS, NEIGHBORHOOD_COLLIDERS, WORLD_CEILINGS } from './layout';
+import { FLOOR_AREAS, HOME_FLOOR, NEIGHBORHOOD_COLLIDERS, WORLD_CEILINGS } from './layout';
 import { WorldBox } from './Primitives';
 import { NaturalTree as Tree } from './NaturalTree';
 
@@ -55,6 +55,7 @@ function Yard() {
 
 export function Neighborhood({ settings }: { settings: GameSettings }) {
   return <>
+    <WorldBox position={HOME_FLOOR.position} size={[HOME_FLOOR.halfExtents[0] * 2, HOME_FLOOR.halfExtents[1] * 2, HOME_FLOOR.halfExtents[2] * 2]} color="#637f4c" surface="grass" />
     {FLOOR_AREAS.filter(area => area.id !== 'studio').map(area => <WorldBox key={area.id}
       position={[area.x, -0.1, area.z]} size={[area.width, 0.2, area.depth]} color="#d0b696" surface="wood" />)}
     <Architecture cameraView={settings.cameraView} />

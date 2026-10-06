@@ -1148,7 +1148,7 @@
   "آزمون مستقل ساخت تابلوی پروژه": "Independent project board assessment",
   "آزمون مستقل ساخت داشبورد هزینه": "Independent budget dashboard assessment",
   "از هر بخش دلخواه شروع کن؛ می‌توانی مستقیم سراغ تمرین بروی.": "Start at any section or go straight to practice.",
-  "رفتن مستقیم به تمرین ←": "Go straight to practice ←",
+  "رفتن مستقیم به تمرین ←": "Go straight to practice →",
   "از هر فصل دلخواه شروع کن؛ ترتیب پیشنهادی، انتخاب تو را محدود نمی‌کند.": "Start at any chapter. The suggested sequence does not limit your choices.",
   "نمایش ساختهٔ من در سایت ↗": "Show my creation on this site ↗",
   "ساختهٔ من": "My creation",
@@ -1164,5 +1164,8 @@
   "موقعیت بازیکن در خانه": "Player position in the home",
   "فضایی آرام کنار خانه": "A quiet space beside the home",
   "از هر فصل دلخواه شروع کن": "Start at any chapter",
-  "با ۱۰۰۰ XP در خانه بازی کن": "Play at home with 1000 XP"
+  "با ۱۰۰۰ XP در خانه بازی کن": "Play at home with 1000 XP",
+  "جوی‌استیک حرکت": "Movement joystick",
+  "برای حرکت، دایره را بکش؛ هرچه بیشتر بکشی، سریع‌تر حرکت می‌کنی. کلیدهای جهت‌دار هم کار می‌کنند.": "Drag the stick to move. Drag farther to move faster. Arrow keys also work.",
+  "برای حرکت، جوی‌استیک را بکش؛ برای چرخاندن دوربین، تصویر را بکش.": "Drag the joystick to move. Drag the scene to look around."
 }

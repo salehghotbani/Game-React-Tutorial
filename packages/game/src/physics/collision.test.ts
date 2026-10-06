@@ -79,6 +79,14 @@ describe('Rapier player collision against the scene geometry', () => {
     expect(position.z).toBeLessThan(12);
     expect(position.y).toBeCloseTo(0.925, 2);
   });
+  it('keeps diagonal movement grounded between the courtyard and greenhouse walls', () => {
+    const position = simulate([0, PLAYER_CONFIG.spawn[1], 8.5], { x: 2.26, z: -2.26 });
+    expect(position.x).toBeGreaterThan(5.2);
+    expect(position.x).toBeLessThan(10.1);
+    expect(position.z).toBeGreaterThan(3.4);
+    expect(position.z).toBeLessThan(5);
+    expect(position.y).toBeCloseTo(0.905, 2);
+  });
   it('allows the quiet-room doorway while blocking solid courtyard fences', () => {
     const quietRoom = simulate([0, PLAYER_CONFIG.spawn[1], 3.5], { x: -5, z: 0 });
     expect(quietRoom.x).toBeLessThan(-7);

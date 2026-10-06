@@ -43,6 +43,7 @@ export class CodeRuntime {
   private container?: WebContainer;
   private serverUrl?: string;
   private unsubscribe: (() => void)[] = [];
+  private language: 'fa' | 'en' = 'fa';
 
   constructor(private notify: (status: RuntimeStatus) => void, private observe?: {
     analysis?: (analysis: CodeAnalysis) => void;
@@ -53,8 +54,14 @@ export class CodeRuntime {
 
   attach(frame: HTMLIFrameElement) {
     this.frame = frame;
+    this.setLocale(document.documentElement.lang === 'fa' ? 'fa' : 'en');
     window.addEventListener('message', this.onMessage);
     return () => this.dispose();
+  }
+
+  setLocale(language: 'fa' | 'en') {
+    this.language = language;
+    this.frame?.contentWindow?.postMessage({ channel: 'react-quest-preview', type: 'locale', language }, '*');
   }
 
   private update(patch: Partial<RuntimeStatus>) { this.status = { ...this.status, ...patch }; this.notify(this.status); }
@@ -73,7 +80,7 @@ export class CodeRuntime {
       if (this.observe) this.observe.initialStorage = values;
       this.observe?.storage?.(values);
     }
-    if (data.type === 'ready') this.ready?.resolve();
+    if (data.type === 'ready') { this.setLocale(this.language); this.ready?.resolve(); }
     if (data.type === 'error' && typeof data.message === 'string') {
       this.ready?.reject(new Error(data.message));
       this.update({ phase: 'error', message: data.message });
@@ -114,7 +121,7 @@ export class CodeRuntime {
       this.frame!.setAttribute('sandbox', 'allow-scripts allow-forms');
       this.frame!.removeAttribute('src');
       const script = localPreviewScript.replace(/<\/script/gi, '<\\/script');
-      this.frame!.srcdoc = `<!doctype html><html><head><meta charset="UTF-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; form-action 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data:;"><style>${previewStyle}</style></head><body><div id="root"></div><script>${script}</script></body></html>`;
+      this.frame!.srcdoc = `<!doctype html><html lang="${this.language}" dir="${this.language === 'fa' ? 'rtl' : 'ltr'}"><head><meta charset="UTF-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; form-action 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data:;"><style>${previewStyle}</style></head><body><div id="root"></div><script>${script}</script></body></html>`;
     });
     await this.send('render', { code: compiled.code, storage: this.observe?.initialStorage ?? {} });
   }
@@ -126,7 +133,7 @@ export class CodeRuntime {
   private project(source: string): FileSystemTree {
     return {
       'package.json': { file: { contents: JSON.stringify({ name: 'react-quest-challenge', packageManager: 'pnpm@11.19.0', type: 'module', scripts: { dev: 'vite --host 0.0.0.0 --port 3111' }, dependencies: { react: '19.2.0', 'react-dom': '19.2.0', vite: '6.4.1', 'react-router-dom': '^7.9.0', '@reduxjs/toolkit': '^2.9.0', 'react-redux': '^9.2.0', '@tanstack/react-query': '^5.90.0', '@testing-library/react': '^16.3.0' } }) } },
-      'index.html': { file: { contents: '<!doctype html><html><head><meta charset="UTF-8"></head><body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body></html>' } },
+      'index.html': { file: { contents: `<!doctype html><html lang="${this.language}" dir="${this.language === 'fa' ? 'rtl' : 'ltr'}"><head><meta charset="UTF-8"></head><body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body></html>` } },
       'vite.config.js': { file: { contents: 'export default { esbuild: { jsx: "automatic" }, server: { hmr: false, allowedHosts: true, headers: { "Cross-Origin-Embedder-Policy": "credentialless" } } };' } },
       src: { directory: {
         'App.jsx': { file: { contents: source } },

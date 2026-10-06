@@ -32,7 +32,7 @@ export function WorldHud({ settings, xp, area, timestamp, clockConnected, onHub,
     </div>
     <div className="world-information">
       <SiteLogo />
-      <div><b>{tx(area)}</b><small><span data-testid="room-xp">{tx(xp)}</span> XP <span>·</span> <time data-testid="server-clock" data-server-timestamp={timestamp ?? ''} title={tx(clockConnected ? 'ساعت سرور · به وقت تهران' : 'ارتباط ساعت سرور در حال بازیابی')}>{tx(timestamp === null ? 'همگام‌سازی…' : clockFormats[language].format(timestamp))}</time>{!clockConnected && timestamp !== null && <span title={tx("ارتباط ساعت سرور در حال بازیابی")}> ↻</span>}</small></div>
+      <div><b>{tx(area)}</b><small><bdi dir="ltr"><span data-testid="room-xp">{tx(xp)}</span> XP</bdi> <span>·</span> <time dir="auto" data-testid="server-clock" data-server-timestamp={timestamp ?? ''} title={tx(clockConnected ? 'ساعت سرور · به وقت تهران' : 'ارتباط ساعت سرور در حال بازیابی')}>{tx(timestamp === null ? 'همگام‌سازی…' : clockFormats[language].format(timestamp))}</time>{!clockConnected && timestamp !== null && <span title={tx("ارتباط ساعت سرور در حال بازیابی")}> ↻</span>}</small></div>
     </div>
   </>;
 }
@@ -40,17 +40,8 @@ export function WorldHud({ settings, xp, area, timestamp, clockConnected, onHub,
 export function MovementGuide({ moved }: { moved: boolean }) {
   useLanguage();
   return <section className={`movement-guide ${moved ? 'faded' : ''}`} aria-label={tx("راهنمای کنترل")} aria-hidden={moved}>
-    <div dir="ltr"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></div>
-    <p>{tx("قدم بزن؛ ")}<kbd>Shift</kbd>{tx(" دویدن · ")}<kbd>Space</kbd>{tx(" پرش · ")}<kbd>E</kbd>{tx(" تعامل · ")}<kbd>Esc</kbd>{tx(" توقف")}<span>{tx("برای چرخاندن دوربین، تصویر را بکش.")}</span></p>
+    <div className="desktop-movement-help" dir="ltr"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></div>
+    <p className="desktop-movement-help">{tx("قدم بزن؛ ")}<kbd>Shift</kbd>{tx(" دویدن · ")}<kbd>Space</kbd>{tx(" پرش · ")}<kbd>E</kbd>{tx(" تعامل · ")}<kbd>Esc</kbd>{tx(" توقف")}<span>{tx("برای چرخاندن دوربین، تصویر را بکش.")}</span></p>
+    <p className="touch-movement-help">{tx('برای حرکت، جوی‌استیک را بکش؛ برای چرخاندن دوربین، تصویر را بکش.')}</p>
   </section>;
-}
-
-export function TouchMovement() {
-  useLanguage();
-  const signal = (direction: string, pressed: boolean) => window.dispatchEvent(new CustomEvent('react-quest-movement', { detail: { direction, pressed } }));
-  return <div className="touch-movement" aria-label={tx("حرکت لمسی")}>
-    {([{ direction: 'forward', label: 'حرکت به جلو', symbol: '↑' }, { direction: 'left', label: 'حرکت به چپ', symbol: '←' }, { direction: 'backward', label: 'حرکت به عقب', symbol: '↓' }, { direction: 'right', label: 'حرکت به راست', symbol: '→' }, { direction: 'jump', label: 'پرش', symbol: '↟' }, { direction: 'sprint', label: 'دویدن', symbol: '»' }]).map(button => <button key={button.direction} className={button.direction} aria-label={tx(button.label)}
-      onPointerDown={event => { event.currentTarget.setPointerCapture(event.pointerId); signal(button.direction, true); }}
-      onPointerUp={() => signal(button.direction, false)} onPointerCancel={() => signal(button.direction, false)} onLostPointerCapture={() => signal(button.direction, false)}>{tx(button.symbol)}</button>)}
-  </div>;
 }

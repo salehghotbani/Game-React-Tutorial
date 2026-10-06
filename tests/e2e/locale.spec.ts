@@ -17,7 +17,7 @@ async function computer(page: Page, language: 'fa' | 'en') {
   await page.locator('.room-dock-toggle').click();
   await page.locator('.world-dock').getByRole('button', { name: language === 'fa' ? 'رفتن به کامپیوتر یادگیری' : 'Go to Learning computer', exact: true }).click();
   await expect(page.locator('.room-destination')).toHaveCount(0, { timeout: 30000 });
-  await expect(page.locator('.interaction-prompt')).toContainText(language === 'fa' ? 'استفاده از کامپیوتر' : 'Use the computer');
+  await expect(page.locator('.interaction-prompt')).toHaveAccessibleName(language === 'fa' ? 'استفاده از کامپیوتر' : 'Use the computer');
   if (language === 'en') {
     await page.locator('.world-tools').getByRole('combobox', { name: 'Site language' }).focus();
     await page.keyboard.press('e');
@@ -32,9 +32,13 @@ test('Iran defaults to Persian; manually choosing English survives reload', asyn
   let publicRequests = 0; page.on('request', request => { if (request.url().startsWith('https://api.country.is/')) publicRequests++; });
   await start(page, 'fa');
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+  await expect(page.locator('.world-tools')).toHaveCSS('direction', 'rtl');
+  expect((await page.locator('.world-information').boundingBox())!.x).toBeGreaterThan((await page.locator('.world-tools').boundingBox())!.x);
   await expect(page.getByRole('button', { name: 'تنظیمات', exact: true })).toBeVisible();
   await page.locator('.world-tools').getByRole('combobox', { name: 'زبان سایت' }).selectOption('en');
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
+  await expect(page.locator('.world-tools')).toHaveCSS('direction', 'ltr');
+  expect((await page.locator('.world-information').boundingBox())!.x).toBeLessThan((await page.locator('.world-tools').boundingBox())!.x);
   await expect(page.getByRole('button', { name: 'Settings', exact: true })).toBeVisible();
   await page.reload(); await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(page.getByTestId('player-marker')).toBeVisible({ timeout: 30000 });
@@ -59,12 +63,19 @@ test('outside Iran uses English lessons, examples and grading; language changes 
   await page.getByTestId('lesson-next').click();
   await page.getByRole('button', { name: '▶ Run example', exact: true }).click();
   await expect(page.frameLocator('iframe[title="React teaching example"]').getByRole('heading', { name: 'Hello, I am Sara' })).toBeVisible({ timeout: 30000 });
+  await expect(page.frameLocator('iframe[title="React teaching example"]').locator('html')).toHaveAttribute('dir', 'ltr');
   for (let step = 0; step < 10 && await page.locator('.teaching-screen').count(); step++) await page.getByTestId('lesson-next').click();
   const editor = page.getByRole('textbox', { name: 'React code editor' }); await expect(editor).toBeVisible({ timeout: 30000 });
+  await expect(page.locator('.panel-strip')).toHaveCSS('direction', 'ltr');
+  await expect(page.locator('.coding-actions')).toHaveCSS('direction', 'ltr');
+  await expect(page.locator('.coding-area')).toHaveCSS('direction', 'ltr');
+  await expect(page.locator('.lesson-nav').first()).toHaveCSS('text-align', 'start');
+  expect((await page.locator('[data-panel="path"]').boundingBox())!.x).toBeLessThan((await page.locator('[data-panel="editor"]').boundingBox())!.x);
   const code = 'export default function App(){return <main><h1>My own greeting</h1><p>No final period required</p></main>;}\n// bilingual saved draft';
   await editor.focus(); await page.keyboard.press('ControlOrMeta+A'); await page.keyboard.insertText(code);
   await page.getByRole('button', { name: 'Submit answer', exact: true }).click();
   await expect(page.getByTestId('total-xp')).toHaveText('200', { timeout: 30000 });
+  await expect(page.frameLocator('iframe[title="React preview"]').locator('html')).toHaveAttribute('dir', 'ltr');
   const path = page.locator('[data-panel="path"]'); const before = (await path.boundingBox())!.width;
   await page.getByRole('separator', { name: 'Resize Learning path', exact: true }).press('ArrowRight');
   await expect.poll(async () => (await path.boundingBox())!.width).toBeGreaterThan(before + 10);
@@ -80,6 +91,21 @@ test('outside Iran uses English lessons, examples and grading; language changes 
   await expect(page.locator('.monaco-editor')).toContainText('bilingual saved draft');
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('react-quest-progress-v1')!).drafts['hello-react'])).toBe(saved);
   await expect(page.locator('.panel-strip')).toHaveCSS('direction', 'rtl');
+  await expect(page.locator('.coding-actions')).toHaveCSS('direction', 'rtl');
+  await expect(page.locator('.coding-area')).toHaveCSS('direction', 'ltr');
+  expect((await page.locator('[data-panel="path"]').boundingBox())!.x).toBeGreaterThan((await page.locator('[data-panel="editor"]').boundingBox())!.x);
+  await page.getByRole('button', { name: '▶ اجرای کد', exact: true }).click();
+  await expect(page.frameLocator('iframe[title="پیش‌نمایش React"]').locator('html')).toHaveAttribute('dir', 'rtl');
+  await page.getByLabel('فصل آموزشی').selectOption('all');
+  await page.locator('[data-challenge="jsx-reading"]').click();
+  await page.getByRole('button', { name: 'رفتن مستقیم به تمرین ←', exact: true }).click();
+  await expect(page.locator('.quiz-area')).toHaveCSS('direction', 'rtl');
+  await expect(page.locator('.knowledge-questions pre')).toHaveCSS('direction', 'ltr');
+  await page.getByRole('button', { name: 'بازگشت به اتاق', exact: true }).click();
+  await page.locator('.world-tools').getByRole('combobox', { name: 'زبان سایت' }).selectOption('en');
+  await computer(page, 'en');
+  await expect(page.locator('.quiz-area')).toHaveCSS('direction', 'ltr');
+  await expect(page.locator('.quiz-area .coding-actions')).toHaveCSS('direction', 'ltr');
   expect(errors).toEqual([]);
 });
 

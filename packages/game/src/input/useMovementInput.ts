@@ -11,7 +11,7 @@ const bindings: Record<string, keyof MovementInput> = {
 export type PlayerInput = MovementInput & { sprint: boolean; jump: boolean; brake: boolean };
 
 export function useMovementInput(paused: boolean) {
-  const input = useRef<PlayerInput>({ forward: false, backward: false, left: false, right: false, sprint: false, jump: false, brake: false });
+  const input = useRef<PlayerInput>({ forward: false, backward: false, left: false, right: false, analog: { x: 0, z: 0 }, sprint: false, jump: false, brake: false });
 
   useEffect(() => {
     const heldKeys = new Set<string>();
@@ -23,7 +23,15 @@ export function useMovementInput(paused: boolean) {
       input.current.sprint = touchDirections.has('sprint') || heldKeys.has('ShiftLeft') || heldKeys.has('ShiftRight');
       input.current.brake = touchDirections.has('brake') || heldKeys.has('Space');
     };
-    const clear = () => { heldKeys.clear(); touchDirections.clear(); input.current.jump = false; updateInput(); };
+    const clear = () => { heldKeys.clear(); touchDirections.clear(); input.current.analog = { x: 0, z: 0 }; input.current.jump = false; updateInput(); };
+    const joystick = (event: Event) => {
+      if (paused || !(event instanceof CustomEvent)) return;
+      const detail: unknown = event.detail;
+      if (!detail || typeof detail !== 'object' || !('x' in detail) || !('z' in detail)) return;
+      if (typeof detail.x !== 'number' || typeof detail.z !== 'number' || !Number.isFinite(detail.x) || !Number.isFinite(detail.z)) return;
+      const divisor = Math.max(1, Math.hypot(detail.x, detail.z));
+      input.current.analog = { x: detail.x / divisor, z: detail.z / divisor };
+    };
     const touch = (event: Event) => {
       if (paused || !(event instanceof CustomEvent)) return;
       const detail: unknown = event.detail;
@@ -53,6 +61,7 @@ export function useMovementInput(paused: boolean) {
     window.addEventListener('keyup', up);
     window.addEventListener('blur', clear);
     window.addEventListener('react-quest-movement', touch);
+    window.addEventListener('react-quest-joystick', joystick);
     document.addEventListener('visibilitychange', clear);
     return () => {
       clear();
@@ -60,6 +69,7 @@ export function useMovementInput(paused: boolean) {
       window.removeEventListener('keyup', up);
       window.removeEventListener('blur', clear);
       window.removeEventListener('react-quest-movement', touch);
+      window.removeEventListener('react-quest-joystick', joystick);
       document.removeEventListener('visibilitychange', clear);
     };
   }, [paused]);
