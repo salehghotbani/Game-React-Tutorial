@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="125" height="28" role="img" aria-label="Babel 7.29.9">
+  <title>Babel 7.29.9</title>
+  <clipPath id="round"><rect width="125" height="28" rx="6"/></clipPath>
+  <g clip-path="url(#round)"><path fill="#202b3c" d="M0 0h59v28H0z"/><path fill="#efd982" d="M59 0h66v28H59z"/></g>
+  <g font-family="Verdana,DejaVu Sans,sans-serif" font-size="11" text-anchor="middle"><text x="29.5" y="18" fill="#f8fafc">Babel</text><text x="92.0" y="18" fill="#17212f">7.29.9</text></g>
+</svg>

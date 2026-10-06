@@ -1,5 +1,32 @@
 # Architecture
 
+## At a glance
+
+The web application connects three independent layers: the 3D world, learning progression and the isolated React execution lab. Shared contracts and localization keep their interfaces consistent.
+
+```mermaid
+flowchart TD
+  Web["apps/web · React UI + Redux state"] --> Game["packages/game · Three.js + Rapier"]
+  Web --> Curriculum["packages/challenges · Lessons + projects"]
+  Web --> Runtime["packages/learning-engine · Compiler + judge"]
+  Web --> Arcade["packages/arcade · Bug Hunter"]
+  Runtime --> Worker["Worker · Babel JSX compilation"]
+  Runtime --> Preview["Sandboxed iframe · React + behavioral tests"]
+  Web --> Storage["Browser storage · Progress + preferences"]
+  Contracts["packages/shared + packages/localization"] -.-> Web
+  Contracts -.-> Game
+  Contracts -.-> Curriculum
+  Contracts -.-> Runtime
+  classDef web fill:#dbebff,stroke:#5485b8,color:#17212f
+  classDef world fill:#d9f3e4,stroke:#65977c,color:#17212f
+  classDef learning fill:#f0e4ff,stroke:#9b7cb6,color:#17212f
+  class Web,Storage web
+  class Game,Arcade world
+  class Curriculum,Runtime,Worker,Preview learning
+```
+
+See the [game and computer screenshots](../README.md#a-look-inside) or the [Persian guide](../README.fa.md). Authentication and the planned FastAPI/PostgreSQL backend are outside the current implementation.
+
 ## Workspace boundaries
 
 | Package | Responsibility |
@@ -73,23 +100,22 @@ Each pane has a close button. The toolbar can reopen individual panes or reset t
 
 ## Dependencies
 
-| Dependency | Purpose |
-|---|---|
-| React 19, Vite 7, strict TypeScript | Component runtime and application tooling |
-| Chakra/Emotion, Router, Redux Toolkit | UI provider, routing and typed application state |
-| Three.js, R3F 9, Drei, React Three Rapier 2 | Procedural room and physics |
-| monaco-editor / @monaco-editor/react | Locally bundled JSX editor and JavaScript language worker |
-| @babel/standalone | Worker-based JSX/module compilation and AST evidence/loop instrumentation |
-| @webcontainer/api | Browser Node runtime, filesystem and Vite process |
-| esbuild | Build-time local preview/bridge bundling |
-| @babel/core types | Typed Babel instrumentation plugin |
-| @tanstack/react-query | Actual Query cache exercises and observations |
-| React Router, Redux Toolkit, React Redux (preview) | Actual routing/store exercises in the isolated student runtime |
-| @testing-library/react / dom | Learner-authored behavior tests and healthy/mutant checking |
-| Vitest / Rapier dev runtime | Pure domain tests and actual collider integration |
-| Playwright | Browser movement, learning, reward, isolation and arcade tests |
+These badges show exact versions resolved in `pnpm-lock.yaml`; pnpm is declared in `package.json`. Version ranges in workspace manifests may be broader. Refresh the badges when the lockfile changes.
 
-The generated challenge project pins React/React DOM 19.2.0 and Vite 6.4.1 independently from the application's Vite version. Large physics, editor and language-worker chunks are expected; heavy lesson dependencies are lazy loaded. The lockfile records actual resolutions.
+| Layer | Versions | Responsibility |
+|---|---|---|
+| Application | <a href="https://react.dev/"><img src="images/stack/react.svg" alt="React 19.3.0" /></a>   <a href="https://www.typescriptlang.org/"><img src="images/stack/typescript.svg" alt="TypeScript 5.9.3" /></a>   <a href="https://vite.dev/"><img src="images/stack/vite.svg" alt="Vite 7.3.6" /></a> | Component runtime, strict typing and application build |
+| UI and state | <a href="https://chakra-ui.com/"><img src="images/stack/chakra-ui.svg" alt="Chakra UI 3.37.0" /></a>   <a href="https://redux-toolkit.js.org/"><img src="images/stack/redux-toolkit.svg" alt="Redux Toolkit 2.13.0" /></a>   <a href="https://reactrouter.com/"><img src="images/stack/react-router.svg" alt="React Router 7.18.4" /></a> | UI provider, routing and typed application state |
+| 3D rendering | <a href="https://threejs.org/"><img src="images/stack/threejs.svg" alt="Three.js 0.180.0" /></a>   <a href="https://r3f.docs.pmnd.rs/"><img src="images/stack/react-three-fiber.svg" alt="React Three Fiber 9.8.1" /></a>   <a href="https://drei.docs.pmnd.rs/"><img src="images/stack/drei.svg" alt="Drei 10.7.9" /></a> | Procedural world, scene components and rendering helpers |
+| Physics | <a href="https://pmndrs.github.io/react-three-rapier/"><img src="images/stack/react-three-rapier.svg" alt="React Three Rapier 2.2.0" /></a> | Kinematic movement, character control and collisions |
+| Learning editor | <a href="https://microsoft.github.io/monaco-editor/"><img src="images/stack/monaco.svg" alt="Monaco Editor 0.55.1" /></a>   <a href="https://babeljs.io/"><img src="images/stack/babel.svg" alt="Babel 7.29.9" /></a> | Locally bundled JSX editor and worker-based compilation |
+| Learning libraries | <a href="https://tanstack.com/query/latest"><img src="images/stack/react-query.svg" alt="React Query 5.104.1" /></a> | Actual Query cache exercises and observations |
+| Optional runtime | <a href="https://webcontainers.io/"><img src="images/stack/webcontainers.svg" alt="WebContainers 1.6.4" /></a> | Browser Node runtime, filesystem and Vite process |
+| Workspace | <a href="https://pnpm.io/"><img src="images/stack/pnpm.svg" alt="pnpm 11.19.0" /></a> | Installation, workspace scripts and generated projects |
+
+Chakra uses Emotion, and Redux Toolkit uses React Redux. The isolated preview also bundles React Router, React Redux and Testing Library for real learner-authored behavior tests. esbuild bundles the local preview/bridge at build time; Vitest and the Rapier development runtime validate domain rules and real colliders, while Playwright checks browser behavior. These dependencies support the existing editor, teaching or game responsibilities; game rendering imports no lesson runtime or editor library.
+
+The generated challenge project pins React/React DOM **19.2.0** and Vite **6.4.1** independently from the application's locked React/Vite versions above. The local preview uses the application's bundled libraries. Large physics, editor and language-worker chunks are expected; heavy lesson dependencies are lazy loaded.
 
 ## Landscape and vehicles
 

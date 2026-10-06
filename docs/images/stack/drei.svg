@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="118" height="28" role="img" aria-label="Drei 10.7.9">
+  <title>Drei 10.7.9</title>
+  <clipPath id="round"><rect width="118" height="28" rx="6"/></clipPath>
+  <g clip-path="url(#round)"><path fill="#202b3c" d="M0 0h52v28H0z"/><path fill="#a8dfc3" d="M52 0h66v28H52z"/></g>
+  <g font-family="Verdana,DejaVu Sans,sans-serif" font-size="11" text-anchor="middle"><text x="26.0" y="18" fill="#f8fafc">Drei</text><text x="85.0" y="18" fill="#17212f">10.7.9</text></g>
+</svg>

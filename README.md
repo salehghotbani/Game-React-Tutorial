@@ -1,10 +1,78 @@
-# React Quest
-
-**English** · [فارسی](README.fa.md)
+<div align="center">
+  <img src="apps/web/public/site-icon.png" width="72" height="72" alt="React Quest" />
+  <h1>React Quest</h1>
+  <p><strong>Learn React. Code at the computer. Explore your own 3D world.</strong></p>
+  <p><strong>English</strong> · <a href="README.fa.md">فارسی</a></p>
+  <p><a href="https://salehghotbani.github.io/Game-React-Tutorial/">Play the live demo</a> · <a href="docs/ARCHITECTURE.md">Architecture</a> · <a href="LICENSE">MIT license</a></p>
+  <p>
+  <a href="https://react.dev/"><img src="docs/images/stack/react.svg" alt="React 19.3.0" /></a>
+  <a href="https://www.typescriptlang.org/"><img src="docs/images/stack/typescript.svg" alt="TypeScript 5.9.3" /></a>
+  <a href="https://vite.dev/"><img src="docs/images/stack/vite.svg" alt="Vite 7.3.6" /></a>
+  </p>
+  <p>
+  <a href="https://threejs.org/"><img src="docs/images/stack/threejs.svg" alt="Three.js 0.180.0" /></a>
+  <a href="https://r3f.docs.pmnd.rs/"><img src="docs/images/stack/react-three-fiber.svg" alt="React Three Fiber 9.8.1" /></a>
+  <a href="https://pmndrs.github.io/react-three-rapier/"><img src="docs/images/stack/react-three-rapier.svg" alt="React Three Rapier 2.2.0" /></a>
+  </p>
+</div>
 
 Learn React from scratch while exploring a 3D home and neighborhood. React Quest combines **15 chapters, 54 exercises, 18 skills and 7 projects** with an interactive world: study at the computer, earn XP, grow flowers, read React books and unlock games and driving.
 
-[Live demo](https://salehghotbani.github.io/Game-React-Tutorial/) · [Repository](https://github.com/salehghotbani/Game-React-Tutorial) · [MIT license](LICENSE)
+> **Learn → Practice → Build → Debug → Master**
+
+## A look inside
+
+![The React Quest home: computer desk, reading sofa, books, television lounge and learning garden](docs/images/game-room.png)
+
+*Your learning home: walk to the computer, read on the sofa and grow a garden with completed exercises.*
+
+| Learn at the computer | Write and run real React |
+|---|---|
+| [![Guided React lesson with an explanation and annotated code example](docs/images/computer-lesson-fa.png)](docs/images/computer-lesson-fa.png) | [![Computer workspace with mission, Monaco editor and live React preview](docs/images/computer-workspace-fa.png)](docs/images/computer-workspace-fa.png) |
+| Read a short explanation and try an ungraded example. | Edit JSX, run the preview and submit behavioral tests. |
+
+<details>
+<summary><strong>Open the knowledge map</strong> · chapters, projects and mastery</summary>
+
+![Knowledge map with daily practice, recommendations and chapter progress](docs/images/knowledge-map-fa.png)
+
+</details>
+
+*Screenshots show the actual application with the Persian interface. English is also available in settings. Click a lesson or workspace image to view it at full size.*
+
+## Built with
+
+**Interface and state**
+
+<p>
+  <a href="https://react.dev/"><img src="docs/images/stack/react.svg" alt="React 19.3.0" /></a>
+  <a href="https://chakra-ui.com/"><img src="docs/images/stack/chakra-ui.svg" alt="Chakra UI 3.37.0" /></a>
+  <a href="https://redux-toolkit.js.org/"><img src="docs/images/stack/redux-toolkit.svg" alt="Redux Toolkit 2.13.0" /></a>
+  <a href="https://reactrouter.com/"><img src="docs/images/stack/react-router.svg" alt="React Router 7.18.4" /></a>
+</p>
+
+**3D world and physics**
+
+<p>
+  <a href="https://threejs.org/"><img src="docs/images/stack/threejs.svg" alt="Three.js 0.180.0" /></a>
+  <a href="https://r3f.docs.pmnd.rs/"><img src="docs/images/stack/react-three-fiber.svg" alt="React Three Fiber 9.8.1" /></a>
+  <a href="https://drei.docs.pmnd.rs/"><img src="docs/images/stack/drei.svg" alt="Drei 10.7.9" /></a>
+  <a href="https://pmndrs.github.io/react-three-rapier/"><img src="docs/images/stack/react-three-rapier.svg" alt="React Three Rapier 2.2.0" /></a>
+</p>
+
+**Learning lab and tooling**
+
+<p>
+  <a href="https://microsoft.github.io/monaco-editor/"><img src="docs/images/stack/monaco.svg" alt="Monaco Editor 0.55.1" /></a>
+  <a href="https://tanstack.com/query/latest"><img src="docs/images/stack/react-query.svg" alt="React Query 5.104.1" /></a>
+  <a href="https://www.typescriptlang.org/"><img src="docs/images/stack/typescript.svg" alt="TypeScript 5.9.3" /></a>
+  <a href="https://vite.dev/"><img src="docs/images/stack/vite.svg" alt="Vite 7.3.6" /></a>
+  <a href="https://pnpm.io/"><img src="docs/images/stack/pnpm.svg" alt="pnpm 11.19.0" /></a>
+</p>
+
+Versions show the exact application resolutions in [`pnpm-lock.yaml`](pnpm-lock.yaml), plus the package manager declared in [`package.json`](package.json). The optional WebContainers engine and the generated exercise project are described in the [architecture guide](docs/ARCHITECTURE.md#dependencies). FastAPI and PostgreSQL are planned for a later stage.
+
+**Jump to:** [Quick start](#getting-started) · [Learning](#learn-before-you-practice) · [World and rewards](#explore-and-unlock-rewards) · [Controls](#controls-and-preferences) · [Project docs](#project-documentation)
 
 For developers and fork maintainers: [development setup](docs/DEVELOPMENT.md), [contributing](CONTRIBUTING.md), [testing](docs/TESTING.md), [publishing your fork](docs/DEPLOYMENT.md) and the [documentation index](docs/README.md).
 
